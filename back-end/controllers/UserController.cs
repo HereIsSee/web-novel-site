@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace Api.Controllers
 {
@@ -17,36 +19,80 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
         {
-            var users = await _db.Users.ToListAsync();
+            var users = await _db.Users
+            .Select(u => new UserReadDto
+            {
+                Id = u.Id,
+                UserName = u.UserName,
+                Email = u.Email,
+                DisplayName = u.DisplayName,
+                Bio = u.Bio,
+                AvatarUrl = u.AvatarUrl,
+                JoinedAt = u.JoinedAt,
+                Role = u.Role
+            })
+            .ToListAsync();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserReadDto>> GetUser(Guid id)
         {
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
 
-            return Ok(user);
+            var dto = new UserReadDto
+            {
+
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Bio = user.Bio,
+                AvatarUrl = user.AvatarUrl,
+                JoinedAt = user.JoinedAt,
+                Role = user.Role
+            };
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
+        public async Task<ActionResult<UserReadDto>> CreateUser([FromBody] CreateUserDto dto)
         {
-            user.Id = Guid.NewGuid();
-            user.JoinedAt = DateTime.UtcNow;
+            var user = new User
+            {
+                UserName = dto.UserName,
+                Email = dto.Email,
+                PasswordHash = dto.Password, //Will have to be hashed later
+                DisplayName = dto.DisplayName,
+                Bio = dto.Bio,
+                AvatarUrl = dto.AvatarUrl
+            };
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            var readDto = new UserReadDto
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Bio = user.Bio,
+                AvatarUrl = user.AvatarUrl,
+                JoinedAt = user.JoinedAt,
+                Role = user.Role
+            };
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, readDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User updatedUser)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDto updatedUser)
         {
             var user = await _db.Users.FindAsync(id);
             if (user == null)
@@ -57,7 +103,6 @@ namespace Api.Controllers
             user.DisplayName = updatedUser.DisplayName;
             user.Bio = updatedUser.Bio;
             user.AvatarUrl = updatedUser.AvatarUrl;
-            user.Role = updatedUser.Role;
 
             await _db.SaveChangesAsync();
             return NoContent();
