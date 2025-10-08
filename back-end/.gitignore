@@ -1,0 +1,50 @@
+## Visual Studio / .NET Core ##
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build outputs ##
+bin/
+obj/
+out/
+
+## Rider ##
+.idea/
+
+## OS generated files ##
+.DS_Store
+Thumbs.db
+
+## .NET Core ##
+project.lock.json
+project.fragment.lock.json
+*.dotCover
+*.ncrunch*
+*.ReSharper*
+*_i.c
+*_p.c
+*_h.h
+*.dbmdl
+
+## NuGet ##
+*.nupkg
+# Packages folder can be ignored if using PackageReference
+**/packages/*
+!**/packages/build/
+
+## EF Core Migrations ##
+# Ignore database file if using SQLite or local dev DB
+*.db
+*.sqlite
+Migrations/
+
+## ASP.NET Core Secrets ##
+appsettings.Development.json
+secrets.json
+
+## Logs ##
+*.log
+logs/
