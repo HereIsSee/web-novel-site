@@ -33,6 +33,6 @@ namespace Api.Models
         public ICollection<Chapter>? Chapters { get; set; } = new List<Chapter>();
         public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
 
-        public ICollection<NovelTag>? NovelTags { get; set; } = new List<NovelTag>();
+        public ICollection<NovelTag> NovelTags { get; set; } = new List<NovelTag>();
     }
 }
