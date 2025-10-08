@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.DTOs;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -10,14 +12,16 @@ namespace Api.Controllers
     public class NovelController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
-        public NovelController(AppDbContext db)
+        public NovelController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Novel>>> GetNovels()
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetNovels()
         {
             var novels = await _db.Novels
                 .Include(n => n.User)
@@ -25,44 +29,52 @@ namespace Api.Controllers
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
+            var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
+
             return Ok(novels);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Novel>> GetNovel(Guid id)
+        public async Task<ActionResult<NovelReadDto>> GetNovel(Guid id)
         {
             var novel = await _db.Novels
                 .Include(n => n.User)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
-                .Include(n => n.Chapters)
                 .FirstOrDefaultAsync(n => n.Id == id);
 
             if (novel == null)
                 return NotFound();
 
-            return Ok(novel);
+            var novelDto = _mapper.Map<NovelReadDto>(novel);
+
+            return Ok(novelDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Novel>> CreateNovel([FromBody] Novel novel)
+        public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
         {
+            var novel = _mapper.Map<Novel>(novelDto);
             novel.Id = Guid.NewGuid();
             novel.CreatedAt = DateTime.UtcNow;
 
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetNovel), new { id = novel.Id }, novel);
+            var novelReadDto = _mapper.Map<NovelReadDto>(novel);
+
+            return CreatedAtAction(nameof(GetNovel), new { id = novel.Id }, novelReadDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNovel(Guid id, [FromBody] Novel updatedNovel)
+        public async Task<IActionResult> UpdateNovel(Guid id, [FromBody] UpdateNovelDto updatedNovelDto)
         {
             var novel = await _db.Novels.FindAsync(id);
 
             if (novel == null)
                 return NotFound();
+
+            var updatedNovel = _mapper.Map<Novel>(updatedNovelDto);
 
             novel.Title = updatedNovel.Title;
             novel.Synopsis = updatedNovel.Synopsis;

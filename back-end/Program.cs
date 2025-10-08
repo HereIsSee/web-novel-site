@@ -5,6 +5,7 @@ using Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Custom services
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

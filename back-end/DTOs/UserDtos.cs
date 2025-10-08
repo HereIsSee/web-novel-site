@@ -32,4 +32,12 @@ namespace Api.DTOs
         public DateTime JoinedAt { get; set; }
         public UserRole Role { get; set; }
     }
+
+    public class UserSummaryDto
+    {
+        public Guid Id { get; set; }
+        public string UserName { get; set; } = null!;
+        public string? DisplayName { get; set; }
+        public string? AvatarUrl { get; set; }
+    }
 }

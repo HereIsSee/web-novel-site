@@ -4,6 +4,7 @@ using Api.Data;
 using Api.Models;
 using Api.DTOs;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -12,29 +13,20 @@ namespace Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
-        public UserController(AppDbContext db)
+        public UserController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
         {
-            var users = await _db.Users
-            .Select(u => new UserReadDto
-            {
-                Id = u.Id,
-                UserName = u.UserName,
-                Email = u.Email,
-                DisplayName = u.DisplayName,
-                Bio = u.Bio,
-                AvatarUrl = u.AvatarUrl,
-                JoinedAt = u.JoinedAt,
-                Role = u.Role
-            })
-            .ToListAsync();
-            return Ok(users);
+            var users = await _db.Users.ToListAsync();
+            var userDtos = _mapper.Map<IEnumerable<UserReadDto>>(users);
+            return Ok(userDtos);
         }
 
         [HttpGet("{id}")]
@@ -44,18 +36,7 @@ namespace Api.Controllers
             if (user == null)
                 return NotFound();
 
-            var dto = new UserReadDto
-            {
-
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Bio = user.Bio,
-                AvatarUrl = user.AvatarUrl,
-                JoinedAt = user.JoinedAt,
-                Role = user.Role
-            };
+            var dto = _mapper.Map<UserReadDto>(user);
 
             return Ok(dto);
         }
@@ -63,30 +44,18 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UserReadDto>> CreateUser([FromBody] CreateUserDto dto)
         {
-            var user = new User
-            {
-                UserName = dto.UserName,
-                Email = dto.Email,
-                PasswordHash = dto.Password, //Will have to be hashed later
-                DisplayName = dto.DisplayName,
-                Bio = dto.Bio,
-                AvatarUrl = dto.AvatarUrl
-            };
+            var user = _mapper.Map<User>(dto);
+
+            var hasher = new PasswordHasher<User>();
+            user.PasswordHash = hasher.HashPassword(user, dto.Password);
+
+            user.JoinedAt = DateTime.UtcNow;
+            user.Id = Guid.NewGuid();
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
-            var readDto = new UserReadDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                Bio = user.Bio,
-                AvatarUrl = user.AvatarUrl,
-                JoinedAt = user.JoinedAt,
-                Role = user.Role
-            };
+            var readDto = _mapper.Map<UserReadDto>(user);
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, readDto);
         }

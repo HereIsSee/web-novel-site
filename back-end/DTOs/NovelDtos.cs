@@ -1,0 +1,42 @@
+using Api.Models;
+
+namespace Api.DTOs
+{
+    public class CreateNovelDto
+    {
+        public string Title { get; set; } = null!;
+        public string? Synopsis { get; set; }
+        public string? CoverImageUrl { get; set; }
+
+        public Guid UserId { get; set; }
+        public NovelStatus Status { get; set; } = NovelStatus.Draft;
+
+    }
+
+    public class UpdateNovelDto
+    {
+        public string? Title { get; set; }
+        public string? Synopsis { get; set; }
+        public string? CoverImageUrl { get; set; }
+        public NovelStatus? Status { get; set; }
+    }
+
+    public class NovelReadDto
+    {
+        public Guid Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string? Synopsis { get; set; }
+        public string? CoverImageUrl { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public int Views { get; set; }
+        public NovelStatus Status { get; set; }
+
+        // Simple author info
+        public UserSummaryDto Author { get; set; } = null!;
+
+        // Tags (flat list)
+        public List<TagReadDto> Tags { get; set; } = new();
+    }
+}

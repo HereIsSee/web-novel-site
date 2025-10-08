@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.DTOs;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -10,25 +12,29 @@ namespace Api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
-        public CommentController(AppDbContext db)
+        public CommentController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comment>>> GetAllComments()
+        public async Task<ActionResult<IEnumerable<CommentReadDto>>> GetAllComments()
         {
             var comments = await _db.Comments
                 .Include(c => c.User)
                 .Include(c => c.Replies)
                 .ToListAsync();
 
-            return Ok(comments);
+            var commentsDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+
+            return Ok(commentsDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comment>> GetComment(Guid id)
+        public async Task<ActionResult<CommentReadDto>> GetComment(Guid id)
         {
             var comment = await _db.Comments
                 .Include(c => c.User)
@@ -38,31 +44,39 @@ namespace Api.Controllers
             if (comment == null)
                 return NotFound();
 
-            return Ok(comment);
+            var commentDto = _mapper.Map<CommentReadDto>(comment);
+
+            return Ok(commentDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Comment>> CreateComment([FromBody] Comment comment)
+        public async Task<ActionResult<CommentReadDto>> CreateComment([FromBody] CreateCommentDto createdComment)
         {
+            var comment = _mapper.Map<Comment>(createdComment);
+
             comment.Id = Guid.NewGuid();
             comment.CreatedAt = DateTime.UtcNow;
 
             _db.Comments.Add(comment);
             await _db.SaveChangesAsync();
 
+            var commentDto = _mapper.Map<CommentReadDto>(comment);
+
             return CreatedAtAction(
                 nameof(GetComment),
                 new { id = comment.Id },
-                comment
+                commentDto
             );
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateComment(Guid id, [FromBody] Comment updatedComment)
+        public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentDto updatedCommentDto)
         {
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
                 return NotFound();
+
+            var updatedComment = _mapper.Map<Comment>(updatedCommentDto);
 
             comment.Content = updatedComment.Content;
             comment.UpdatedAt = DateTime.UtcNow;

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.Models;
+using Api.DTOs;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -10,14 +12,16 @@ namespace Api.Controllers
     public class ChapterController : ControllerBase
     {
         private readonly AppDbContext _db;
+        private readonly IMapper _mapper;
 
-        public ChapterController(AppDbContext db)
+        public ChapterController(AppDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Chapter>>> GetChapters(Guid novelId)
+        public async Task<ActionResult<IEnumerable<ChapterReadDto>>> GetChapters(Guid novelId)
         {
             var novelExists = await _db.Novels.AnyAsync(n => n.Id == novelId);
             if (!novelExists)
@@ -27,28 +31,33 @@ namespace Api.Controllers
                 .Where(c => c.NovelId == novelId)
                 .ToListAsync();
 
-            return Ok(chapters);
+            var chaptersDto = _mapper.Map<IEnumerable<ChapterReadDto>>(chapters);
+
+            return Ok(chaptersDto);
         }
 
         [HttpGet("{chapterId}")]
-        public async Task<ActionResult<Chapter>> GetChapter(Guid novelId, Guid chapterId)
+        public async Task<ActionResult<ChapterReadDto>> GetChapter(Guid novelId, Guid chapterId)
         {
             var chapter = await _db.Chapters
-                .Include(c => c.Comments)
                 .FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
 
             if (chapter == null)
                 return NotFound();
 
-            return Ok(chapter);
+            var chapterDto = _mapper.Map<ChapterReadDto>(chapter);
+
+            return Ok(chapterDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Chapter>> CreateChapter(Guid novelId, [FromBody] Chapter chapter)
+        public async Task<ActionResult<ChapterReadDto>> CreateChapter(Guid novelId, [FromBody] CreateChapterDto createChapterDto)
         {
             var novel = await _db.Novels.FindAsync(novelId);
             if (novel == null)
                 return NotFound("Novel not found!");
+
+            var chapter = _mapper.Map<Chapter>(createChapterDto);
 
             chapter.Id = Guid.NewGuid();
             chapter.NovelId = novelId;
@@ -57,20 +66,24 @@ namespace Api.Controllers
             _db.Chapters.Add(chapter);
             await _db.SaveChangesAsync();
 
+            var chapterDto = _mapper.Map<ChapterReadDto>(chapter);
+
             return CreatedAtAction(
                 nameof(GetChapter),
                 new { novelId = novelId, chapterId = chapter.Id },
-                chapter
+                chapterDto
             );
         }
 
         [HttpPut("{chapterId}")]
-        public async Task<IActionResult> UpdateChapter(Guid novelId, Guid chapterId, [FromBody] Chapter updatedChapter)
+        public async Task<IActionResult> UpdateChapter(Guid novelId, Guid chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
         {
             var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)
                 return NotFound();
 
+            var updatedChapter = _mapper.Map<Chapter>(updatedChapterDto);
+            
             chapter.Title = updatedChapter.Title;
             chapter.Content = updatedChapter.Content;
             chapter.ChapterNumber = updatedChapter.ChapterNumber;
