@@ -55,49 +55,49 @@ h1, h2, h3, h4, h5, h6 {
 
 /* CSS START */
 :root{
-    --dark-color: rgb(17, 17, 17);
-    --dark-light-color: rgb(27, 27, 27);
-    --dark-very-light-color: rgb(46, 46, 46);
-    --light-color: white;
-    --dark-gray-color: rgb(56, 56, 56);
-    --ocean-light-blue-color: rgba(39, 61, 122, 0.719);
-    --light-white-border-color: rgba(255, 255, 255, 0.116);
-    --system-blue-color: #337ab7;;
-    --golden-color: rgb(230, 208, 84);
+  --dark-color: rgb(17, 17, 17);
+  --dark-light-color: rgb(27, 27, 27);
+  --dark-very-light-color: rgb(46, 46, 46);
+  --light-color: white;
+  --dark-gray-color: rgb(56, 56, 56);
+  --ocean-light-blue-color: rgba(39, 61, 122, 0.719);
+  --light-white-border-color: rgba(255, 255, 255, 0.116);
+  --system-blue-color: #337ab7;;
+  --golden-color: rgb(230, 208, 84);
 }
 
 body{
-    background-color: var(--dark-light-color);
-    color: white;
+  background-color: var(--dark-light-color);
+  color: white;
 }
 
 header{
-    background-color: var(--dark-color);
-    color: var(--light-color);
+  background-color: var(--dark-color);
+  color: var(--light-color);
 }
 nav{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
 }
 nav h1{
-    font-size: 48px;
+  font-size: 48px;
 }
 .options{
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 .options img {
-    width: 100px;
-    border-radius: 50%;
+  width: 100px;
+  border-radius: 50%;
 }
 .options > div{
-    font-size: 32px;
+  font-size: 32px;
 }
 .drop-down-menu-container{
   position: relative;
