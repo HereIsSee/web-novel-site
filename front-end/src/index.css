@@ -89,8 +89,26 @@ nav h1{
     width: 100px;
     border-radius: 50%;
 }
-.options div{
+.options > div{
     font-size: 32px;
+}
+.drop-down-menu-container{
+  position: relative;
+}
+.drop-down-menu{
+  position: absolute;
+  transform: translate(-80%, 16%);
+  background-color: rgb(27, 27, 85);
+  padding: 20px;
+  width: 250px;
+  font-size: 24px;;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* CSS DONE */

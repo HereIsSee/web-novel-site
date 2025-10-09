@@ -1,4 +1,5 @@
 import DefaultAvatarImage from '/avatar_default.webp';
+import DropDownMenu from './DropDownMenu';
 
 const Header = function(){
     
@@ -10,7 +11,7 @@ const Header = function(){
                 <div className='options'>
                     <img src={DefaultAvatarImage} alt="user image" />
                     <div className='display-name'>UserName</div>
-                    <div>|||</div>
+                    <DropDownMenu />
                 </div>
             </nav>
         </header>
