@@ -1,11 +1,13 @@
+import NovelCover from '/the-legend-of-william-oh.png';
+
 const Novel = ({novelData}) =>{
     
     console.log("Novel data: " + novelData);
 
     return(
         <div className="container">
-            <div className="novel-header card">
-                <img src="get_from_novel_data" alt="novel cover art"/>
+            <div className="novel-header">
+                <img src={NovelCover} alt="novel cover art"/>
                 <div>
                     <div className="novel-title">Novel title</div>
                     <div className="novel-author">by Author Display Name</div>
@@ -17,25 +19,24 @@ const Novel = ({novelData}) =>{
                     <div className="novel-tag">Male Lead</div>
                     <div className="novel-tag">Reincarnation</div>
                 </div>
-            </div>
+                <div className="novel-summary">
+                    <p>
+                        Night City, it's a place of endless wonders and horrors. 
+                        Opportunities and dangers, but before Motoko Kusanagi 
+                        can access any of them. She first has to build up enough 
+                        strength to walk again. Learn the basics of living in a 
+                        world that was just a game to her before. Good thing 
+                        she found a Shard hidden in her stuff that opens the 
+                        door of opportunity. But like all opportunities in Night 
+                        City, it usually ends up in a gunfight.
+                    </p>
 
-            <div className="novel-summary card">
-                <p>
-                    Night City, it's a place of endless wonders and horrors. 
-                    Opportunities and dangers, but before Motoko Kusanagi 
-                    can access any of them. She first has to build up enough 
-                    strength to walk again. Learn the basics of living in a 
-                    world that was just a game to her before. Good thing 
-                    she found a Shard hidden in her stuff that opens the 
-                    door of opportunity. But like all opportunities in Night 
-                    City, it usually ends up in a gunfight.
-                </p>
-
-                <p>
-                    Self-Insert with a modified Cyberpunk 2077 Gamer System. 
-                    Not a direct Ghost in the Shell Crossover. MC just happens 
-                    to share the name
-                </p>
+                    <p>
+                        Self-Insert with a modified Cyberpunk 2077 Gamer System. 
+                        Not a direct Ghost in the Shell Crossover. MC just happens 
+                        to share the name
+                    </p>
+                </div>
             </div>
 
             <div className="novel-statistics card">
@@ -92,7 +93,7 @@ const Novel = ({novelData}) =>{
             <div className="novel-action-buttons card">
                 <button>Rate it!</button>
                 <button>Follow</button>
-                <button>Favortie</button>
+                <button>Favorite</button>
                 <button>Read Later</button>
             </div>
 
@@ -102,9 +103,9 @@ const Novel = ({novelData}) =>{
                     <div>231 Chapters</div>
                 </div>
                         
-                <div className="nove-table-of-contents-sorting-options">
-                    <button>Chapter Name</button>
-                    <button>Release Date</button>
+                <div className="novel-table-of-contents-sorting-options">
+                    <button className="chapter-name-sort">Chapter Name</button>
+                    <button className="release-date-sort">Release Date</button>
                 </div>
 
                 <div className="chapters">

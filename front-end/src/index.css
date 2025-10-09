@@ -55,13 +55,20 @@ h1, h2, h3, h4, h5, h6 {
 
 /* CSS START */
 :root{
-    --dark-color: black;
+    --dark-color: rgb(17, 17, 17);
     --dark-light-color: rgb(27, 27, 27);
+    --dark-very-light-color: rgb(46, 46, 46);
     --light-color: white;
+    --dark-gray-color: rgb(56, 56, 56);
+    --ocean-light-blue-color: rgba(39, 61, 122, 0.719);
+    --light-white-border-color: rgba(255, 255, 255, 0.116);
+    --system-blue-color: #337ab7;;
+    --golden-color: rgb(230, 208, 84);
 }
 
 body{
     background-color: var(--dark-light-color);
+    color: white;
 }
 
 header{
@@ -107,8 +114,181 @@ nav h1{
 .container{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 30px;
 }
+
+/* Novel css START*/
+.novel-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--ocean-light-blue-color);
+  /* justify-content: space-around; */
+}
+.card{
+  display: flex;
+  flex-direction: column;
+  margin: 0 2%;
+  background-color: var(--dark-color);
+  padding: 20px 40px;
+  border: 1px var(--light-white-border-color) solid;
+}
+.novel-header > img{
+  height: 300px;
+  margin: 15px;
+  border: 5px white solid;
+}
+.novel-header > div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  flex: 1;
+}
+.novel-title{
+  font-size: 48px;
+}
+.novel-author{
+  font-size: 24px;
+}
+.novel-tags{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: flex-start;
+}
+.novel-tag{
+  padding:2px 5px;
+  font-size:18px;
+  background-color: var(--ocean-light-blue-color);
+}
+.novel-summary{
+  font-size: 20px;
+}
+.novel-summary > *{
+  margin: 20px 0px;
+}
+.novel-statistics{
+  display: flex;
+  flex-direction: column;
+}
+.novel-statistics > h3{
+  font-size: 32px;
+}
+.novel-statistics-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap:40px;
+}
+.novel-statistics-star-rating, .novel-statistics-metric{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-right: 200px;
+}
+.metric{
+  min-width: 400px;
+}
+.metric-title, .metric-value{
+  font-size: 24px;
+  font-weight: bold;
+}
+.metric-value{
+  color: var(--golden-color);
+}
+.novel-action-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.novel-action-buttons button{
+  border: none;
+  padding: 10px;
+  color: white;
+  font-size: 24px;
+  border-bottom: 1px var(--light-white-border-color) solid;
+  background-color: var(--dark-light-color);
+  transition: background-color 0.3s ease-out;
+}
+.novel-action-buttons button:hover{
+  background-color: var(--dark-color);
+}
+
+.novel-table-of-contents{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.novel-table-of-contents-header{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--light-white-border-color);
+  padding: 10px;
+}
+.novel-table-of-contents-header > h3{
+  color: var(--golden-color);
+  font-size: 24px;
+}
+.novel-table-of-contents-header > div{
+  background-color: var(--dark-gray-color);
+  padding: 5px;
+  font-size: 18px;
+}
+
+.novel-table-of-contents-sorting-options{
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 10px;
+  border-bottom: solid rgba(255, 255, 255, 0.774) 3px;
+}
+.novel-table-of-contents-sorting-options button{
+  color: white;
+  background-color: var(--dark-color);
+  border: none;
+  text-align: start;
+  font-size: 24px;
+  font-weight: bold;
+}
+button.chapter-name-sort{
+  flex: 2;
+}
+button.release-date-sort{
+  flex: 1;
+  text-align: end;
+}
+button.chapter-name-sort:hover, button.release-date-sort:hover{
+  background-color: var(--dark-very-light-color);
+}
+.chapters{
+  display: flex;
+  flex-direction: column;
+}
+.chapter{
+  display: flex;
+  flex-direction: row;
+  color: var(--system-blue-color);
+  font-size: 18px;
+  border-bottom: 1px var(--light-white-border-color) solid;
+}
+.chapter:hover .chapter-name, .chapter:hover .chapter-release-date{
+  background-color: var(--dark-very-light-color);
+}
+.chapter-name, .chapter-release-date{
+  padding: 5px;
+}
+.chapter-name{
+  flex: 2;
+}
+.chapter-release-date{
+  flex: 1;
+  text-align: end;
+  background-color: var(--dark-light-color);
+}
+
+
+/* Novel css DONE */
 
 /* CSS DONE */
