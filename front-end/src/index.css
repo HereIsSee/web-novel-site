@@ -287,8 +287,23 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   text-align: end;
   background-color: var(--dark-light-color);
 }
-
-
 /* Novel css DONE */
+
+/* Create Novel START */
+
+.novel-form{
+  margin-top: 20px;
+}
+.novel-form > div{
+  display: flex;
+  flex-direction: column;
+}
+.novel-form > div > label{
+  font-size: 24px;
+}
+.novel-synopsis-edit{
+  border: solid 1px var(--light-white-border-color);
+}
+/* Create Novel DONE */
 
 /* CSS DONE */
