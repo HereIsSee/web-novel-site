@@ -3,13 +3,14 @@ import Home from './routes/Home';
 import Novel from './routes/Novel';
 import CreateNovel from './routes/CreateNovel';
 
-function App() {
+function App({children}) {
 
   return (
     <div>
       <Header />
       {/* <Novel /> */}
-      <CreateNovel />
+      {/* <CreateNovel /> */}
+      {children}
     </div>
   )
 }

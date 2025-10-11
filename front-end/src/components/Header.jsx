@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import DefaultAvatarImage from '/avatar_default.webp';
 import DropDownMenu from './DropDownMenu';
 
@@ -6,7 +7,7 @@ const Header = function(){
     return(
         <header>
             <nav>
-                <h1 className='logo'>FableBound</h1>
+                <Link className="logo" to="/">FableBound</Link>
 
                 <div className='options'>
                     <img src={DefaultAvatarImage} alt="user image" />

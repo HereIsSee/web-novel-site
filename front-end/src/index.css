@@ -60,9 +60,11 @@ h1, h2, h3, h4, h5, h6 {
   --dark-very-light-color: rgb(46, 46, 46);
   --light-color: white;
   --dark-gray-color: rgb(56, 56, 56);
+  --light-gray-color: rgba(212, 212, 212, 0.76);
   --ocean-light-blue-color: rgba(39, 61, 122, 0.719);
   --light-white-border-color: rgba(255, 255, 255, 0.116);
-  --system-blue-color: #337ab7;;
+  --light-blue-color: #337ab7;
+  --dark-blue-color: #255b8a;
   --golden-color: rgb(230, 208, 84);
 }
 
@@ -82,8 +84,14 @@ nav{
   align-items: center;
   padding: 20px;
 }
-nav h1{
+a.logo{
   font-size: 48px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+a.logo:hover, a.logo:focus{
+  color: white;
 }
 .options{
   display:flex;
@@ -103,6 +111,8 @@ nav h1{
   position: relative;
 }
 .drop-down-menu{
+  display: flex;
+  flex-direction: column;
   position: absolute;
   transform: translate(-80%, 16%);
   background-color: rgb(27, 27, 85);
@@ -110,14 +120,88 @@ nav h1{
   width: 250px;
   font-size: 24px;;
 }
-
+.drop-down-menu a{
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+}
+.drop-down-menu a:hover, .drop-down-menu a:focus{
+  color: rgb(165, 165, 165);
+}
+a{
+  color: var(--light-blue-color);
+  font-size: 18px;
+}
+a:hover,a:focus{
+  color: var(--dark-blue-color);
+}
 .container{
   display: flex;
   flex-direction: column;
-  gap: 30px;
 }
+.container > h1{
+  font-size: 38px;
+  align-self: center;
+  margin-top: 10px;
+}
+/* Login/Register css START*/
+.auth-cover{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 100vh;
+  background-image: url(./assets/background.jpg);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
+}
+.auth-container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  background-color: var(--dark-color);
+  padding: 50px 100px;
+  border-radius: 20px;
+}
+a.title{
+  font-size: 48px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+a.title:hover, a.title:focus{
+  color: white;
+}
+.auth-container h2{
+  font-weight: normal;
+  font-size: 24px;
+  color: var(--dark-blue-color);
+}
+.auth-container form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.form-item{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.form-item label{
+  font-size: 24px;
+  color: var(--light-gray-color)
+}
+/* Login/Register css DONE*/
 
 /* Novel css START*/
+.novel > div{
+  margin-bottom: 30px;
+}
 .novel-header{
   display: flex;
   flex-direction: row;
@@ -132,6 +216,10 @@ nav h1{
   background-color: var(--dark-color);
   padding: 20px 40px;
   border: 1px var(--light-white-border-color) solid;
+}
+.novel .novel-header{
+  border-top: none;
+  margin-bottom: 0px;
 }
 .novel-header > img{
   height: 300px;
@@ -269,7 +357,7 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 .chapter{
   display: flex;
   flex-direction: row;
-  color: var(--system-blue-color);
+  color: var(--light-blue-color);
   font-size: 18px;
   border-bottom: 1px var(--light-white-border-color) solid;
 }
@@ -304,6 +392,52 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 .novel-synopsis-edit{
   border: solid 1px var(--light-white-border-color);
 }
+.novel-synopsis-edit div{
+  font-size: 18px;
+}
+.novel-form input{
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: 1px solid var(--light-white-border-color);
+  font-size: 18px;
+}
+.novel-form button{
+  align-self: center;
+  padding: 10px 30px ;
+  background-color: var(--dark-light-color);
+  color:var(--golden-color);
+  font-size: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--light-white-border-color);
+}
+.novel-form button:hover{
+  background-color: var(--dark-very-light-color);
+}
 /* Create Novel DONE */
+
+/* Home START */
+
+.novel-card{
+  display: flex;
+  flex-direction: row;
+  gap: 25px
+}
+.novel-card img{
+  height: 250px;
+}
+.novel-card-info{
+  display: flex;
+  flex-direction: column;
+}
+.novel-card h1{
+  font-size: 48px;
+  color: var(--golden-color);
+}
+.novel-card-statistics{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+/* Home DONE */
 
 /* CSS DONE */

@@ -11,7 +11,7 @@ const CreateNovel = () =>{
 
     const [title, setTitle] = useState('');
     const [converURL, setCoverUrl] = useState('');
-    const [content, setContent] = useState('');
+    // const [content, setContent] = useState('');
 
     const handleSubmit = (e) =>{
         e.preventDefault();
@@ -20,8 +20,6 @@ const CreateNovel = () =>{
 
         const rawHTML = editor.getHTML();
         const safeHTML = DOMPurify.sanitize(rawHTML);
-
-        setContent(rawHTML);
         
         const formData = {
             title,

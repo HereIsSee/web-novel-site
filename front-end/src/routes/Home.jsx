@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import NovelCard from '../components/NovelCard';
+import App from '../App';
 
 const Home = () =>{
     const [isLoading, setIsLoading] = useState(true);
@@ -20,29 +22,33 @@ const Home = () =>{
 
         fetchNovels();
         
-
     },[]);
 
     
 
     return(
-        <div className='container'>
-            <h1>Home Page</h1>
-            {isLoading ? (
-                <div>
-                    <h1>Loading...</h1>
-                </div>
+        <App>
+            <div className='container'>
+                <h1>Home Page</h1>
+                {isLoading ? (
+                    <>
+                        <h1>Loading...</h1>
+                    </>
 
-            ) : error ? (
-                <div>
-                    <h1>{error}</h1>
-                </div>
-            ) : (
-                <div>
-                    {console.log(novels)}
-                </div>
-            )}
-        </div>
+                ) : error ? (
+                    <>
+                        <h1>{error}</h1>
+                    </>
+                ) : (
+                    <div className='card'>
+                        <NovelCard 
+
+                        />
+                        {console.log(novels)}
+                    </div>
+                )}
+            </div>
+        </App>
     );
 }
 

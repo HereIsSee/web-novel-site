@@ -1,0 +1,34 @@
+.dark-golden{
+  align-self: center;
+  padding: 10px 30px ;
+  background-color: var(--dark-light-color);
+  color:var(--golden-color);
+  font-size: 24px;
+  border-radius: 20px;
+  border: 1px solid var(--light-white-border-color);
+}
+.button:hover{
+  background-color: var(--dark-very-light-color);
+}
+.blue-white{
+  align-self: center;
+  padding: 10px 30px;
+  background-color: var(--light-blue-color);
+  color: white;
+  font-size: 24px;
+  border-radius: 20px;
+  border: none;
+}
+.blue-white:hover{
+  background-color: var(--dark-blue-color);
+}
+.text-only-gray{
+    color: rgb(160, 160, 160);
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.3s ease-in;
+}
+
+.text-only-gray:hover{
+    color: rgb(126, 126, 126);
+}

@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
+import Button from './FormFields/Button';
 
 const DropDownMenu = function(){
     const [showMenu, setShowMenu] = useState(false);
@@ -9,16 +11,17 @@ const DropDownMenu = function(){
 
     return(
         <div className='drop-down-menu-container'>
-            <button onClick={handleClick}>☰</button>
+            <Button styleType='text-only-gray'onClick={handleClick}>☰</Button>
             {showMenu && (
                 <div className='drop-down-menu'>
-                    <div>My profile</div>
-                    <div>Author Dashboard</div>
+                    <Link to="/profile/:id">My Profile</Link>
+                    <Link to="/author-dashboard/:id">Author Dashboard</Link>
                     <hr />
-                    <div>Search</div>
-                    <div>Follow list</div>
-                    <div>Read Later</div>
-                    <div>Favorites</div>
+                    <Link to="/search">Search</Link>
+                    <Link to="/follows">Follow List</Link>
+                    <Link to="/read-later">Read Later</Link>
+                    <Link to="/favorites">Favorites</Link>
+                    <Link to="/login">Log in</Link>
                 </div>
             )}
         </div>

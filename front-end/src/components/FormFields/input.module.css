@@ -1,0 +1,6 @@
+.inputText{
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: 1px solid var(--light-white-border-color);
+    font-size: 18px;
+}
