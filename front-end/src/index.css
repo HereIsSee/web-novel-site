@@ -118,7 +118,8 @@ a.logo:hover, a.logo:focus{
   background-color: rgb(27, 27, 85);
   padding: 20px;
   width: 250px;
-  font-size: 24px;;
+  font-size: 24px;
+  z-index: 1;
 }
 .drop-down-menu a{
   font-size: 24px;
