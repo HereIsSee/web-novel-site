@@ -4,7 +4,7 @@ import App from '../App';
 
 const Home = () =>{
     const [isLoading, setIsLoading] = useState(true);
-    const [novels, SetNovels] = useState();
+    const [novels, SetNovels] = useState([]);
     const [error, SetError] = useState('');
 
     useEffect(()=>{
@@ -24,8 +24,6 @@ const Home = () =>{
         
     },[]);
 
-    
-
     return(
         <App>
             <div className='container'>
@@ -41,9 +39,9 @@ const Home = () =>{
                     </>
                 ) : (
                     <div className='card'>
-                        <NovelCard 
-
-                        />
+                        <NovelCard />
+                        <NovelCard />
+                        <NovelCard />
                         {console.log(novels)}
                     </div>
                 )}
