@@ -55,6 +55,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* CSS START */
 :root{
+  --very-dark-color: rgb(10, 10, 10);
   --dark-color: rgb(17, 17, 17);
   --dark-light-color: rgb(27, 27, 27);
   --dark-very-light-color: rgb(46, 46, 46);
@@ -72,9 +73,8 @@ body{
   background-color: var(--dark-light-color);
   color: white;
 }
-
 header{
-  background-color: var(--dark-color);
+  background-color: var(--very-dark-color);
   color: var(--light-color);
 }
 nav{
@@ -109,6 +109,7 @@ a.logo:hover, a.logo:focus{
 }
 .drop-down-menu-container{
   position: relative;
+  z-index: 2;
 }
 .drop-down-menu{
   display: flex;
@@ -145,13 +146,7 @@ a:hover,a:focus{
   align-self: center;
   margin-top: 10px;
 }
-/* Login/Register css START*/
-.auth-cover{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
+.cover-background{
   height: 100vh;
   background-image: url(./assets/background.jpg);
   background-size: cover;
@@ -159,6 +154,13 @@ a:hover,a:focus{
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.5);
   background-blend-mode: darken;
+}
+/* Login/Register css START*/
+.auth-cover{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .auth-container{
   display: flex;
@@ -492,5 +494,101 @@ button.show-more{
   }
 }
 /* Home DONE */
+
+/* Profile START */
+.profile-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  align-self: center;
+  width: 90vw;
+  height: 100%;
+  background-color: var(--dark-color)
+}
+.profile-header{
+  border: 1px var(--light-white-border-color) solid;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  margin: 0 2%;
+  background-color: var(--dark-color);
+}
+.blurred-picture-cover{
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+}
+.blurred-picture-cover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(./assets/background.jpg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  z-index: -1;
+}
+.upper-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.upper-bar img{
+  width: 100px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.upper-bar button.edit{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--light-blue-color);
+  color: white;
+  border: none;
+}
+.upper-bar button.edit:hover{
+  background-color: var(--dark-blue-color);
+}
+.lower-bar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 20px ;
+}
+.lower-bar h3{
+  font-size: 24px;
+  align-self: center;
+}
+.lower-bar .value{
+  color: var(--light-blue-color);
+}
+.profile-information{
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--light-white-border-color);
+}
+.profile-information > *{
+  border-bottom: 1px solid var(--light-white-border-color);
+  padding: 5px;
+}
+.item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.item > div:first-child{
+  font-weight: bold;
+}
+.item > div{
+  flex: 1;
+}
+
+/* Profile DONE */
 
 /* CSS DONE */

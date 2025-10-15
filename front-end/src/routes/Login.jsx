@@ -12,7 +12,7 @@ const Login = ()=>{
     } 
 
     return(
-        <div className="auth-cover">
+        <div className="auth-cover cover-background">
             <div className="auth-container">
                 <Link className='title' to='/'>FableBound</Link>
                 <h2>Sign In</h2>

@@ -14,8 +14,8 @@ const DropDownMenu = function(){
             <Button styleType='text-only-gray'onClick={handleClick}>☰</Button>
             {showMenu && (
                 <div className='drop-down-menu'>
-                    <Link to="/profile/:id">My Profile</Link>
-                    <Link to="/author-dashboard/:id">Author Dashboard</Link>
+                    <Link to="/profile/1">My Profile</Link> {/* Id needs to be changed into a dynamic one */}
+                    <Link to="/author-dashboard/:id">Author Dashboard</Link> {/* Id needs to be changed into a dynamic one */}
                     <hr />
                     <Link to="/search">Search</Link>
                     <Link to="/follows">Follow List</Link>
