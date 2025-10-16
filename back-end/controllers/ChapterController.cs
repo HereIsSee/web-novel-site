@@ -21,7 +21,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ChapterReadDto>>> GetChapters(Guid novelId)
+        public async Task<ActionResult<IEnumerable<ChapterReadDto>>> GetChapters(int novelId)
         {
             var novelExists = await _db.Novels.AnyAsync(n => n.Id == novelId);
             if (!novelExists)
@@ -37,7 +37,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{chapterId}")]
-        public async Task<ActionResult<ChapterReadDto>> GetChapter(Guid novelId, Guid chapterId)
+        public async Task<ActionResult<ChapterReadDto>> GetChapter(int novelId, int chapterId)
         {
             var chapter = await _db.Chapters
                 .FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
@@ -51,7 +51,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ChapterReadDto>> CreateChapter(Guid novelId, [FromBody] CreateChapterDto createChapterDto)
+        public async Task<ActionResult<ChapterReadDto>> CreateChapter(int novelId, [FromBody] CreateChapterDto createChapterDto)
         {
             var novel = await _db.Novels.FindAsync(novelId);
             if (novel == null)
@@ -59,7 +59,6 @@ namespace Api.Controllers
 
             var chapter = _mapper.Map<Chapter>(createChapterDto);
 
-            chapter.Id = Guid.NewGuid();
             chapter.NovelId = novelId;
             chapter.CreatedAt = DateTime.UtcNow;
 
@@ -76,7 +75,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{chapterId}")]
-        public async Task<IActionResult> UpdateChapter(Guid novelId, Guid chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
+        public async Task<IActionResult> UpdateChapter(int novelId, int chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
         {
             var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)
@@ -94,7 +93,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{chapterId}")]
-        public async Task<IActionResult> DeleteChapter(Guid novelId, Guid chapterId)
+        public async Task<IActionResult> DeleteChapter(int novelId, int chapterId)
         {
             var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)

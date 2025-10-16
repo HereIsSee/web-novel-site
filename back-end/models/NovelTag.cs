@@ -7,10 +7,10 @@ namespace Api.Models
 {
     public class NovelTag
     {
-        public Guid NovelId { get; set; }
+        public int NovelId { get; set; }
         public Novel Novel { get; set; } = null!;
 
-        public Guid TagId { get; set; }
+        public int TagId { get; set; }
         public Tag Tag { get; set; } = null!;
     }
 }

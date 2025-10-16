@@ -13,7 +13,7 @@ namespace Api.Models
     }
     public class Novel
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         public string Title { get; set; } = null!;
         public string? Synopsis { get; set; }
@@ -26,7 +26,7 @@ namespace Api.Models
         public NovelStatus Status { get; set; } = NovelStatus.Draft;
 
         // Author (User)
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; } = null!;
 
         // Relationships

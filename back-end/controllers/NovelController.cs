@@ -35,7 +35,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<NovelReadDto>> GetNovel(Guid id)
+        public async Task<ActionResult<NovelReadDto>> GetNovel(int id)
         {
             var novel = await _db.Novels
                 .Include(n => n.User)
@@ -54,8 +54,13 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
         {
+            var user = await _db.Users.FindAsync(novelDto.UserId);
+            if (user == null)
+                return BadRequest($"User with id {novelDto.UserId} does not exist.");
+
+
             var novel = _mapper.Map<Novel>(novelDto);
-            novel.Id = Guid.NewGuid();
+
             novel.CreatedAt = DateTime.UtcNow;
 
             _db.Novels.Add(novel);
@@ -67,7 +72,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNovel(Guid id, [FromBody] UpdateNovelDto updatedNovelDto)
+        public async Task<IActionResult> UpdateNovel(int id, [FromBody] UpdateNovelDto updatedNovelDto)
         {
             var novel = await _db.Novels.FindAsync(id);
 
@@ -88,7 +93,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNovel(Guid id)
+        public async Task<IActionResult> DeleteNovel(int id)
         {
             var novel = await _db.Novels.FindAsync(id);
 
@@ -102,7 +107,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("{novelId}/tags/{tagId`}")]
-        public async Task<IActionResult> AddTagToNovel(Guid novelId, Guid tagId)
+        public async Task<IActionResult> AddTagToNovel(int novelId, int tagId)
         {
             var novel = await _db.Novels.FindAsync(novelId);
             if (novel == null) return NotFound();
@@ -120,7 +125,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{novelId}/tags/{tagId}")]
-        public async Task<IActionResult> RemoveTagFromNovel(Guid novelId, Guid tagId)
+        public async Task<IActionResult> RemoveTagFromNovel(int novelId, int tagId)
         {
             var novelTag = await _db.NovelTags.FirstOrDefaultAsync(nt => nt.NovelId == novelId && nt.TagId == tagId);
             if (novelTag == null) return NotFound();

@@ -8,7 +8,7 @@ namespace Api.DTOs
         public string? Synopsis { get; set; }
         public string? CoverImageUrl { get; set; }
 
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public NovelStatus Status { get; set; } = NovelStatus.Draft;
 
     }
@@ -23,7 +23,7 @@ namespace Api.DTOs
 
     public class NovelReadDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Synopsis { get; set; }
         public string? CoverImageUrl { get; set; }

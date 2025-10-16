@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserReadDto>> GetUser(Guid id)
+        public async Task<ActionResult<UserReadDto>> GetUser(int id)
         {
             var user = await _db.Users.FindAsync(id);
             if (user == null)
@@ -50,7 +50,6 @@ namespace Api.Controllers
             user.PasswordHash = hasher.HashPassword(user, dto.Password);
 
             user.JoinedAt = DateTime.UtcNow;
-            user.Id = Guid.NewGuid();
 
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
@@ -61,7 +60,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDto updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto updatedUser)
         {
             var user = await _db.Users.FindAsync(id);
             if (user == null)
@@ -78,7 +77,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _db.Users.FindAsync(id);
             if (user == null)

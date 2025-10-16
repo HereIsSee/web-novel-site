@@ -5,10 +5,10 @@ namespace Api.DTOs
     public class CreateCommentDto
     {
         public string Content { get; set; } = null!;
-        public Guid UserId { get; set; }
-        public Guid? NovelId { get; set; }
-        public Guid? ChapterId { get; set; }
-        public Guid? ParentCommentId { get; set; }
+        public int UserId { get; set; }
+        public int? NovelId { get; set; }
+        public int? ChapterId { get; set; }
+        public int? ParentCommentId { get; set; }
     }
 
     public class UpdateCommentDto
@@ -18,7 +18,7 @@ namespace Api.DTOs
 
     public class CommentReadDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

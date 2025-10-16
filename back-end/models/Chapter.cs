@@ -7,7 +7,7 @@ namespace Api.Models
 {
     public class Chapter
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
@@ -18,7 +18,7 @@ namespace Api.Models
         public int Views { get; set; } = 0;
 
         // Parent Novel
-        public Guid NovelId { get; set; }
+        public int NovelId { get; set; }
         public Novel Novel { get; set; } = null!;
 
         // Comments

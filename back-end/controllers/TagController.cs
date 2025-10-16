@@ -25,7 +25,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tag>> GetTag(Guid id)
+        public async Task<ActionResult<Tag>> GetTag(int id)
         {
             var tag = await _db.Tags.FindAsync(id);
             if (tag == null)
@@ -37,7 +37,6 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Tag>> CreateTag([FromBody] Tag tag)
         {
-            tag.Id = Guid.NewGuid();
             _db.Tags.Add(tag);
             await _db.SaveChangesAsync();
 
@@ -45,7 +44,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("id")]
-        public async Task<IActionResult> UpdateTag(Guid id, [FromBody] Tag updatedTag)
+        public async Task<IActionResult> UpdateTag(int id, [FromBody] Tag updatedTag)
         {
             var tag = await _db.Tags.FindAsync(id);
             if (tag == null)
@@ -57,7 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("id")]
-        public async Task<IActionResult> DeleteTag(Guid id)
+        public async Task<IActionResult> DeleteTag(int id)
         {
             var tag = await _db.Tags.FindAsync(id);
             if (tag == null)

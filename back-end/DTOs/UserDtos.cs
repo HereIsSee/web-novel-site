@@ -1,11 +1,15 @@
 using Api.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Api.DTOs
 {
     public class CreateUserDto
     {
+        [Required]
         public string UserName { get; set; } = null!;
+        [Required]
         public string Email { get; set; } = null!;
+        [Required]
         public string Password { get; set; } = null!; // raw password, to be hashed in service
         public string? DisplayName { get; set; }
         public string? Bio { get; set; }
@@ -23,7 +27,7 @@ namespace Api.DTOs
 
     public class UserReadDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string? DisplayName { get; set; }
@@ -35,7 +39,7 @@ namespace Api.DTOs
 
     public class UserSummaryDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string UserName { get; set; } = null!;
         public string? DisplayName { get; set; }
         public string? AvatarUrl { get; set; }

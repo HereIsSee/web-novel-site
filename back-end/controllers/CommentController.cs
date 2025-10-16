@@ -34,7 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CommentReadDto>> GetComment(Guid id)
+        public async Task<ActionResult<CommentReadDto>> GetComment(int id)
         {
             var comment = await _db.Comments
                 .Include(c => c.User)
@@ -54,7 +54,6 @@ namespace Api.Controllers
         {
             var comment = _mapper.Map<Comment>(createdComment);
 
-            comment.Id = Guid.NewGuid();
             comment.CreatedAt = DateTime.UtcNow;
 
             _db.Comments.Add(comment);
@@ -70,7 +69,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentDto updatedCommentDto)
+        public async Task<IActionResult> UpdateComment(int id, [FromBody] UpdateCommentDto updatedCommentDto)
         {
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
@@ -87,7 +86,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(Guid id)
+        public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)

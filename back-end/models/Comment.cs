@@ -7,7 +7,7 @@ namespace Api.Models
 {
     public class Comment
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public int Id { get; set; }
 
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -17,17 +17,17 @@ namespace Api.Models
         public bool IsEdited => UpdatedAt.HasValue;
 
         // Relationships
-        public Guid UserId { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; } = null!;
 
-        public Guid? NovelId { get; set; }
+        public int? NovelId { get; set; }
         public Novel? Novel { get; set; }
 
-        public Guid? ChapterId { get; set; }
+        public int? ChapterId { get; set; }
         public Chapter? Chapter { get; set; }
 
         // For replies (self-referencing relationship)
-        public Guid? ParentCommentId { get; set; }
+        public int? ParentCommentId { get; set; }
         public Comment? ParentComment { get; set; }
         public ICollection<Comment>? Replies { get; set; } = new List<Comment>();
 
