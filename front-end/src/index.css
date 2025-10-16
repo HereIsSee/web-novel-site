@@ -504,7 +504,7 @@ button.show-more{
   align-self: center;
   width: 90vw;
   height: 100%;
-  background-color: var(--dark-color)
+  background-color: var(--dark-light-color)
 }
 .profile-header{
   border: 1px var(--light-white-border-color) solid;

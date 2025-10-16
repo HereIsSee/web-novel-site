@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,28 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add Authentication
+// var jwtKey = builder.Configuration["Jwt:Key"];
+// var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateLifetime = true,
+//             ValidateIssuerSigningKey = true,
+//             ValidIssuer = jwtIssuer,
+//             ValidAudience = jwtIssuer,
+//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+//         };
+//     });
+
+// Add Authorization
+builder.Services.AddAuthorization();
 
 // Controllers
 builder.Services.AddControllers()
@@ -33,8 +58,8 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection(); // redirects from http to https
 app.UseRouting();
 
-// app.UseAuthentication(); // optional. Will need do define a service for it to work
-// app.UseAuthorization(); // optional.
+// app.UseAuthentication();
+// app.UseAuthorization();
 
 app.MapControllers();
 
