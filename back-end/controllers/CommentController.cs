@@ -52,6 +52,24 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CommentReadDto>> CreateComment([FromBody] CreateCommentDto createdComment)
         {
+            if (createdComment.NovelId == null && createdComment.ChapterId == null)
+                return BadRequest("Comment must be associated with either a Novel or a Chapter.");
+            else if (createdComment.NovelId != null)
+            {
+                var novel = await _db.Novels.FindAsync(createdComment.NovelId);
+                if (novel == null) return NotFound("Novel not found");
+            }
+            else
+            {
+                var chapter = await _db.Chapters.FindAsync(createdComment.ChapterId);
+                if (chapter == null)
+                    return NotFound("Chapter not found");
+            }
+            var user = await _db.Users.FindAsync(createdComment.UserId);
+            if (user == null)
+                return BadRequest("Invalid UserId: user does not exist.");
+
+            
             var comment = _mapper.Map<Comment>(createdComment);
 
             comment.CreatedAt = DateTime.UtcNow;
@@ -73,11 +91,10 @@ namespace Api.Controllers
         {
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
-                return NotFound();
+                return NotFound("Comment not found");
 
-            var updatedComment = _mapper.Map<Comment>(updatedCommentDto);
+            _mapper.Map(updatedCommentDto, comment);
 
-            comment.Content = updatedComment.Content;
             comment.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
@@ -90,7 +107,7 @@ namespace Api.Controllers
         {
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
-                return NotFound();
+                return NotFound("Comment not found");
 
             _db.Comments.Remove(comment);
             await _db.SaveChangesAsync();

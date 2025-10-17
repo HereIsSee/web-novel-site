@@ -79,13 +79,10 @@ namespace Api.Controllers
         {
             var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)
-                return NotFound();
+                return NotFound("Chapter not found");
 
-            var updatedChapter = _mapper.Map<Chapter>(updatedChapterDto);
+             _mapper.Map(updatedChapterDto, chapter);
             
-            chapter.Title = updatedChapter.Title;
-            chapter.Content = updatedChapter.Content;
-            chapter.ChapterNumber = updatedChapter.ChapterNumber;
             chapter.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();

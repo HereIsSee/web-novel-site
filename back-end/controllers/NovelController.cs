@@ -79,13 +79,9 @@ namespace Api.Controllers
             if (novel == null)
                 return NotFound();
 
-            var updatedNovel = _mapper.Map<Novel>(updatedNovelDto);
+            _mapper.Map(updatedNovelDto, novel);
 
-            novel.Title = updatedNovel.Title;
-            novel.Synopsis = updatedNovel.Synopsis;
-            novel.CoverImageUrl = updatedNovel.CoverImageUrl;
             novel.UpdatedAt = DateTime.UtcNow;
-            novel.Status = updatedNovel.Status;
 
             await _db.SaveChangesAsync();
 
