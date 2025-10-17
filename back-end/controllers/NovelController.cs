@@ -44,7 +44,7 @@ namespace Api.Controllers
                 .FirstOrDefaultAsync(n => n.Id == id);
 
             if (novel == null)
-                return NotFound();
+                return NotFound("Novel not found");
 
             var novelDto = _mapper.Map<NovelReadDto>(novel);
 
@@ -54,10 +54,12 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
         {
+            if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
+                return BadRequest($"Invalid novel status: {novelDto.Status}");
+            
             var user = await _db.Users.FindAsync(novelDto.UserId);
             if (user == null)
                 return BadRequest($"User with id {novelDto.UserId} does not exist.");
-
 
             var novel = _mapper.Map<Novel>(novelDto);
 
@@ -74,6 +76,9 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateNovel(int id, [FromBody] UpdateNovelDto updatedNovelDto)
         {
+            if (updatedNovelDto.Status != null && !Enum.IsDefined(typeof(NovelStatus), updatedNovelDto.Status))
+                return BadRequest($"Invalid novel status: {updatedNovelDto.Status}");
+            
             var novel = await _db.Novels.FindAsync(id);
 
             if (novel == null)

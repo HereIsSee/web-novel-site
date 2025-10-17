@@ -57,18 +57,25 @@ namespace Api.Controllers
             else if (createdComment.NovelId != null)
             {
                 var novel = await _db.Novels.FindAsync(createdComment.NovelId);
-                if (novel == null) return NotFound("Novel not found");
+                if (novel == null) return BadRequest("Invalid NovelId: novel does not exist.");
             }
             else
             {
                 var chapter = await _db.Chapters.FindAsync(createdComment.ChapterId);
                 if (chapter == null)
-                    return NotFound("Chapter not found");
+                    return BadRequest("Invalid ChapterId: chapter does not exist");
             }
+
             var user = await _db.Users.FindAsync(createdComment.UserId);
             if (user == null)
                 return BadRequest("Invalid UserId: user does not exist.");
-
+            
+            if (createdComment.ParentCommentId != null)
+            {
+                var parentComment = await _db.Comments.FindAsync(createdComment.ParentCommentId);
+                if (parentComment == null)
+                    return BadRequest("Invalid ParentCommentId: comment does not exist");
+            }
             
             var comment = _mapper.Map<Comment>(createdComment);
 
