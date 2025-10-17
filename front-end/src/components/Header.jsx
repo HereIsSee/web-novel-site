@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import DefaultAvatarImage from '/avatar_default.webp';
 import DropDownMenu from './DropDownMenu';
 

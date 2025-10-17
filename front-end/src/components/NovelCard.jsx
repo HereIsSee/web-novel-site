@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import NovelCover from '/the-legend-of-william-oh.png';
 
