@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import InputField from '../components/FormFields/InputField'
 import Button from '../components/FormFields/Button'
+import { useToast } from '../context/ToastContext';
 
 const Register = ()=>{
+    const { showToast } = useToast();
+
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -11,6 +14,8 @@ const Register = ()=>{
 
     const onSubmit = (e)=>{
         e.preventDefault();
+
+        showToast("Login was successful!", "success");
     }
 
     return(

@@ -1,0 +1,52 @@
+.toastContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 250px;
+  max-width: 350px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out;
+}
+
+.success {
+  background-color: #4caf50;
+}
+
+.error {
+  background-color: #f44336;
+}
+
+.info {
+  background-color: #2196f3;
+}
+
+.warning {
+  background-color: #ff9800;
+}
+
+.closeButton {
+  margin-left: 16px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
