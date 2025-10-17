@@ -10,8 +10,10 @@ const Home = () =>{
     useEffect(()=>{
         const fetchNovels = () =>{
             fetch('/api/novels').then(response => {
-                if (response.status >= 400){
+                if (response.status >= 500)
                     throw new Error("Server Error");
+                else if (response.status >= 400){
+                    throw new Error("Client side Error");
                 }
                 return response.json();
             })
@@ -39,9 +41,23 @@ const Home = () =>{
                     </>
                 ) : (
                     <div className='card'>
+                        {novels.map((novel) => {
+                            console.log(novel);
+                             return (
+                                <NovelCard 
+                                    key={novel.id}
+                                    id={novel.id}
+                                    title={novel.title}
+                                    synopsis={novel.synopsis}
+                                    coverImageUrl={novel.coverImageUrl}
+
+                                    stats={novel.views}
+                                />
+                            )
+                        })}
+                        {/* <NovelCard />
                         <NovelCard />
-                        <NovelCard />
-                        <NovelCard />
+                        <NovelCard /> */}
                         {console.log(novels)}
                     </div>
                 )}

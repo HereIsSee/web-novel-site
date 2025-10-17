@@ -1,4 +1,4 @@
-const NovelSummary = () =>{
+const NovelSummary = ({synopsis}) =>{
     return(
         <div className="novel-summary">
             <p>

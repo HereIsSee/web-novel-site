@@ -5,10 +5,9 @@ import NovelCover from '/the-legend-of-william-oh.png';
 import NovelTags from './Novel/NovelTags';
 import NovelSummary from './Novel/NovelSummary';
 
-const NovelCard = ()=>{
+const NovelCard = ({id, title, synopsis, coverImageUrl, stats})=>{
     const [showMore, setShowMore] = useState(false);
     
-    const id = '21';
     const novelSlog = 'the-legend-of-william-oh';
     
     return(
@@ -17,7 +16,7 @@ const NovelCard = ()=>{
                 <img src={NovelCover} alt="novel cover" />
             </Link>
             <div className='novel-card-info'>
-                <Link className="novel-card-title" to={`/novels/${id}/${novelSlog}`}>Novel Title</Link>
+                <Link className="novel-card-title" to={`/novels/${id}/${novelSlog}`}>{title}</Link>
                 <NovelTags />
                 <div className='novel-card-statistics'>
                     <div>
@@ -33,7 +32,7 @@ const NovelCard = ()=>{
                     </div>
                 </div>
 
-                {showMore && <NovelSummary />}
+                {showMore && <NovelSummary synopsis={synopsis}/>}
             </div>
             <button className="show-more"onClick={()=> setShowMore(!showMore)}>
                 {showMore ? '-' : '+'}
