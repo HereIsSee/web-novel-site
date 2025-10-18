@@ -1,9 +1,18 @@
+import { IoBookSharp } from "react-icons/io5";
+import NovelReadLaterCard from '../components/NovelReadLaterCard';
+import SectionWrapper from '../components/SectionWrapper';
 const ReadLater = () =>{
 
     return(
-        <div>
-
-        </div>
+        <SectionWrapper
+            title="Read Later"
+            Icon={IoBookSharp}
+        >
+            <NovelReadLaterCard />
+            <NovelReadLaterCard />
+            <NovelReadLaterCard />
+                
+        </SectionWrapper>
     );
 }
 
