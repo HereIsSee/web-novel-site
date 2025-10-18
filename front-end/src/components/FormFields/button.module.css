@@ -59,3 +59,23 @@
 .gray-blue:hover{
   background-color: rgb(80, 80, 80);;
 }
+.white-text-only{
+  border: none;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  background-color: transparent;
+}
+.white-text-only:hover{
+  color: rgb(177, 177, 177);
+}
+.red-white{
+  padding: 10px 20px;
+  background-color: rgb(153, 17, 17);
+  color: white;
+  font-size: 24px;
+  border: none;
+}
+.red-white:hover{
+  background-color: rgb(247, 25, 25);
+}
