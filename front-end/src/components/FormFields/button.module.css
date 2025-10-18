@@ -23,12 +23,25 @@
   background-color: var(--dark-blue-color);
 }
 .text-only-gray{
-    color: rgb(160, 160, 160);
-    border: none;
-    background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.3s ease-in;
+  color: rgb(160, 160, 160);
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.3s ease-in;
 }
-
 .text-only-gray:hover{
-    color: rgb(126, 126, 126);
+  color: rgb(126, 126, 126);
+}
+.gray-blue{
+  padding: 10px 30px;
+  background-color: rgb(61, 61, 61);
+  color: var(--light-blue-color);
+  font-weight: bold;
+  font-size: 24px;
+  border-radius: 20px;
+  border: none;
+  padding: 30px 50px;
+  transition: background-color 0.3s ease-in;
+}
+.gray-blue:hover{
+  background-color: rgb(80, 80, 80);;
 }

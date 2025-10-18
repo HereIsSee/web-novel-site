@@ -1,6 +1,6 @@
 import ButtonStyles from './button.module.css'
 
-const Styles = ['dark-golden', 'blue-white', 'text-only-gray']
+const Styles = ['dark-golden', 'blue-white', 'text-only-gray', 'gray-blue']
 
 const Button = ({ children, styleType = 'blue-white', type = 'button', onClick }) => {
   

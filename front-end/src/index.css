@@ -591,4 +591,84 @@ button.show-more{
 
 /* Profile DONE */
 
+/* Author Dashboard START */
+
+.author-dashboard-container{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.author-dashboard-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  background-color: var(--dark-color);
+}
+.author-dashboard-header > h3 {
+  font-size: 32px;
+}
+.author-dashboard-info{
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr) );
+  align-items: center;
+}
+.author-dashboard-info .info{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.author-dashboard-novels{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+.author-dashboard-novels .novels{
+  align-self: stretch;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr) );
+  align-items: center;
+}
+.author-dashboard-novels .novel{
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  border: 2px solid var(--light-white-border-color);
+  border-radius: 10px;
+  background-color: var(--dark-light-color);
+}
+.author-dashboard-novels .novel > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+.author-dashboard-novels .novel .title{
+  font-size: 24px;
+}
+.author-dashboard-novels .novel .rating{
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.author-dashboard-novels .novel img{
+  width: 100px;
+  border-radius: 10px;
+}
+/* Author Dashboard DONE */
+
 /* CSS DONE */
