@@ -693,23 +693,6 @@ button.show-more{
 
 /* Follows START */
 
-.follows-container{
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-.follows-header{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: flex-start;
-  padding: 10px;
-  border-bottom: 2px solid var(--light-white-border-color);
-}
-.follows-header h3{
-  color: var(--golden-color);
-  font-size: 32px;
-}
 .novel-follow-card{
   position: relative;
   display: flex;
@@ -844,5 +827,27 @@ a.novel-favorite-card-title:focus, a.novel-favorite-card-title:hover{
 }
 
 /* Favorites DONE */
+
+/* Section Wrapper START */
+
+.section-container{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.section-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 10px;
+  border-bottom: 2px solid var(--light-white-border-color);
+}
+.section-header h3{
+  color: var(--golden-color);
+  font-size: 32px;
+}
+
+/* Section Wrapper DONE */
 
 /* CSS DONE */
