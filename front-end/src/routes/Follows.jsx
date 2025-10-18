@@ -1,9 +1,11 @@
+import App from '../App';
+
 const Follows = () =>{
 
     return(
-        <div>
+        <App>
 
-        </div>
+        </App>
     );
 }
 

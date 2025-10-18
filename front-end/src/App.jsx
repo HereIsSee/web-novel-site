@@ -6,11 +6,12 @@ import CreateNovel from './routes/CreateNovel';
 function App({children}) {
 
   return (
-    <div>
+    <div className="app-layout">
       <Header />
-      {/* <Novel /> */}
-      {/* <CreateNovel /> */}
-      {children}
+
+      <main className="app-content">
+        {children}
+      </main>
     </div>
   )
 }

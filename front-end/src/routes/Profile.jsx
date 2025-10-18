@@ -17,7 +17,7 @@ const Profile = () =>{
                     <ProfileHeader />
                     <div className='profile-information card'>
                         <h3>Personal Information</h3>
-                        {/* <hr /> */}
+                        
                         <div className="item">
                             <div>Joined At</div>
                             <div> 5/23/2023, 7:32 PM</div>
