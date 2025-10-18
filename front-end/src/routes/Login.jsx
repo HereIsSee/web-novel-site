@@ -39,7 +39,7 @@ const Login = ()=>{
                         />
                     </div>
 
-                    <Button styleType="blue-white" type="submit">Sign in</Button>
+                    <Button styleType="blue-white-rounded" type="submit">Sign in</Button>
                 </form>
 
                 <Link to='/register'>Create a new account</Link>

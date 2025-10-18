@@ -72,7 +72,7 @@ const Register = ()=>{
                         />
                     </div>
 
-                    <Button styleType="blue-white" type="submit">Register</Button>
+                    <Button styleType="blue-white-rounded" type="submit">Register</Button>
                 </form>
 
                 <Link to='/login'>Already have an account? Login</Link>

@@ -463,6 +463,7 @@ a.novel-card-title:focus, a.novel-card-title:hover{
   text-decoration-thickness: 2px; 
 }
 .novel-card-info{
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -500,6 +501,9 @@ button.show-more{
   .novel-card{
     flex-direction: column;
     gap: 0px;
+  }
+  .novel-card-title{
+    text-align: center;
   }
   .novel-card-info{
     align-items: center;
@@ -686,5 +690,86 @@ button.show-more{
   border-radius: 10px;
 }
 /* Author Dashboard DONE */
+
+/* Follows START */
+
+.follows-container{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.follows-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 10px;
+  border-bottom: 2px solid var(--light-white-border-color);
+}
+.follows-header h3{
+  color: var(--golden-color);
+  font-size: 32px;
+}
+.novel-follow-card{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  border-bottom: 2px solid var(--light-white-border-color);
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+.novel-follow-card img{
+  height: 250px;
+}
+a.novel-follow-card-title{
+  font-size: 42px;
+  color: var(--golden-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+a.novel-follow-card-title:focus, a.novel-follow-card-title:hover{
+  text-decoration: underline;
+  text-decoration-thickness: 2px; 
+}
+.novel-follow-card-info{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.novel-follow-card h1{
+  font-size: 48px;
+  color: var(--golden-color);
+}
+.novel-follow-info{
+  position: relative;
+}
+.novel-follow-info > div{
+  font-size: 18px;
+}
+.novel-follow-author{
+  position: absolute;
+  top:0px;
+  right:0px;
+}
+.novel-follow-author span{
+  color: var(--golden-color);
+  font-weight: bold;
+}
+.last-update, .last-read{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+@media(max-width: 900px){
+  .novel-follow-card img{
+    display: none;
+  }
+}
+/* Follows START */
 
 /* CSS DONE */

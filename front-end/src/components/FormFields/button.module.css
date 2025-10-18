@@ -1,5 +1,16 @@
-.dark-golden{
+.left {
+  align-self: flex-start;
+}
+
+.center {
   align-self: center;
+}
+
+.right {
+  align-self: flex-end;
+}
+
+.dark-golden{
   padding: 10px 30px ;
   background-color: var(--dark-light-color);
   color:var(--golden-color);
@@ -11,15 +22,18 @@
   background-color: var(--dark-very-light-color);
 }
 .blue-white{
-  align-self: center;
   padding: 10px 30px;
   background-color: var(--light-blue-color);
   color: white;
   font-size: 24px;
-  border-radius: 20px;
   border: none;
 }
-.blue-white:hover{
+.blue-white-rounded{
+  composes: blue-white;
+  border-radius: 20px;
+
+}
+.blue-white:hover, .blue-white-rounded:hover{
   background-color: var(--dark-blue-color);
 }
 .text-only-gray{
