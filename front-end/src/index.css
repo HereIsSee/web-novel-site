@@ -850,4 +850,41 @@ a.novel-favorite-card-title:focus, a.novel-favorite-card-title:hover{
 
 /* Section Wrapper DONE */
 
+/* Chapter START */
+
+.chapter-header{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  background-color: var(--ocean-light-blue-color);
+  font-size: 48px;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+.title-author span{
+  font-size: 32px;
+}
+.title-author .author{
+  font-size: 42px;
+}
+.chapter-header .stars{
+  font-size: 42px;
+  white-space: nowrap;
+}
+.chapter-buttons{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 2px solid var(--light-white-border-color);
+}
+.chapter-content p{
+  padding: 20px 0;
+  font-size: 22px;
+}
+/* Chapter DONE */
+
 /* CSS DONE */

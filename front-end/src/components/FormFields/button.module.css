@@ -9,6 +9,9 @@
 .right {
   align-self: flex-end;
 }
+.stretch{
+  align-self: stretch;
+}
 
 .dark-golden{
   padding: 10px 30px ;
