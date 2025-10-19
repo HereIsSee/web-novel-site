@@ -3,9 +3,11 @@ import App from '../App';
 import InputField from '../components/FormFields/InputField';
 import Button from '../components/FormFields/Button';
 import DropDownListSelection from '../components/FormFields/DropDownListSelection';
+import MultiRangeSlider from '../components/FormFields/MultiRangeSlider';
 
 const Search = () =>{
     const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+
 
     return(
         <App>
@@ -13,7 +15,7 @@ const Search = () =>{
                 <div className='basic-search'>
                     <InputField 
                         styleType='search'
-                        placeHolder='Search for title...'
+                        placeholder='Search for title...'
                     />
                     <Button>
                         Search
@@ -36,7 +38,7 @@ const Search = () =>{
                             </label>
                             <InputField 
                                 styleType='search'
-                                placeHolder='Author...'
+                                placeholder='Author...'
                                 name='author-name'
                                 id='author-name'
                             />
@@ -57,6 +59,7 @@ const Search = () =>{
                             >
                                 Number of Pages
                             </label>
+                            <MultiRangeSlider/>
                         </div>
 
                         <div className="search-item">
@@ -64,6 +67,13 @@ const Search = () =>{
                             >
                                 Rating
                             </label>
+
+                            <MultiRangeSlider
+                                minValue="0"
+                                maxValue="5"
+                                step="0.01"
+                                wholeNumbers={false}
+                            />
                         </div>
 
                         <div className="search-item">
