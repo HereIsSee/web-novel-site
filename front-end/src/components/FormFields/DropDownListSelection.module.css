@@ -1,0 +1,70 @@
+.selection {
+  position: relative;
+  width: 100%;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  background-color: rgb(22, 22, 22);
+  border: 1px solid var(--light-white-border-color);
+  padding: 8px;
+  cursor: text;
+}
+
+.input {
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.selectedTag {
+  display: flex;
+  align-items: center;
+  background-color: #3379b7;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.tagSelection {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--dark-color);
+  border: 1px solid var(--light-white-border-color);
+  transform: translateY(5px);
+  z-index: 10;
+}
+
+.tag {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.tag:hover {
+  background-color: #3379b7a8;
+}
+
+.tagName {
+  font-size: 18px;
+  color: white;
+}

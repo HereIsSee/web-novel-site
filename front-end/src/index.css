@@ -887,4 +887,27 @@ a.novel-favorite-card-title:focus, a.novel-favorite-card-title:hover{
 }
 /* Chapter DONE */
 
+/* Search START */
+.search {   margin-top: 20px }
+.search, .advanced-search{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.basic-search{
+  display: flex;
+  flex-direction: row;
+}
+.search-item{
+  display: flex;
+  flex-direction: column;
+}
+.search-item label{
+  font-size: 22px;
+}
+.search-results{
+  margin-top: 20px;
+}
+/* Search DONE */
+
 /* CSS DONE */
