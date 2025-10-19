@@ -30,11 +30,11 @@ const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true})
       if (e.target === minRangeRef.current) {
         setMin(maxVal - minGap);
       } else {
-        setMax((minVal + minGap).toFixed(2));
+        setMax(wholeNumbers ? (minVal + minGap) : (minVal + minGap).toFixed(2));
       }
     } else {
       setMin(minVal);
-      setMax(maxVal.toFixed(2));
+      setMax(wholeNumbers ? maxVal : maxVal.toFixed(2));
     }
   };
 
