@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import NovelCover from '/the-legend-of-william-oh.png';
-import Button from './FormFields/Button';
+import Button from '../FormFields/Button';
 
 const NovelFavoriteCard = ({id})=>{
     const [expanded, setExpanded] = useState(false);

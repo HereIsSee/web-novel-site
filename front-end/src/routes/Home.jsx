@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
-import NovelCard from '../components/NovelCard';
 import App from '../App';
+import SectionWrapper from '../components/SectionWrapper';
+// import NovelCard from '../components/NovelCard';
+import NovelLatestUpdateCard from '../components/NovelCards/NovelLatestUpdateCard';
+import { FaRegClock } from "react-icons/fa";
 
 const Home = () =>{
     const [isLoading, setIsLoading] = useState(true);
@@ -37,29 +40,34 @@ const Home = () =>{
 
                 ) : error ? (
                     <>
-                        <h1>{error}</h1>
+                        <h1>Something went wrong</h1>
                     </>
                 ) : (
-                    <div className='card'>
-                        {novels.map((novel) => {
-                            console.log(novel);
-                             return (
-                                <NovelCard 
-                                    key={novel.id}
-                                    id={novel.id}
-                                    title={novel.title}
-                                    synopsis={novel.synopsis}
-                                    coverImageUrl={novel.coverImageUrl}
+                    <>
+                        <SectionWrapper
+                            title="Latest Updates"
+                            Icon={FaRegClock}
+                        >
+                            {novels.map((novel) => {
+                                console.log(novel);
+                                return (
+                                    <NovelLatestUpdateCard 
+                                        key={novel.id}
+                                        id={novel.id}
+                                        title={novel.title}
+                                        // synopsis={novel.synopsis}
+                                        // coverImageUrl={novel.coverImageUrl}
 
-                                    stats={novel.views}
-                                />
-                            )
-                        })}
-                        {/* <NovelCard />
-                        <NovelCard />
-                        <NovelCard /> */}
-                        {console.log(novels)}
-                    </div>
+                                        // stats={novel.views}
+                                    />
+                                )
+                            })}
+                            
+                            {console.log(novels)}
+                        </SectionWrapper>
+
+
+                    </>
                 )}
             </div>
         </App>

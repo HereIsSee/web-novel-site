@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import NovelCover from '/the-legend-of-william-oh.png';
-import Button from './FormFields/Button';
+import Button from '../FormFields/Button';
 
-const NovelReadLaterCard = ({id})=>{
+const NovelReadLaterCard = ({id, title})=>{
     const [expanded, setExpanded] = useState(false);
     const [isOverflowing, setIsOverflowing] = useState(false);
     const summaryRef = useRef(null);

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import NovelCover from '/the-legend-of-william-oh.png';
-import Button from './FormFields/Button';
+import Button from '../FormFields/Button';
 
 const NovelFollowCard = ({id, title, allRead=false})=>{
     

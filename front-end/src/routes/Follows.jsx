@@ -1,19 +1,22 @@
+import App from "../App";
 import { FaBookmark } from "react-icons/fa";
-import NovelFollowCard from '../components/NovelFollowCard';
+import NovelFollowCard from '../components/NovelCards/NovelFollowCard';
 import SectionWrapper from '../components/SectionWrapper';
 
 const Follows = () =>{
 
     return(
-        <SectionWrapper
-            title="Follow List"
-            Icon={FaBookmark}
-        >
-            <NovelFollowCard />
-            <NovelFollowCard />
-            <NovelFollowCard />
-            <NovelFollowCard />
-        </SectionWrapper>
+        <App>
+            <SectionWrapper
+                title="Follow List"
+                Icon={FaBookmark}
+            >
+                <NovelFollowCard />
+                <NovelFollowCard />
+                <NovelFollowCard />
+                <NovelFollowCard />
+            </SectionWrapper>
+        </App>
     );
 }
 

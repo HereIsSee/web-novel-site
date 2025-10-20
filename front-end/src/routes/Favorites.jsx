@@ -1,20 +1,22 @@
 import App from '../App';
 import { TbStarFilled } from "react-icons/tb";
-import NovelFavoriteCard from '../components/NovelFavoriteCard';
+import NovelFavoriteCard from '../components/NovelCards/NovelFavoriteCard';
 import SectionWrapper from '../components/SectionWrapper';
 
 
 const Favorites = () =>{
 
     return(
-        <SectionWrapper
-            title="Favorites"
-            Icon={TbStarFilled}
-        >
-            <NovelFavoriteCard />
-            <NovelFavoriteCard />
-            <NovelFavoriteCard />
-        </SectionWrapper>
+        <App>
+            <SectionWrapper
+                title="Favorites"
+                Icon={TbStarFilled}
+            >
+                <NovelFavoriteCard />
+                <NovelFavoriteCard />
+                <NovelFavoriteCard />
+            </SectionWrapper>
+        </App>
     );
 }
 
