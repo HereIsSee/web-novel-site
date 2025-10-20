@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./MultiRangeSlider.module.css";
 
 const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true}) => {
@@ -9,7 +9,10 @@ const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true})
   const sliderProgress = useRef(null);
   const minGap = step;
 
-  const parseNumber = wholeNumbers ? parseInt : parseFloat;
+  const parseNumber = useCallback(
+    (value) => (wholeNumbers ? parseInt(value) : parseFloat(value)),
+    [wholeNumbers]
+  );
   
   // Update progress bar when min/max changes
   useEffect(() => {
@@ -19,7 +22,7 @@ const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true})
       sliderProgress.current.style.left = `${minPercent}%`;
       sliderProgress.current.style.right = `${100 - maxPercent}%`;
     }
-  }, [min, max]);
+  }, [min, max, parseNumber]);
 
   // Handle range input (slider)
   const onSliderChange = (e) => {
