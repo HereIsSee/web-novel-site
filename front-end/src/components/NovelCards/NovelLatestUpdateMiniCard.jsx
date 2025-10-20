@@ -1,22 +1,22 @@
 import { Link } from 'react-router-dom';
 import styles from './NovelCard.module.css';
-import NovelMiniCard from './NovelMiniCard';
+import NovelMiniCardLayout from './NovelMiniCardLayout';
 
 const NovelLatestUpdateMiniCard = ({id, title, coverUrl})=>{
     
     return(
-        <NovelMiniCard
+        <NovelMiniCardLayout
             id={id}
             title={title}
             coverUrl={coverUrl}
         >
-            <Link className={styles['chapter']} to={`/novels/${2}/chapters/${2}`}>
+            <Link className={styles['chapter']} to={`/novels/${2}/a/chapters/${2}/a`}>
                 Chapter Name
             </Link>
-            <Link className={styles['chapter']} to={`/novels/${2}/chapters/${2}`}>
+            <Link className={styles['chapter']} to={`/novels/${2}/a/chapters/${2}/a`}>
                 Chapter Name
             </Link>
-        </NovelMiniCard>
+        </NovelMiniCardLayout>
     );
 }
 export default NovelLatestUpdateMiniCard;

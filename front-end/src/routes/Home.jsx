@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import App from '../App';
 import SectionWrapper from '../components/SectionWrapper';
-// import NovelCard from '../components/NovelCard';
 import NovelLatestUpdateMiniCard from '../components/NovelCards/NovelLatestUpdateMiniCard';
-import NovelBasicMiniCard from '../components/NovelCards/NovelBasicMiniCard';
+import NovelMiniCard from '../components/NovelCards/NovelMiniCard';
 import { FaRegClock, FaTrophy } from "react-icons/fa";
 import { AiFillPlaySquare } from "react-icons/ai";
 
@@ -72,7 +71,7 @@ const Home = () =>{
                     {novels.map((novel, index) => {
                         if (index > 4) return;
                         return (
-                            <NovelBasicMiniCard 
+                            <NovelMiniCard 
                                 key={novel.id}
                                 id={novel.id}
                                 title={novel.title}
@@ -88,7 +87,7 @@ const Home = () =>{
                     {novels.map((novel, index) => {
                         if (index > 4) return;
                         return (
-                            <NovelBasicMiniCard 
+                            <NovelMiniCard 
                                 key={novel.id}
                                 id={novel.id}
                                 title={novel.title}

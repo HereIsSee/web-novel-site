@@ -5,6 +5,8 @@ import Button from '../components/FormFields/Button';
 import DropDownListSelection from '../components/FormFields/DropDownListSelection';
 import MultiRangeSlider from '../components/FormFields/MultiRangeSlider';
 import DropDown from '../components/FormFields/DropDown';
+import NovelCard from '../components/NovelCards/NovelCard';
+
 
 const allTags = [
   'Anti-Hero Lead',
@@ -147,7 +149,11 @@ const Search = () =>{
             </form>
 
             <div className='search-results card'>
-
+                <NovelCard 
+                    id="2" 
+                    title="The Legend Of Wiliam Oh"
+                    synopsis="asldkfjlksdajflksdjklf"
+                />
             </div>
         </App>
     );

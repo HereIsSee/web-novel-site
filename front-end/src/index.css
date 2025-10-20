@@ -128,7 +128,7 @@ a.logo:hover, a.logo:focus{
   display: flex;
   flex-direction: column;
   position: absolute;
-  transform: translate(-80%, 16%);
+  transform: translate(-80%, 1%);
   background-color: rgb(27, 27, 85);
   padding: 20px;
   width: 250px;
@@ -230,8 +230,6 @@ a.title:hover, a.title:focus{
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: var(--ocean-light-blue-color);
-  /* justify-content: space-around; */
 }
 .card{
   display: flex;
@@ -456,81 +454,6 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
     flex: 1;
   }
 }
-.novel-card{
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-  border-bottom: 2px solid var(--light-white-border-color);
-  margin-top: 10px;
-  padding-bottom: 10px;
-}
-.link-with-image{
-  flex-shrink: 0; 
-}
-.novel-card img{
-  height: 250px;
-}
-a.novel-card-title{
-  font-size: 42px;
-  color: var(--golden-color);
-  text-decoration: none;
-  font-weight: bold;
-}
-a.novel-card-title:focus, a.novel-card-title:hover{
-  text-decoration: underline;
-  text-decoration-thickness: 2px; 
-}
-.novel-card-info{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.novel-card h1{
-  font-size: 48px;
-  color: var(--golden-color);
-}
-.novel-card-statistics{
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-.novel-card-statistic{
-  font-size: 18px;
-  font-weight: bold;
-}
-button.show-more{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  width: 50px;
-  height: 50px;
-  font-size: 48px;
-  font-weight: bold;
-  color: var(--golden-color);
-  border: none;
-  background-color: rgba(0, 0, 0, 0);
-
-}
-@media(max-width: 900px){
-  .novel-card{
-    flex-direction: column;
-    gap: 0px;
-  }
-  .novel-card-title{
-    text-align: center;
-  }
-  .novel-card-info{
-    align-items: center;
-  }
-  .novel-card .link-with-image{
-    align-self: center;
-  }
-}
 /* Home DONE */
 
 /* Profile START */
@@ -709,143 +632,6 @@ button.show-more{
   border-radius: 10px;
 }
 /* Author Dashboard DONE */
-
-/* Follows START */
-
-.novel-follow-card{
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-  border-bottom: 2px solid var(--light-white-border-color);
-  margin-top: 10px;
-  padding-bottom: 10px;
-}
-.novel-follow-card img{
-  height: 250px;
-}
-a.novel-follow-card-title{
-  font-size: 42px;
-  color: var(--golden-color);
-  text-decoration: none;
-  font-weight: bold;
-}
-a.novel-follow-card-title:focus, a.novel-follow-card-title:hover{
-  text-decoration: underline;
-  text-decoration-thickness: 2px; 
-}
-.novel-follow-card-info{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.novel-follow-card h1{
-  font-size: 48px;
-  color: var(--golden-color);
-}
-.novel-follow-info{
-  position: relative;
-}
-.novel-follow-info > div{
-  font-size: 18px;
-}
-.novel-follow-author{
-  position: absolute;
-  top:0px;
-  right:0px;
-}
-.novel-follow-author span{
-  color: var(--golden-color);
-  font-weight: bold;
-}
-.last-update, .last-read{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  text-decoration: none;
-  font-size: 24px;
-}
-
-@media(max-width: 900px){
-  .novel-follow-card img{
-    display: none;
-  }
-}
-/* Follows START */
-
-/* Favorites START */
-
-.novel-favorite-card{
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  gap: 25px;
-  border-bottom: 2px solid var(--light-white-border-color);
-  margin-top: 10px;
-  padding-bottom: 10px;
-}
-.novel-favorite-card img{
-  height: 250px;
-}
-.novel-favorite-card .novel-summary{
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-.novel-favorite-card .novel-summary.collapsed{
-  max-height: 140px;
-}
-.novel-favorite-card .novel-summary.expanded{
-  max-height: 1000px;
-}
-a.novel-favorite-card-title{
-  font-size: 42px;
-  color: var(--golden-color);
-  text-decoration: none;
-  font-weight: bold;
-}
-a.novel-favorite-card-title:focus, a.novel-favorite-card-title:hover{
-  text-decoration: underline;
-  text-decoration-thickness: 2px; 
-}
-.novel-favorite-card-info{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.novel-favorite-card h1{
-  font-size: 48px;
-  color: var(--golden-color);
-}
-.novel-favorite-author span{
-  color: var(--golden-color);
-  font-weight: bold;
-}
-.novel-favorite-info{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 18px;
-}
-.novel-favorite-info .pages-number{
-  font-weight: bold;
-}
-
-@media(max-width: 900px){
-  .novel-favorite-card{
-    flex-direction: column;
-    gap: 0px;
-  }
-  .novel-favorite-card-title{
-    text-align: center;
-  }
-  .novel-favorite-card .link-with-image{
-    align-self: center;
-  }
-}
-
-/* Favorites DONE */
 
 /* Section Wrapper START */
 

@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import styles from './NovelCard.module.css';
 import { useState } from 'react';
 import NovelCover from '/the-legend-of-william-oh.png';
 
-import NovelTags from './Novel/NovelTags';
-import NovelSummary from './Novel/NovelSummary';
+import NovelTags from '../Novel/NovelTags';
+import NovelSummary from '../Novel/NovelSummary';
+
+import NovelCardLayout from './NovelCardLayout';
 
 const NovelCard = ({id, title, synopsis, coverImageUrl, stats})=>{
     const [showMore, setShowMore] = useState(false);
@@ -11,33 +14,35 @@ const NovelCard = ({id, title, synopsis, coverImageUrl, stats})=>{
     const novelSlog = 'the-legend-of-william-oh';
     
     return(
-        <div className='novel-card'>
-            <Link to={`/novels/${id}/${novelSlog}`} className="link-with-image">
-                <img src={NovelCover} alt="novel cover" />
-            </Link>
-            <div className='novel-card-info'>
-                <Link className="novel-card-title" to={`/novels/${id}/${novelSlog}`}>{title}</Link>
-                <NovelTags />
-                <div className='novel-card-statistics'>
-                    <div>
-                        <div className='novel-card-statistic'>10,032 FOLLOWERS</div>
-                        <div className='novel-card-statistic'>2,223 PAGES</div>
-                        <div className='novel-card-statistic'>13 CHAPTERS</div>
-                    </div>
+        <NovelCardLayout
+            id={id}
+            coverUrl={NovelCover}
 
-                    <div>
-                        <div className='novel-card-statistic'>4.82 STARS</div>
-                        <div className='novel-card-statistic'>23,002 VIEWS</div>
-                        <div className='novel-card-statistic'>7/6/2023, 8:23 PM</div>
-                    </div>
+        >
+            <Link className={styles["novel-card-title"]} to={`/novels/${id}/${novelSlog}`}>{title}</Link>
+            <NovelTags />
+            <div className={styles["novel-card-statistics"]}>
+                <div>
+                    <div className={styles["novel-card-statistic"]}>10,032 FOLLOWERS</div>
+                    <div className={styles["novel-card-statistic"]}>2,223 PAGES</div>
+                    <div className={styles["novel-card-statistic"]}>13 CHAPTERS</div>
                 </div>
 
-                {showMore && <NovelSummary synopsis={synopsis}/>}
+                <div>
+                    <div className={styles["novel-card-statistic"]}>4.82 STARS</div>
+                    <div className={styles["novel-card-statistic"]}>23,002 VIEWS</div>
+                    <div className={styles["novel-card-statistic"]}>7/6/2023, 8:23 PM</div>
+                </div>
             </div>
-            <button className="show-more"onClick={()=> setShowMore(!showMore)}>
+
+            {showMore && <NovelSummary synopsis={synopsis}/>}
+
+                <button className={styles["show-more"]} onClick={()=> setShowMore(!showMore)}>
                 {showMore ? '-' : '+'}
             </button>
-        </div>
+        </NovelCardLayout>
+
     );
 }
 export default NovelCard;
+

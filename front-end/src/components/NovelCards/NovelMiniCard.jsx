@@ -1,25 +1,26 @@
 import { Link } from 'react-router-dom';
 import styles from './NovelCard.module.css';
-import NovelCover from '/the-legend-of-william-oh.png';
-import Button from '../FormFields/Button';
+import NovelMiniCardLayout from './NovelMiniCardLayout';
+import NovelTags from '../Novel/NovelTags';
+import { MdGroups } from "react-icons/md";
 
-const NovelMiniCard = ({id, title, coverUrl, children})=>{
-    
-    const novelSlog = 'the-legend-of-william-oh';
+const NovelMiniCard = ({id, title, coverUrl})=>{
     
     return(
-        <div className={styles['mini-novel-card']}>
-            <Link to={`/novels/${id}/${novelSlog}`} className="link-with-image">
-                <img src={NovelCover} alt="novel cover" />
-            </Link>
-            <div>
-                <Link className={styles["mini-novel-card-title"]} to={`/novels/${2}/${novelSlog}`}>The Legend Of William Oh</Link>
-
-                <div className={styles["content"]}>
-                    {children}
+        <NovelMiniCardLayout
+            id={id}
+            title={title}
+            coverUrl={coverUrl}
+        >
+            <div className={styles['latest-update-chapters']}>
+                <NovelTags />
+                <div className={styles["follows"]}>
+                    <MdGroups style={{ display: "inline", verticalAlign: "middle", marginRight: "4px", marginTop: "-3px"}} size="30px"/>
+                    19,740 FOLLOWERS
                 </div>
+
             </div>
-        </div>
+        </NovelMiniCardLayout>
     );
 }
 export default NovelMiniCard;
