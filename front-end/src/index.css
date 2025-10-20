@@ -908,6 +908,11 @@ a.novel-favorite-card-title:focus, a.novel-favorite-card-title:hover{
   display: flex;
   flex-direction: column;
 }
+.search-item .order-by{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
 .search-item label{
   font-size: 22px;
 }

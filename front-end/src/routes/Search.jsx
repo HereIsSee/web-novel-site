@@ -4,6 +4,34 @@ import InputField from '../components/FormFields/InputField';
 import Button from '../components/FormFields/Button';
 import DropDownListSelection from '../components/FormFields/DropDownListSelection';
 import MultiRangeSlider from '../components/FormFields/MultiRangeSlider';
+import DropDown from '../components/FormFields/DropDown';
+
+const allTags = [
+  'Anti-Hero Lead',
+  'Romantic Comedy',
+  'Tragic Hero',
+  'Redemption Arc',
+  'Found Family',
+  'Enemies to Lovers'
+];
+const allStatus = [
+    'All',
+    'Completed',
+    'Dropped',
+    'Ongoing',
+    'Hiatus',
+    'Inactive'
+];
+const orderBy = [
+    'Last Update',
+    'Release Date',
+    'Followers',
+    'Number of Pages',
+    'Views',
+    'Title',
+    'Author',
+]
+
 
 const Search = () =>{
     const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
@@ -51,7 +79,10 @@ const Search = () =>{
                                 Tags
                             </label>
                             
-                            <DropDownListSelection />
+                            <DropDownListSelection
+                                placeholder="Search tags..."
+                                items={allTags}
+                            />
                         </div>
                         
                         <div className="search-item">
@@ -81,6 +112,11 @@ const Search = () =>{
                             >
                                 Status
                             </label>
+
+                            <DropDownListSelection
+                                placeholder="Search status..."
+                                items={allStatus}
+                            />
                         </div>
 
                         <div className="search-item">
@@ -88,6 +124,19 @@ const Search = () =>{
                             >
                                 Order by
                             </label>
+                            <div className="order-by">
+                                <DropDown 
+                                    items={orderBy}
+                                    name="orderBy"
+                                    id="orderBy"
+                                />
+
+                                <DropDown 
+                                    items={["Descending", "Ascending"]}
+                                    name="sortOrder"
+                                    id="sortOrder"
+                                />
+                            </div>
                         </div>
 
                         <Button align='stretch'>

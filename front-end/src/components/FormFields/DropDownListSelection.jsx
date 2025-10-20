@@ -1,36 +1,27 @@
 import { useState, useRef } from 'react';
 import styles from './DropDownListSelection.module.css';
 
-const allTags = [
-  'Anti-Hero Lead',
-  'Romantic Comedy',
-  'Tragic Hero',
-  'Redemption Arc',
-  'Found Family',
-  'Enemies to Lovers'
-];
-
-const DropDownListSelection = () => {
-  const [showTagSelection, setShowTagSelection] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
+const DropDownListSelection = ({items, placeholder}) => {
+  const [showItemSelection, setShowItemSelection] = useState(false);
+  const [selectedItems, setselectedItems] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const searchField = useRef(null);
 
-  const filteredTags = allTags.filter(
-    (tag) =>
-      tag.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedTags.includes(tag)
+  const filteredItems = items.filter(
+    (item) =>
+      item.toLowerCase().includes(inputValue.toLowerCase()) &&
+      !selectedItems.includes(item)
   );
 
-  const handleTagClick = (tag) => {
-    setSelectedTags([...selectedTags, tag]);
+  const handleItemClick = (item) => {
+    setselectedItems([...selectedItems, item]);
     setInputValue('');
-    setShowTagSelection(false);
+    setShowItemSelection(false);
     searchField.current.focus();
   };
 
-  const handleRemoveTag = (tagToRemove) => {
-    setSelectedTags(selectedTags.filter((tag) => tag !== tagToRemove));
+  const handleRemoveItem = (itemToRemove) => {
+    setselectedItems(selectedItems.filter((item) => item !== itemToRemove));
   };
 
   return (
@@ -39,13 +30,13 @@ const DropDownListSelection = () => {
         className={styles.inputContainer}
         onClick={() => searchField.current.focus()}
       >
-        {selectedTags.map((tag) => (
-          <div key={tag} className={styles.selectedTag}>
-            <span>{tag}</span>
+        {selectedItems.map((item) => (
+          <div key={item} className={styles.selectedItem}>
+            <span>{item}</span>
             <button
               type="button"
               className={styles.removeButton}
-              onClick={() => handleRemoveTag(tag)}
+              onClick={() => handleRemoveItem(item)}
             >
               ×
             </button>
@@ -57,22 +48,22 @@ const DropDownListSelection = () => {
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onClick={() => setShowTagSelection(!showTagSelection)}
-          onBlur={() => setShowTagSelection(false)} 
-          placeholder="Search tags..."
+          onClick={() => setShowItemSelection(!showItemSelection)}
+          onBlur={() => setShowItemSelection(false)} 
+          placeholder={placeholder}
           className={styles.input}
         />
       </div>
 
-      {showTagSelection && filteredTags.length > 0 && (
-        <div className={styles.tagSelection}>
-          {filteredTags.map((tag) => (
+      {showItemSelection && filteredItems.length > 0 && (
+        <div className={styles.itemSelection}>
+          {filteredItems.map((item) => (
             <div
-              key={tag}
-              className={styles.tag}
-              onMouseDown={() => handleTagClick(tag)}
+              key={item}
+              className={styles.item}
+              onMouseDown={() => handleItemClick(item)}
             >
-              <div className={styles.tagName}>{tag}</div>
+              <div className={styles.itemName}>{item}</div>
             </div>
           ))}
         </div>

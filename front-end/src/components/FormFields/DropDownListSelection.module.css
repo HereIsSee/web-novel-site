@@ -24,7 +24,7 @@
   min-width: 120px;
 }
 
-.selectedTag {
+.selectedItem {
   display: flex;
   align-items: center;
   background-color: #3379b7;
@@ -44,7 +44,7 @@
   line-height: 1;
 }
 
-.tagSelection {
+.itemSelection {
   position: absolute;
   width: 100%;
   max-height: 200px;
@@ -55,16 +55,16 @@
   z-index: 10;
 }
 
-.tag {
+.item {
   padding: 8px;
   cursor: pointer;
 }
 
-.tag:hover {
+.item:hover {
   background-color: #3379b7a8;
 }
 
-.tagName {
+.itemName {
   font-size: 18px;
   color: white;
 }
