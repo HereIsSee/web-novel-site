@@ -170,6 +170,12 @@ a:hover,a:focus{
   background-color: rgba(0, 0, 0, 0.5);
   background-blend-mode: darken;
 }
+
+@media(max-width: 900px){
+  .options img, .options .display-name {
+    display: none;
+  }
+}
 /* Login/Register css START*/
 .auth-cover{
   display: flex;
