@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import App from '../App';
 import SectionWrapper from '../components/SectionWrapper';
 // import NovelCard from '../components/NovelCard';
-import NovelLatestUpdateCard from '../components/NovelCards/NovelLatestUpdateCard';
-import { FaRegClock } from "react-icons/fa";
+import NovelLatestUpdateMiniCard from '../components/NovelCards/NovelLatestUpdateMiniCard';
+import NovelBasicMiniCard from '../components/NovelCards/NovelBasicMiniCard';
+import { FaRegClock, FaTrophy } from "react-icons/fa";
+import { AiFillPlaySquare } from "react-icons/ai";
 
 const Home = () =>{
     const [isLoading, setIsLoading] = useState(true);
@@ -29,46 +31,71 @@ const Home = () =>{
         
     },[]);
 
+    if(isLoading){
+        return(
+            <App>
+                <h1>Loading...</h1>
+            </App>
+        )
+    }
+    if(error){
+        return(
+            <App>
+                <h1>Something went wrong</h1>
+            </App>
+        )
+    }
+
     return(
         <App>
-            <div className='container'>
-                <h1>Home Page</h1>
-                {isLoading ? (
-                    <>
-                        <h1>Loading...</h1>
-                    </>
+            <SectionWrapper
+                title="Latest Updates"
+                Icon={FaRegClock}
+            >
+                {novels.map((novel, index) => {
+                    if (index > 4) return;
+                    return (
+                        <NovelLatestUpdateMiniCard 
+                            key={novel.id}
+                            id={novel.id}
+                            title={novel.title}
+                        />
+                    );
+                })}
+            </SectionWrapper>
 
-                ) : error ? (
-                    <>
-                        <h1>Something went wrong</h1>
-                    </>
-                ) : (
-                    <>
-                        <SectionWrapper
-                            title="Latest Updates"
-                            Icon={FaRegClock}
-                        >
-                            {novels.map((novel) => {
-                                console.log(novel);
-                                return (
-                                    <NovelLatestUpdateCard 
-                                        key={novel.id}
-                                        id={novel.id}
-                                        title={novel.title}
-                                        // synopsis={novel.synopsis}
-                                        // coverImageUrl={novel.coverImageUrl}
+            <div className='novel-categories'>
+                <SectionWrapper
+                    title="Best Completed"
+                    Icon={FaTrophy}
+                >
+                    {novels.map((novel, index) => {
+                        if (index > 4) return;
+                        return (
+                            <NovelBasicMiniCard 
+                                key={novel.id}
+                                id={novel.id}
+                                title={novel.title}
+                            />
+                        );
+                    })}
+                </SectionWrapper>
 
-                                        // stats={novel.views}
-                                    />
-                                )
-                            })}
-                            
-                            {console.log(novels)}
-                        </SectionWrapper>
-
-
-                    </>
-                )}
+                <SectionWrapper
+                    title="Best Ongoing"
+                    Icon={AiFillPlaySquare}
+                >
+                    {novels.map((novel, index) => {
+                        if (index > 4) return;
+                        return (
+                            <NovelBasicMiniCard 
+                                key={novel.id}
+                                id={novel.id}
+                                title={novel.title}
+                            />
+                        );
+                    })}
+                </SectionWrapper>
             </div>
         </App>
     );

@@ -443,6 +443,19 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 
 /* Home START */
 
+.novel-categories{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+@media(min-width: 1400px){
+  .novel-categories{
+    flex-direction: row;
+  }
+  .novel-categories > div{
+    flex: 1;
+  }
+}
 .novel-card{
   position: relative;
   display: flex;

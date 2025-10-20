@@ -1,0 +1,52 @@
+/* Mini Novel Card START */
+.mini-novel-card{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  border-bottom: 2px solid var(--light-white-border-color);
+  margin-top: 10px;
+  padding: 20px;
+}
+.mini-novel-card:hover, .mini-novel-card:focus{
+    background-color: rgb(32, 32, 32);
+}
+.mini-novel-card img{
+  height: 150px;
+}
+a.mini-novel-card-title{
+  font-size: 28px;
+  color: var(--golden-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+a.mini-novel-card-title:focus, a.mini-novel-card-title:hover{
+  text-decoration: underline;
+  text-decoration-thickness: 2px; 
+}
+/* Mini Novel Card DONE */
+
+/* latest-update START */
+.content{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.chapter{
+    font-size: 24px;
+    text-decoration: none;
+}
+.chapter:focus, .chapter:hover{
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+/* latest-update DONE */
+
+/* basic mini card  START*/
+
+.follows{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* basic mini card DONE*/
