@@ -1,8 +1,8 @@
 export async function httpRequest(url, options = {}) {
-  const token = localStorage.getItem('token');
-  
-    const defaultHeaders = {
-    'Content-Type': 'application/json',
+  const token = localStorage.getItem("token");
+
+  const defaultHeaders = {
+    "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
@@ -35,9 +35,9 @@ export async function httpRequest(url, options = {}) {
     throw new Error(errorMessage);
   }
 
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-        return await response.json();
-    }
-    return null;
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.includes("application/json")) {
+    return await response.json();
+  }
+  return null;
 }

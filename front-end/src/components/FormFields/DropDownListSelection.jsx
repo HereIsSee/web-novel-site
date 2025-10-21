@@ -1,21 +1,21 @@
-import { useState, useRef } from 'react';
-import styles from './DropDownListSelection.module.css';
+import { useState, useRef } from "react";
+import styles from "./DropDownListSelection.module.css";
 
-const DropDownListSelection = ({items, placeholder}) => {
+const DropDownListSelection = ({ items, placeholder }) => {
   const [showItemSelection, setShowItemSelection] = useState(false);
   const [selectedItems, setselectedItems] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const searchField = useRef(null);
 
   const filteredItems = items.filter(
     (item) =>
       item.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedItems.includes(item)
+      !selectedItems.includes(item),
   );
 
   const handleItemClick = (item) => {
     setselectedItems([...selectedItems, item]);
-    setInputValue('');
+    setInputValue("");
     setShowItemSelection(false);
     searchField.current.focus();
   };
@@ -49,7 +49,7 @@ const DropDownListSelection = ({items, placeholder}) => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onClick={() => setShowItemSelection(!showItemSelection)}
-          onBlur={() => setShowItemSelection(false)} 
+          onBlur={() => setShowItemSelection(false)}
           placeholder={placeholder}
           className={styles.input}
         />

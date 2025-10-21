@@ -1,5 +1,5 @@
 /* Mini Novel Card START */
-.mini-novel-card{
+.mini-novel-card {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -8,35 +8,38 @@
   margin-top: 10px;
   padding: 20px;
 }
-.mini-novel-card:hover, .mini-novel-card:focus{
+.mini-novel-card:hover,
+.mini-novel-card:focus {
   background-color: rgb(32, 32, 32);
 }
-.mini-novel-card img{
+.mini-novel-card img {
   height: 150px;
 }
-a.mini-novel-card-title{
+a.mini-novel-card-title {
   font-size: 28px;
   color: var(--golden-color);
   text-decoration: none;
   font-weight: bold;
 }
-a.mini-novel-card-title:focus, a.mini-novel-card-title:hover{
+a.mini-novel-card-title:focus,
+a.mini-novel-card-title:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px; 
+  text-decoration-thickness: 2px;
 }
 /* Mini Novel Card DONE */
 
 /* latest-update START */
-.content{
+.content {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-.chapter{
+.chapter {
   font-size: 24px;
   text-decoration: none;
 }
-.chapter:focus, .chapter:hover{
+.chapter:focus,
+.chapter:hover {
   text-decoration: underline;
   text-decoration-thickness: 2px;
 }
@@ -44,14 +47,14 @@ a.mini-novel-card-title:focus, a.mini-novel-card-title:hover{
 
 /* basic mini card  START*/
 
-.follows{
+.follows {
   font-size: 22px;
   font-weight: bold;
 }
 /* basic mini card DONE*/
 
 /* Novel Card START */
-.novel-card{
+.novel-card {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -60,68 +63,70 @@ a.mini-novel-card-title:focus, a.mini-novel-card-title:hover{
   margin-top: 10px;
   padding-bottom: 10px;
 }
-.link-with-image{
-  flex-shrink: 0; 
+.link-with-image {
+  flex-shrink: 0;
 }
-.novel-card img{
+.novel-card img {
   height: 250px;
 }
-a.novel-card-title{
+a.novel-card-title {
   font-size: 42px;
   color: var(--golden-color);
   text-decoration: none;
   font-weight: bold;
 }
-a.novel-card-title:focus, a.novel-card-title:hover{
+a.novel-card-title:focus,
+a.novel-card-title:hover {
   text-decoration: underline;
-  text-decoration-thickness: 2px; 
+  text-decoration-thickness: 2px;
 }
-.novel-card-info{
+.novel-card-info {
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-.novel-card h1{
+.novel-card h1 {
   font-size: 48px;
   color: var(--golden-color);
 }
-.novel-card-statistics{
+.novel-card-statistics {
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
-.novel-card-statistic{
+.novel-card-statistic {
   font-size: 18px;
   font-weight: bold;
   white-space: nowrap;
 }
-.novel-author span{
+.novel-author span {
   color: var(--golden-color);
   font-weight: bold;
 }
-.novel-meta{
+.novel-meta {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   font-size: 18px;
   gap: 20px;
 }
-.novel-meta .pages-number{
+.novel-meta .pages-number {
   font-weight: bold;
 }
-.novel-status{
+.novel-status {
   font-size: 20px;
 }
-.last-update, .last-read{
+.last-update,
+.last-read {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   text-decoration: none;
   font-size: 24px;
 }
-button.show-more{
+button.show-more {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -136,43 +141,43 @@ button.show-more{
   border: none;
   background-color: rgba(0, 0, 0, 0);
 }
-@media(max-width: 900px){
+@media (max-width: 900px) {
   /* For centering on small screens */
-  .novel-card.center{
+  .novel-card.center {
     flex-direction: column;
     gap: 0px;
   }
-  .novel-card.center .novel-card-title{
+  .novel-card.center .novel-card-title {
     text-align: center;
   }
-  .novel-card.center .novel-card-info{
+  .novel-card.center .novel-card-info {
     align-items: center;
   }
-  .novel-card.center .link-with-image{
+  .novel-card.center .link-with-image {
     align-self: center;
   }
-  .novel-card.center .novel-card-info .novel-meta{
+  .novel-card.center .novel-card-info .novel-meta {
     align-self: stretch;
     justify-content: space-around;
   }
   /* For hiding image on small screens */
-  .novel-card.hide img{
+  .novel-card.hide img {
     display: none;
   }
   /* For NovelCard on small screens */
-  .novel-card-statistics{
+  .novel-card-statistics {
     flex-direction: column;
     gap: 0;
   }
-  .novel-meta.with-button{
+  .novel-meta.with-button {
     justify-content: unset;
     gap: 0;
   }
-  .novel-meta.with-button > div:first-child{
+  .novel-meta.with-button > div:first-child {
     justify-content: center;
     flex: 30;
   }
-  button.show-more{
+  button.show-more {
     flex: 1;
   }
 }

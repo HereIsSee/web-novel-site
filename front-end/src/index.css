@@ -1,5 +1,7 @@
 /* 1. Use a more-intuitive box-sizing model */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -23,18 +25,31 @@ body {
 }
 
 /* 6. Improve media defaults */
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
 /* 7. Inherit fonts for form controls */
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
 /* 8. Avoid text overflows */
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
@@ -42,23 +57,31 @@ p, h1, h2, h3, h4, h5, h6 {
 p {
   text-wrap: pretty;
 }
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
 /*
   10. Create a root stacking context
 */
-#root, #__next {
+#root,
+#__next {
   isolation: isolate;
 }
 
 /* CSS START */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }
-:root{
+:root {
   --very-dark-color: rgb(10, 10, 10);
   --dark-color: rgb(17, 17, 17);
   --dark-light-color: rgb(27, 27, 27);
@@ -82,32 +105,33 @@ html, body, #root {
   display: flex;
   flex-direction: column;
 }
-body{
+body {
   background-color: var(--dark-light-color);
   color: white;
 }
-header{
+header {
   background-color: var(--very-dark-color);
   color: var(--light-color);
 }
-nav{
+nav {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
 }
-a.logo{
+a.logo {
   font-size: 48px;
   color: white;
   font-weight: bold;
   text-decoration: none;
 }
-a.logo:hover, a.logo:focus{
+a.logo:hover,
+a.logo:focus {
   color: white;
 }
-.options{
-  display:flex;
+.options {
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -117,14 +141,14 @@ a.logo:hover, a.logo:focus{
   width: 70px;
   border-radius: 50%;
 }
-.options > div{
+.options > div {
   font-size: 32px;
 }
-.drop-down-menu-container{
+.drop-down-menu-container {
   position: relative;
   z-index: 2;
 }
-.drop-down-menu{
+.drop-down-menu {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -145,32 +169,34 @@ a.logo:hover, a.logo:focus{
   border-right: 10px solid transparent;
   border-bottom: 10px solid rgb(199, 199, 199);
 }
-.drop-down-menu a{
+.drop-down-menu a {
   font-size: 24px;
   color: white;
   text-decoration: none;
 }
-.drop-down-menu a:hover, .drop-down-menu a:focus{
+.drop-down-menu a:hover,
+.drop-down-menu a:focus {
   color: rgb(165, 165, 165);
 }
-a{
+a {
   color: var(--light-blue-color);
   font-size: 18px;
 }
-a:hover,a:focus{
+a:hover,
+a:focus {
   color: var(--dark-blue-color);
 }
-.container{
+.container {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-.container > h1{
+.container > h1 {
   font-size: 38px;
   align-self: center;
   margin-top: 10px;
 }
-.cover-background{
+.cover-background {
   flex: 1;
   height: max(100vh, 100%);
   background-image: url(./assets/background.jpg);
@@ -181,19 +207,20 @@ a:hover,a:focus{
   background-blend-mode: darken;
 }
 
-@media(max-width: 900px){
-  .options img, .options .display-name {
+@media (max-width: 900px) {
+  .options img,
+  .options .display-name {
     display: none;
   }
 }
 /* Login/Register css START*/
-.auth-cover{
+.auth-cover {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.auth-container{
+.auth-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -202,48 +229,49 @@ a:hover,a:focus{
   padding: 50px 100px;
   border-radius: 20px;
 }
-a.title{
+a.title {
   font-size: 48px;
   color: white;
   font-weight: bold;
   text-decoration: none;
 }
-a.title:hover, a.title:focus{
+a.title:hover,
+a.title:focus {
   color: white;
 }
-.auth-container h2{
+.auth-container h2 {
   font-weight: normal;
   font-size: 24px;
   color: var(--dark-blue-color);
 }
-.auth-container form{
+.auth-container form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.form-item{
+.form-item {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
 }
-.form-item label{
+.form-item label {
   font-size: 24px;
-  color: var(--light-gray-color)
+  color: var(--light-gray-color);
 }
 /* Login/Register css DONE*/
 
 /* Novel css START*/
-.novel > div{
+.novel > div {
   margin-bottom: 30px;
 }
-.novel-header{
+.novel-header {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 10px;
   background-color: var(--ocean-light-blue-color);
 }
-.card{
+.card {
   display: flex;
   flex-direction: column;
   margin: 0 2%;
@@ -251,29 +279,29 @@ a.title:hover, a.title:focus{
   padding: 20px 40px;
   border: 1px var(--light-white-border-color) solid;
 }
-.novel .novel-header{
+.novel .novel-header {
   border-top: none;
   margin-bottom: 0px;
 }
-.novel-header > img{
+.novel-header > img {
   height: 300px;
   margin: 15px;
   border: 5px white solid;
 }
-.novel-header > div{
+.novel-header > div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   flex: 1;
 }
-.novel-title{
+.novel-title {
   font-size: 48px;
 }
-.novel-author{
+.novel-author {
   font-size: 24px;
 }
-.novel-tags{
+.novel-tags {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -281,53 +309,55 @@ a.title:hover, a.title:focus{
   justify-content: flex-start;
   align-items: center;
 }
-.novel-tag{
-  padding:2px 5px;
-  font-size:18px;
+.novel-tag {
+  padding: 2px 5px;
+  font-size: 18px;
   background-color: var(--ocean-light-blue-color);
   white-space: nowrap;
 }
-.novel-summary{
+.novel-summary {
   font-size: 22px;
 }
-.novel-summary > *{
+.novel-summary > * {
   margin: 20px 0px;
 }
-.novel-statistics{
+.novel-statistics {
   display: flex;
   flex-direction: column;
 }
-.novel-statistics > h3{
+.novel-statistics > h3 {
   font-size: 32px;
 }
-.novel-statistics-container{
+.novel-statistics-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap:40px;
+  gap: 40px;
 }
-.novel-statistics-star-rating, .novel-statistics-metric{
+.novel-statistics-star-rating,
+.novel-statistics-metric {
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-right: 200px;
 }
-.metric{
+.metric {
   min-width: 400px;
 }
-.metric-title, .metric-value{
+.metric-title,
+.metric-value {
   font-size: 24px;
   font-weight: bold;
 }
-.metric-value{
+.metric-value {
   color: var(--golden-color);
 }
-.novel-action-buttons{
+.novel-action-buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.novel-action-buttons button{
+.novel-action-buttons button {
   border: none;
   padding: 10px;
   color: white;
@@ -336,40 +366,40 @@ a.title:hover, a.title:focus{
   background-color: var(--dark-light-color);
   transition: background-color 0.3s ease-out;
 }
-.novel-action-buttons button:hover{
+.novel-action-buttons button:hover {
   background-color: var(--dark-color);
 }
 
-.novel-table-of-contents{
+.novel-table-of-contents {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.novel-table-of-contents-header{
-  display:flex;
+.novel-table-of-contents-header {
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--light-white-border-color);
   padding: 10px;
 }
-.novel-table-of-contents-header > h3{
+.novel-table-of-contents-header > h3 {
   color: var(--golden-color);
   font-size: 24px;
 }
-.novel-table-of-contents-header > div{
+.novel-table-of-contents-header > div {
   background-color: var(--dark-gray-color);
   padding: 5px;
   font-size: 18px;
 }
 
-.novel-table-of-contents-sorting-options{
+.novel-table-of-contents-sorting-options {
   display: flex;
   flex-direction: row;
   padding-bottom: 10px;
   border-bottom: solid rgba(255, 255, 255, 0.774) 3px;
 }
-.novel-table-of-contents-sorting-options button{
+.novel-table-of-contents-sorting-options button {
   color: white;
   background-color: var(--dark-color);
   border: none;
@@ -377,37 +407,40 @@ a.title:hover, a.title:focus{
   font-size: 24px;
   font-weight: bold;
 }
-button.chapter-name-sort{
+button.chapter-name-sort {
   flex: 2;
 }
-button.release-date-sort{
+button.release-date-sort {
   flex: 1;
   text-align: end;
 }
-button.chapter-name-sort:hover, button.release-date-sort:hover{
+button.chapter-name-sort:hover,
+button.release-date-sort:hover {
   background-color: var(--dark-very-light-color);
 }
-.chapters{
+.chapters {
   display: flex;
   flex-direction: column;
 }
-.chapter{
+.chapter {
   display: flex;
   flex-direction: row;
   color: var(--light-blue-color);
   font-size: 18px;
   border-bottom: 1px var(--light-white-border-color) solid;
 }
-.chapter:hover .chapter-name, .chapter:hover .chapter-release-date{
+.chapter:hover .chapter-name,
+.chapter:hover .chapter-release-date {
   background-color: var(--dark-very-light-color);
 }
-.chapter-name, .chapter-release-date{
+.chapter-name,
+.chapter-release-date {
   padding: 5px;
 }
-.chapter-name{
+.chapter-name {
   flex: 2;
 }
-.chapter-release-date{
+.chapter-release-date {
   flex: 1;
   text-align: end;
   background-color: var(--dark-light-color);
@@ -416,61 +449,61 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 
 /* Create Novel START */
 
-.novel-form{
+.novel-form {
   margin-top: 20px;
 }
-.novel-form > div{
+.novel-form > div {
   display: flex;
   flex-direction: column;
 }
-.novel-form > div > label{
+.novel-form > div > label {
   font-size: 24px;
 }
-.novel-synopsis-edit{
+.novel-synopsis-edit {
   border: solid 1px var(--light-white-border-color);
 }
-.novel-synopsis-edit div{
+.novel-synopsis-edit div {
   font-size: 18px;
 }
-.novel-form input{
+.novel-form input {
   background-color: rgba(0, 0, 0, 0);
   color: white;
   border: 1px solid var(--light-white-border-color);
   font-size: 18px;
 }
-.novel-form button{
+.novel-form button {
   align-self: center;
-  padding: 10px 30px ;
+  padding: 10px 30px;
   background-color: var(--dark-light-color);
-  color:var(--golden-color);
+  color: var(--golden-color);
   font-size: 24px;
   border-radius: 20px;
   border: 1px solid var(--light-white-border-color);
 }
-.novel-form button:hover{
+.novel-form button:hover {
   background-color: var(--dark-very-light-color);
 }
 /* Create Novel DONE */
 
 /* Home START */
 
-.novel-categories{
+.novel-categories {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
-@media(min-width: 1400px){
-  .novel-categories{
+@media (min-width: 1400px) {
+  .novel-categories {
     flex-direction: row;
   }
-  .novel-categories > div{
+  .novel-categories > div {
     flex: 1;
   }
 }
 /* Home DONE */
 
 /* Profile START */
-.profile-container{
+.profile-container {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -479,9 +512,9 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   align-self: center;
   width: 90vw;
   height: 100%;
-  background-color: var(--dark-light-color)
+  background-color: var(--dark-light-color);
 }
-.profile-header{
+.profile-header {
   border: 1px var(--light-white-border-color) solid;
   border-top: none;
   display: flex;
@@ -489,13 +522,13 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   margin: 0 2%;
   background-color: var(--dark-color);
 }
-.blurred-picture-cover{
+.blurred-picture-cover {
   position: relative;
   height: 140px;
   overflow: hidden;
 }
 .blurred-picture-cover::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -507,19 +540,19 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   filter: blur(8px);
   z-index: -1;
 }
-.upper-bar{
+.upper-bar {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: 1;
 }
-.upper-bar img{
+.upper-bar img {
   width: 100px;
   border-radius: 50%;
   border: 2px solid white;
 }
-.upper-bar button.edit{
+.upper-bar button.edit {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -527,40 +560,40 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   color: white;
   border: none;
 }
-.upper-bar button.edit:hover{
+.upper-bar button.edit:hover {
   background-color: var(--dark-blue-color);
 }
-.lower-bar{
+.lower-bar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 10px 20px ;
+  padding: 10px 20px;
 }
-.lower-bar h3{
+.lower-bar h3 {
   font-size: 24px;
   align-self: center;
 }
-.lower-bar .value{
+.lower-bar .value {
   color: var(--light-blue-color);
 }
-.profile-information{
+.profile-information {
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--light-white-border-color);
 }
-.profile-information > *{
+.profile-information > * {
   border-bottom: 1px solid var(--light-white-border-color);
   padding: 5px;
 }
-.item{
+.item {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.item > div:first-child{
+.item > div:first-child {
   font-weight: bold;
 }
-.item > div{
+.item > div {
   flex: 1;
 }
 
@@ -568,13 +601,13 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 
 /* Author Dashboard START */
 
-.author-dashboard-container{
+.author-dashboard-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.author-dashboard-header{
+.author-dashboard-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -585,13 +618,13 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 .author-dashboard-header > h3 {
   font-size: 32px;
 }
-.author-dashboard-info{
+.author-dashboard-info {
   display: grid;
   grid-gap: 30px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr) );
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   align-items: center;
 }
-.author-dashboard-info .info{
+.author-dashboard-info .info {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -599,20 +632,20 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   font-size: 18px;
   font-weight: bold;
 }
-.author-dashboard-novels{
+.author-dashboard-novels {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
 }
-.author-dashboard-novels .novels{
+.author-dashboard-novels .novels {
   align-self: stretch;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr) );
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   align-items: center;
 }
-.author-dashboard-novels .novel{
+.author-dashboard-novels .novel {
   flex: 1;
   display: flex;
   flex-direction: row;
@@ -624,23 +657,23 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   border-radius: 10px;
   background-color: var(--dark-light-color);
 }
-.author-dashboard-novels .novel > div{
+.author-dashboard-novels .novel > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0;
 }
-.author-dashboard-novels .novel .title{
+.author-dashboard-novels .novel .title {
   font-size: 24px;
 }
-.author-dashboard-novels .novel .rating{
+.author-dashboard-novels .novel .rating {
   font-size: 18px;
   font-weight: bold;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.author-dashboard-novels .novel img{
+.author-dashboard-novels .novel img {
   width: 100px;
   border-radius: 10px;
 }
@@ -648,11 +681,11 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 
 /* Section Wrapper START */
 
-.section-container{
+.section-container {
   margin-top: 30px;
   margin-bottom: 30px;
 }
-.section-header{
+.section-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -661,7 +694,7 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   padding: 10px;
   border-bottom: 2px solid var(--light-white-border-color);
 }
-.section-header h3{
+.section-header h3 {
   color: var(--golden-color);
   font-size: 32px;
 }
@@ -670,7 +703,7 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
 
 /* Chapter START */
 
-.chapter-header{
+.chapter-header {
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -681,17 +714,17 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   padding: 10px;
   margin-bottom: 30px;
 }
-.title-author span{
+.title-author span {
   font-size: 32px;
 }
-.title-author .author{
+.title-author .author {
   font-size: 42px;
 }
-.chapter-header .stars{
+.chapter-header .stars {
   font-size: 42px;
   white-space: nowrap;
 }
-.chapter-buttons{
+.chapter-buttons {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -699,36 +732,39 @@ button.chapter-name-sort:hover, button.release-date-sort:hover{
   padding: 10px 0;
   border-bottom: 2px solid var(--light-white-border-color);
 }
-.chapter-content p{
+.chapter-content p {
   padding: 20px 0;
   font-size: 22px;
 }
 /* Chapter DONE */
 
 /* Search START */
-.search {   margin-top: 20px }
-.search, .advanced-search{
+.search {
+  margin-top: 20px;
+}
+.search,
+.advanced-search {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.basic-search{
+.basic-search {
   display: flex;
   flex-direction: row;
 }
-.search-item{
+.search-item {
   display: flex;
   flex-direction: column;
 }
-.search-item .order-by{
+.search-item .order-by {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
-.search-item label{
+.search-item label {
   font-size: 22px;
 }
-.search-results{
+.search-results {
   margin-top: 20px;
 }
 /* Search DONE */

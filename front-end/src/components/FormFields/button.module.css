@@ -9,46 +9,46 @@
 .right {
   align-self: flex-end;
 }
-.stretch{
+.stretch {
   align-self: stretch;
 }
 
-.dark-golden{
-  padding: 10px 30px ;
+.dark-golden {
+  padding: 10px 30px;
   background-color: var(--dark-light-color);
-  color:var(--golden-color);
+  color: var(--golden-color);
   font-size: 24px;
   border-radius: 20px;
   border: 1px solid var(--light-white-border-color);
 }
-.button:hover{
+.button:hover {
   background-color: var(--dark-very-light-color);
 }
-.blue-white{
+.blue-white {
   padding: 10px 30px;
   background-color: var(--light-blue-color);
   color: white;
   font-size: 24px;
   border: none;
 }
-.blue-white-rounded{
+.blue-white-rounded {
   composes: blue-white;
   border-radius: 20px;
-
 }
-.blue-white:hover, .blue-white-rounded:hover{
+.blue-white:hover,
+.blue-white-rounded:hover {
   background-color: var(--dark-blue-color);
 }
-.text-only-gray{
+.text-only-gray {
   color: rgb(160, 160, 160);
   border: none;
   background-color: rgba(0, 0, 0, 0);
   transition: background-color 0.3s ease-in;
 }
-.text-only-gray:hover{
+.text-only-gray:hover {
   color: rgb(126, 126, 126);
 }
-.gray-blue{
+.gray-blue {
   padding: 10px 30px;
   background-color: rgb(61, 61, 61);
   color: var(--light-blue-color);
@@ -59,26 +59,26 @@
   padding: 30px 50px;
   transition: background-color 0.3s ease-in;
 }
-.gray-blue:hover{
-  background-color: rgb(80, 80, 80);;
+.gray-blue:hover {
+  background-color: rgb(80, 80, 80);
 }
-.white-text-only{
+.white-text-only {
   border: none;
   font-size: 28px;
   font-weight: bold;
   color: white;
   background-color: transparent;
 }
-.white-text-only:hover{
+.white-text-only:hover {
   color: rgb(177, 177, 177);
 }
-.red-white{
+.red-white {
   padding: 10px 20px;
   background-color: rgb(153, 17, 17);
   color: white;
   font-size: 24px;
   border: none;
 }
-.red-white:hover{
+.red-white:hover {
   background-color: rgb(247, 25, 25);
 }

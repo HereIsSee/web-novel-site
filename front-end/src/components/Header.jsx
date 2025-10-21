@@ -1,22 +1,23 @@
-import { Link } from 'react-router-dom';
-import DefaultAvatarImage from '/avatar_default.webp';
-import DropDownMenu from './DropDownMenu';
+import { Link } from "react-router-dom";
+import DefaultAvatarImage from "/avatar_default.webp";
+import DropDownMenu from "./DropDownMenu";
 
-const Header = function(){
-    
-    return(
-        <header>
-            <nav>
-                <Link className="logo" to="/">FableBound</Link>
+const Header = function () {
+  return (
+    <header>
+      <nav>
+        <Link className="logo" to="/">
+          FableBound
+        </Link>
 
-                <div className='options'>
-                    <img src={DefaultAvatarImage} alt="user image" />
-                    <div className='display-name'>UserName</div>
-                    <DropDownMenu />
-                </div>
-            </nav>
-        </header>
-    );
-}
+        <div className="options">
+          <img src={DefaultAvatarImage} alt="user image" />
+          <div className="display-name">UserName</div>
+          <DropDownMenu />
+        </div>
+      </nav>
+    </header>
+  );
+};
 
 export default Header;

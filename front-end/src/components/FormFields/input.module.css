@@ -1,19 +1,19 @@
-.basic{
-    background-color: transparent;
-    color: white;
-    border: 1px solid var(--light-white-border-color);
-    font-size: 18px;
+.basic {
+  background-color: transparent;
+  color: white;
+  border: 1px solid var(--light-white-border-color);
+  font-size: 18px;
 }
-input.search{
-    background-color: rgba(60, 73, 77, 0.493);
-    border: none;
-    padding: 10px 30px;
-    font-size: 24px;
-    flex: 1;
-    color: white;
-    min-width: 0;
+input.search {
+  background-color: rgba(60, 73, 77, 0.493);
+  border: none;
+  padding: 10px 30px;
+  font-size: 24px;
+  flex: 1;
+  color: white;
+  min-width: 0;
 }
-.search:focus-visible{
-    border:none;
-    outline: none;
+.search:focus-visible {
+  border: none;
+  outline: none;
 }

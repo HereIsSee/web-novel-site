@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./MultiRangeSlider.module.css";
 
-const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true}) => {
+const MultiRangeSlider = ({
+  minValue = 0,
+  maxValue = 100,
+  step = 1,
+  wholeNumbers = true,
+}) => {
   const [min, setMin] = useState(minValue);
   const [max, setMax] = useState(maxValue);
   const minRangeRef = useRef(null);
@@ -11,9 +16,9 @@ const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true})
 
   const parseNumber = useCallback(
     (value) => (wholeNumbers ? parseInt(value) : parseFloat(value)),
-    [wholeNumbers]
+    [wholeNumbers],
   );
-  
+
   // Update progress bar when min/max changes
   useEffect(() => {
     if (sliderProgress.current && minRangeRef.current && maxRangeRef.current) {
@@ -28,12 +33,12 @@ const MultiRangeSlider = ({minValue=0, maxValue=100, step=1, wholeNumbers=true})
   const onSliderChange = (e) => {
     const minVal = parseNumber(minRangeRef.current.value);
     const maxVal = parseNumber(maxRangeRef.current.value);
-    
+
     if (maxVal - minVal < minGap) {
       if (e.target === minRangeRef.current) {
         setMin(maxVal - minGap);
       } else {
-        setMax(wholeNumbers ? (minVal + minGap) : (minVal + minGap).toFixed(2));
+        setMax(wholeNumbers ? minVal + minGap : (minVal + minGap).toFixed(2));
       }
     } else {
       setMin(minVal);
