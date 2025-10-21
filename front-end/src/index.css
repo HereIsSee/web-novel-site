@@ -86,7 +86,8 @@ body,
   --dark-color: rgb(17, 17, 17);
   --dark-light-color: rgb(27, 27, 27);
   --dark-very-light-color: rgb(46, 46, 46);
-  --light-color: white;
+  --white-color: white;
+  --white-hover-color: rgb(165, 165, 165);
   --dark-gray-color: rgb(56, 56, 56);
   --light-gray-color: rgba(212, 212, 212, 0.76);
   --ocean-light-blue-color: rgba(39, 61, 122, 0.719);
@@ -111,7 +112,7 @@ body {
 }
 header {
   background-color: var(--very-dark-color);
-  color: var(--light-color);
+  color: var(--white-color);
 }
 nav {
   display: flex;
@@ -129,6 +130,26 @@ a.logo {
 a.logo:hover,
 a.logo:focus {
   color: white;
+}
+.log-in {
+  font-size: 32px;
+  text-decoration: none;
+  color: var(--white-color);
+}
+.log-in:hover,
+.log-in:focus {
+  color: var(--white-hover-color);
+}
+.log-out {
+  border: none;
+  background-color: transparent;
+  color: var(--white-color);
+  text-align: left;
+  padding: 0;
+}
+.log-out:hover,
+.log-out:focus {
+  color: var(--white-hover-color);
 }
 .options {
   display: flex;
@@ -169,14 +190,14 @@ a.logo:focus {
   border-right: 10px solid transparent;
   border-bottom: 10px solid rgb(199, 199, 199);
 }
-.drop-down-menu a {
+.drop-down-menu > * {
   font-size: 24px;
   color: white;
   text-decoration: none;
 }
-.drop-down-menu a:hover,
-.drop-down-menu a:focus {
-  color: rgb(165, 165, 165);
+.drop-down-menu *:hover,
+.drop-down-menu *:focus {
+  color: var(--white-hover-color);
 }
 a {
   color: var(--light-blue-color);

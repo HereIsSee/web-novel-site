@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
 import { useToast } from "../context/useToast";
+import { useAuth } from "../context/useAuth";
 import { loginUser } from "../api/users";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const { showToast } = useToast();
+  const { login } = useAuth();
+
   const navigate = useNavigate();
 
   const onSubmit = async (e) => {
@@ -19,7 +23,8 @@ const Login = () => {
         Email: email,
         Password: password,
       });
-      localStorage.setItem("token", response.token);
+
+      login(response.token);
 
       setEmail("");
       setPassword("");

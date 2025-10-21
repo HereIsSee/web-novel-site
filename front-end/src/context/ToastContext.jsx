@@ -3,7 +3,7 @@ import Toast from "../components/Toast/Toast";
 
 const ToastContext = createContext();
 
-export const ToastProvider = ({ children }) => {
+const ToastProvider = ({ children }) => {
   const [toast, setToast] = useState({ message: "", type: "info" });
 
   const showToast = useCallback((message, type = "info", duration = 3000) => {
@@ -24,4 +24,4 @@ export const ToastProvider = ({ children }) => {
   );
 };
 
-export { ToastContext };
+export { ToastContext, ToastProvider };
