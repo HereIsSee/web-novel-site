@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import InputField from '../components/FormFields/InputField'
 import Button from '../components/FormFields/Button'
-import { useToast } from '../context/ToastContext';
+import { useToast } from '../context/useToast';
+import { registerUser } from '../api/users';
 
 const Register = ()=>{
     const { showToast } = useToast();
@@ -12,10 +13,33 @@ const Register = ()=>{
     const [password, setPassword] = useState('');
     const [passwordAgain, setPasswordAgain] = useState('');
 
-    const onSubmit = (e)=>{
+    const onSubmit = async (e)=>{
         e.preventDefault();
 
-        showToast("Login was successful!", "success");
+        if(password != passwordAgain){
+            showToast("Password does not match Password again!", "error");
+            return;
+        }
+        try {
+            const response = await registerUser({
+                UserName: username,
+                Email: email,
+                Password: password,
+            });
+
+            console.log("User registered:", response);
+            
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setPasswordAgain("");
+            
+            showToast("Registration successful!", "success");
+
+        } catch (err) {
+            console.error("Registration failed:", err);
+            showToast(err.message || "Registration failed", "error");
+        }
     }
 
     return(

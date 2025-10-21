@@ -44,4 +44,10 @@ namespace Api.DTOs
         public string? DisplayName { get; set; }
         public string? AvatarUrl { get; set; }
     }
+
+    public class UserLogin
+    {
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
+    }
 }

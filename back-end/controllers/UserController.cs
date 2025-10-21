@@ -5,6 +5,7 @@ using Api.Models;
 using Api.DTOs;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -44,6 +45,11 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UserReadDto>> CreateUser([FromBody] CreateUserDto dto)
         {
+            var used = await EmailOrUserNameAlreadyUsed(dto.Email, dto.UserName);
+
+            if (used != "")
+                return Conflict(new { message = used });
+            
             var user = _mapper.Map<User>(dto);
 
             var hasher = new PasswordHasher<User>();
@@ -87,6 +93,18 @@ namespace Api.Controllers
             await _db.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private async Task<string> EmailOrUserNameAlreadyUsed(string email, string userName)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email || u.UserName == userName);
+            if (user == null)
+                return "";
+
+            if (user.Email == email)
+                return "Email already used";
+            else
+                return "UserName already used";
         }
     }
 

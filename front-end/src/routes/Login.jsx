@@ -1,15 +1,37 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import InputField from '../components/FormFields/InputField'
 import Button from '../components/FormFields/Button'
+import { useToast } from '../context/useToast'
+import { loginUser } from '../api/users';
 
 const Login = ()=>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { showToast } = useToast();
+    const navigate = useNavigate();
 
-    const onSubmit = (e)=>{
+    const onSubmit = async (e)=>{
         e.preventDefault();
-    } 
+
+        try {
+            const response = await loginUser({
+                Email: email,
+                Password: password,
+            });
+            localStorage.setItem("token", response.token);
+            
+            setEmail("");
+            setPassword("");
+            
+            showToast("Login successful!", "success");
+            navigate("/");
+
+        } catch (err) {
+            console.error("Login failed:", err);
+            showToast(err.message || "Login failed", "error");
+        }
+    }
 
     return(
         <div className="auth-cover cover-background">

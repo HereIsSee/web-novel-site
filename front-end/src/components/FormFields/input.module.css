@@ -1,5 +1,5 @@
 .basic{
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
     color: white;
     border: 1px solid var(--light-white-border-color);
     font-size: 18px;
