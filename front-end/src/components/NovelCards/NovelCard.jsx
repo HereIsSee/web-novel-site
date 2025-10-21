@@ -20,7 +20,14 @@ const NovelCard = ({id, title, synopsis, coverImageUrl, stats})=>{
 
         >
             <Link className={styles["novel-card-title"]} to={`/novels/${id}/${novelSlog}`}>{title}</Link>
-            <NovelTags />
+            
+            <div className={`${styles["novel-meta"]} ${styles["with-button"]}`}>
+                <NovelTags />
+                <button className={styles["show-more"]} onClick={()=> setShowMore(!showMore)}>
+                    {showMore ? '-' : '+'}
+                </button>
+            </div>
+
             <div className={styles["novel-card-statistics"]}>
                 <div>
                     <div className={styles["novel-card-statistic"]}>10,032 FOLLOWERS</div>
@@ -37,9 +44,6 @@ const NovelCard = ({id, title, synopsis, coverImageUrl, stats})=>{
 
             {showMore && <NovelSummary synopsis={synopsis}/>}
 
-                <button className={styles["show-more"]} onClick={()=> setShowMore(!showMore)}>
-                {showMore ? '-' : '+'}
-            </button>
         </NovelCardLayout>
 
     );

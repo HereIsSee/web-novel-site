@@ -240,6 +240,8 @@ a.title:hover, a.title:focus{
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 0 10px;
+  background-color: var(--ocean-light-blue-color);
 }
 .card{
   display: flex;
@@ -277,6 +279,7 @@ a.title:hover, a.title:focus{
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-start;
+  align-items: center;
 }
 .novel-tag{
   padding:2px 5px;

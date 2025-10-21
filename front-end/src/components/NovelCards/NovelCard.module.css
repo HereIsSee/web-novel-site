@@ -81,7 +81,7 @@ a.novel-card-title:focus, a.novel-card-title:hover{
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 .novel-card h1{
   font-size: 48px;
@@ -95,6 +95,7 @@ a.novel-card-title:focus, a.novel-card-title:hover{
 .novel-card-statistic{
   font-size: 18px;
   font-weight: bold;
+  white-space: nowrap;
 }
 .novel-author span{
   color: var(--golden-color);
@@ -124,9 +125,9 @@ button.show-more{
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0px;
-  right: 0px;
+  /* position: absolute; */
+  /* top: 0px;
+  right: 0px; */
   width: 50px;
   height: 50px;
   font-size: 48px;
@@ -157,6 +158,22 @@ button.show-more{
   /* For hiding image on small screens */
   .novel-card.hide img{
     display: none;
+  }
+  /* For NovelCard on small screens */
+  .novel-card-statistics{
+    flex-direction: column;
+    gap: 0;
+  }
+  .novel-meta.with-button{
+    justify-content: unset;
+    gap: 0;
+  }
+  .novel-meta.with-button > div:first-child{
+    justify-content: center;
+    flex: 30;
+  }
+  button.show-more{
+    flex: 1;
   }
 }
 /* Novel Card DONE */
