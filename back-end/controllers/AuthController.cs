@@ -54,24 +54,24 @@ namespace Api.Controllers
             var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim))
-                return Unauthorized("User ID not found in token.");
+                return Unauthorized(new { message = "User ID not found in token." });
 
             if (!int.TryParse(userIdClaim, out int userId))
-                return BadRequest("Invalid user ID in token.");
+                return BadRequest(new { message = "Invalid user ID in token." });
 
             var user = await _db.Users.FindAsync(userId);
             if (user == null)
-                return NotFound("User not found.");
+                return NotFound(new { message = "User not found." });
 
             var dto = _mapper.Map<UserReadDto>(user);
             return Ok(dto);
-    }
+        }
 
         private string GenerateJwtToken(int userId, string username)
         {
             var jwtKey = _config["Jwt:Key"];
             var jwtIssuer = _config["Jwt:Issuer"];
-            
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
