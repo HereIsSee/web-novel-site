@@ -25,5 +25,6 @@ namespace Api.Models
         //Navigation properties
         public ICollection<Novel>? Novels { get; set; }
         public ICollection<Comment>? Comments { get; set; }
+        public ICollection<UploadedFile>? UploadedFiles { get; set; }
     }
 }

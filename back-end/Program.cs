@@ -55,6 +55,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// To be able to store files locally and access them
+app.UseStaticFiles();
+
 // app.UseHttpsRedirection(); // redirects from http to https
 app.UseRouting();
 

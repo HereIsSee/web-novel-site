@@ -15,6 +15,7 @@ namespace Api.Data
         public DbSet<Comment> Comments { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<NovelTag> NovelTags { get; set; } = null!;
+        public DbSet<UploadedFile> UploadedFiles { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,6 +69,22 @@ namespace Api.Data
                 .WithMany(ch => ch.Comments)
                 .HasForeignKey(c => c.ChapterId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-one Novel -> CoverImage
+            modelBuilder.Entity<Novel>()
+                .HasOne(n => n.CoverImage)
+                .WithOne(uf => uf.Novel)
+                .HasForeignKey<UploadedFile>(uf => uf.NovelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // User -> UploadedFiles
+            modelBuilder.Entity<UploadedFile>()
+                .HasOne(uf => uf.User)
+                .WithMany(u => u.UploadedFiles)
+                .HasForeignKey(uf => uf.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            
 
         }
     }

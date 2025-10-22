@@ -17,7 +17,8 @@ namespace Api.Models
 
         public string Title { get; set; } = null!;
         public string? Synopsis { get; set; }
-        public string? CoverImageUrl { get; set; }
+        // One-to-one relationship
+        public UploadedFile? CoverImage { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
