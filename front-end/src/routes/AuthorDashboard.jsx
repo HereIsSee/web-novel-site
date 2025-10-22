@@ -1,11 +1,17 @@
-import App from "../App";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 import { IoBookSharp, IoDocumentTextSharp } from "react-icons/io5";
 import { FaPuzzlePiece, FaBookmark } from "react-icons/fa";
 import { TbStarFilled } from "react-icons/tb";
+import App from "../App";
 import Button from "../components/FormFields/Button";
 import novelPicture from "/the-legend-of-william-oh.png";
 
 const AuthorDashboard = () => {
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn) return <Navigate to="/" replace />;
+
   return (
     <App>
       <div className="author-dashboard-container">

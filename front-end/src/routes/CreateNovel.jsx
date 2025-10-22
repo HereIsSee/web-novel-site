@@ -1,9 +1,15 @@
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useState } from "react";
+import { useAuth } from "../context/useAuth";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 
 const CreateNovel = () => {
+  const { isLoggedIn } = useAuth();
+
+  if (!isLoggedIn) return <Navigate to="/" replace />;
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: "<p>Write your synopsis here...</p>",
