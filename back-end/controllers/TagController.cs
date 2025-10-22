@@ -7,7 +7,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/tags")]
-    public class TagController : ControllerBase
+    public class TagController : BaseController
     {
         private readonly AppDbContext _db;
 

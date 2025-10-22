@@ -16,7 +16,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;

@@ -6,11 +6,8 @@ namespace Api.DTOs
     {
         public string Title { get; set; } = null!;
         public string? Synopsis { get; set; }
-        public string? CoverImageUrl { get; set; }
-
-        public int UserId { get; set; }
+        public int? CoverImageId { get; set; }
         public NovelStatus Status { get; set; } = NovelStatus.Draft;
-
     }
 
     public class UpdateNovelDto

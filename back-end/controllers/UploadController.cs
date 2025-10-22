@@ -17,7 +17,7 @@ namespace Api.Controllers
 {
     [ApiController]
 [Route("api/[controller]")]
-public class UploadController : ControllerBase
+public class UploadController : BaseController
 {
     private readonly IWebHostEnvironment _env;
     private readonly AppDbContext _db;
@@ -34,8 +34,6 @@ public class UploadController : ControllerBase
         {
             var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
                           ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            Console.WriteLine($"Gotten claim: {userIdClaim}");
 
             if (string.IsNullOrEmpty(userIdClaim))
                 return Unauthorized(new { message = "User ID not found in token." });

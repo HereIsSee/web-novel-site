@@ -8,7 +8,7 @@ export const uploadCoverTemp = (formData) =>
   });
 
 export const createNovel = (data) =>
-  httpRequest("/api/users", {
+  httpRequest("/api/novels/", {
     method: "POST",
     body: JSON.stringify(data),
   });

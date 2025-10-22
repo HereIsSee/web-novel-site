@@ -9,7 +9,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/comments")]
-    public class CommentController : ControllerBase
+    public class CommentController : BaseController
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;

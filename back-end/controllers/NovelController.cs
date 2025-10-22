@@ -4,20 +4,27 @@ using Api.Data;
 using Api.Models;
 using Api.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/novels")]
-    public class NovelController : ControllerBase
+    public class NovelController : BaseController
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _env;
 
-        public NovelController(AppDbContext db, IMapper mapper)
+        public NovelController(IWebHostEnvironment env, AppDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;
+            _env = env;
         }
 
         [HttpGet]
@@ -52,21 +59,54 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
         {
-            if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
-                return BadRequest($"Invalid novel status: {novelDto.Status}");
+            var userId = GetCurrentUserId();
 
-            var user = await _db.Users.FindAsync(novelDto.UserId);
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
+            if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
+                return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
+
+            var user = await _db.Users.FindAsync(userId);
             if (user == null)
-                return BadRequest($"User with id {novelDto.UserId} does not exist.");
+                return BadRequest($"User with id {userId} does not exist.");
 
             var novel = _mapper.Map<Novel>(novelDto);
-
+            novel.UserId = (int)userId;
             novel.CreatedAt = DateTime.UtcNow;
 
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
+
+            // Relate the temp image with created novel, and move it to uploads folder
+            if (novelDto.CoverImageId.HasValue)
+            {
+                var temp = await _db.UploadedFiles.FindAsync(novelDto.CoverImageId.Value);
+                if (temp != null && temp.UserId == userId && temp.IsTemporary)
+                {
+                    // Move file from temp dir to permanent
+                    var permDir = Path.Combine(_env.WebRootPath, "uploads", "covers", novel.UserId.ToString());
+                    if (!Directory.Exists(permDir)) Directory.CreateDirectory(permDir);
+                    var newPath = Path.Combine(permDir, temp.FileName);
+                    System.IO.File.Move(temp.FilePath, newPath);
+
+                    var newUrl = $"{Request.Scheme}://{Request.Host}/uploads/covers/{novel.UserId}/{temp.FileName}";
+
+                    // Update record
+                    temp.FilePath = newPath;
+                    temp.FileUrl = newUrl;
+                    temp.IsTemporary = false;
+                    temp.NovelId = novel.Id;
+                    temp.ExpiresAt = null;
+
+                    // set novel cover url
+                    novel.CoverImageUrl = newUrl;
+                    await _db.SaveChangesAsync();
+                }
+            }
 
             var novelReadDto = _mapper.Map<NovelReadDto>(novel);
 
@@ -78,7 +118,8 @@ namespace Api.Controllers
         // {
         //     // basic validation omitted...
         //     // create novel entity
-        //     var novel = new Novel {
+        //     var novel = new Novel
+        //     {
         //         Title = novelDto.Title,
         //         Synopsis = novelDto.Synopsis,
         //         UserId = novelDto.UserId,
@@ -124,7 +165,7 @@ namespace Api.Controllers
         {
             if (updatedNovelDto.Status != null && !Enum.IsDefined(typeof(NovelStatus), updatedNovelDto.Status))
                 return BadRequest($"Invalid novel status: {updatedNovelDto.Status}");
-            
+
             var novel = await _db.Novels.FindAsync(id);
 
             if (novel == null)

@@ -9,7 +9,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/novels/{novelId}/chapters")]
-    public class ChapterController : ControllerBase
+    public class ChapterController : BaseController
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
