@@ -1,10 +1,28 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
+import {
+  IoIosLogIn,
+  IoIosLogOut,
+  IoMdSearch,
+  IoIosBookmark,
+  IoIosStar,
+} from "react-icons/io";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { HiOutlinePencil } from "react-icons/hi";
+import { MdPerson } from "react-icons/md";
 import DefaultAvatarImage from "/avatar_default.webp";
 // import DropDownMenu from "./DropDownMenu";
 import Button from "./FormFields/Button";
+
+const iconStyles = {
+  display: "inline",
+  verticalAlign: "middle",
+  marginRight: "4px",
+  marginTop: "-3px",
+  color: "#1988e9ff",
+};
+const iconSize = "30px";
 
 const Header = function () {
   const { user, isLoggedIn, logout } = useAuth();
@@ -33,27 +51,40 @@ const Header = function () {
                 {showMenu && (
                   <div className="drop-down-menu">
                     <div className="arrow" />
-                    <Link to={`/profile/${user.id}`}>My Profile</Link>
-                    <Link to={`/author-dashboard/${user.id}`}>
+                    <Link className="menu-option" to={`/profile/${user.id}`}>
+                      <MdPerson style={iconStyles} size={iconSize} />
+                      My Profile
+                    </Link>
+                    <Link
+                      className="menu-option"
+                      to={`/author-dashboard/${user.id}`}
+                    >
+                      <HiOutlinePencil style={iconStyles} size={iconSize} />
                       Author Dashboard
                     </Link>
                     <hr />
-                    <Link to="/search">Search</Link>
-                    <Link to="/follows">Follow List</Link>
-                    <Link to="/read-later">Read Later</Link>
-                    <Link to="/favorites">Favorites</Link>
-                    <hr />
-                    <button className="log-out" onClick={logout}>
-                      <IoIosLogOut
-                        style={{
-                          display: "inline",
-                          verticalAlign: "middle",
-                          marginRight: "4px",
-                          marginTop: "-3px",
-                          color: "#337ab7",
-                        }}
-                        size="30px"
+                    <Link className="menu-option" to="/search">
+                      <IoMdSearch style={iconStyles} size={iconSize} />
+                      Search
+                    </Link>
+                    <Link className="menu-option" to="/follows">
+                      <IoIosBookmark style={iconStyles} size={iconSize} />
+                      Follow List
+                    </Link>
+                    <Link className="menu-option" to="/read-later">
+                      <AiOutlineClockCircle
+                        style={iconStyles}
+                        size={iconSize}
                       />
+                      Read Later
+                    </Link>
+                    <Link className="menu-option" to="/favorites">
+                      <IoIosStar style={iconStyles} size={iconSize} />
+                      Favorites
+                    </Link>
+                    <hr />
+                    <button className="log-out menu-option" onClick={logout}>
+                      <IoIosLogOut style={iconStyles} size={iconSize} />
                       Log out
                     </button>
                   </div>
@@ -63,13 +94,8 @@ const Header = function () {
           ) : (
             <Link className="log-in" to="/login">
               <IoIosLogIn
-                style={{
-                  display: "inline",
-                  verticalAlign: "middle",
-                  marginRight: "4px",
-                  marginTop: "-3px",
-                }}
-                size="30px"
+                style={{ ...iconStyles, color: "inherit" }}
+                size={iconSize}
               />
               Log In
             </Link>

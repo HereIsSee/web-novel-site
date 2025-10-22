@@ -174,8 +174,8 @@ a.logo:focus {
   flex-direction: column;
   position: absolute;
   transform: translate(-80%, 1%);
-  background-color: rgb(27, 27, 85);
-  padding: 20px;
+  background-color: rgb(36, 60, 87);
+  padding: 20px 0;
   width: 250px;
   font-size: 24px;
   z-index: 1;
@@ -190,14 +190,20 @@ a.logo:focus {
   border-right: 10px solid transparent;
   border-bottom: 10px solid rgb(199, 199, 199);
 }
-.drop-down-menu > * {
+.drop-down-menu > .menu-option {
   font-size: 24px;
   color: white;
   text-decoration: none;
+  padding: 0 20px;
+  white-space: nowrap;
 }
-.drop-down-menu *:hover,
-.drop-down-menu *:focus {
-  color: var(--white-hover-color);
+.drop-down-menu hr {
+  margin: 5px 0;
+}
+.drop-down-menu .menu-option:hover,
+.drop-down-menu .menu-option:focus {
+  /* color: var(--white-hover-color); */
+  background-color: rgb(22, 37, 54);
 }
 a {
   color: var(--light-blue-color);
