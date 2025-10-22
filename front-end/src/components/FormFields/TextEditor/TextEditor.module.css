@@ -1,0 +1,47 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+}
+.toolbar button {
+  flex: 1;
+  flex-shrink: 0;
+  color: white;
+  border: none;
+  border-right: 1px solid var(--light-white-border-color);
+  border-radius: 0;
+  white-space: nowrap;
+  align-self: center;
+  padding: 10px;
+  font-size: 24px;
+  background-color: var(--dark-light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toolbar button * {
+  flex-shrink: 0;
+}
+.toolbar button:last-child {
+  border-right: none;
+}
+.toolbar button:hover,
+.toolbar button:focus {
+  background-color: rgb(32, 32, 32);
+}
+.toolbar button.active {
+  background-color: rgb(83, 83, 83);
+}
+.text-area {
+  border: solid 1px var(--light-white-border-color);
+  min-height: 200px;
+  padding: 10px 10px;
+}
+.text-area > div:focus {
+  outline: none;
+}
+.novel-form input {
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: 1px solid var(--light-white-border-color);
+  font-size: 18px;
+}

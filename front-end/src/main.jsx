@@ -21,7 +21,7 @@ import Chapter from "./routes/Chapter";
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/author-dashboard/:id", element: <AuthorDashboard /> },
-  { path: "/create", element: <CreateNovel /> },
+  { path: "/author-dashboard/:id/create-novel", element: <CreateNovel /> },
   { path: "/favorites", element: <Favorites /> },
   { path: "/follows", element: <Follows /> },
   { path: "/read-later", element: <ReadLater /> },

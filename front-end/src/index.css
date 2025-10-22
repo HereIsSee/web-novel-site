@@ -486,18 +486,6 @@ button.release-date-sort:hover {
 .novel-form > div > label {
   font-size: 24px;
 }
-.novel-synopsis-edit {
-  border: solid 1px var(--light-white-border-color);
-}
-.novel-synopsis-edit div {
-  font-size: 18px;
-}
-.novel-form input {
-  background-color: rgba(0, 0, 0, 0);
-  color: white;
-  border: 1px solid var(--light-white-border-color);
-  font-size: 18px;
-}
 .novel-form button {
   align-self: center;
   padding: 10px 30px;
@@ -510,6 +498,13 @@ button.release-date-sort:hover {
 .novel-form button:hover {
   background-color: var(--dark-very-light-color);
 }
+.novel-form input {
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: 1px solid var(--light-white-border-color);
+  font-size: 18px;
+}
+
 /* Create Novel DONE */
 
 /* Home START */
@@ -639,11 +634,16 @@ button.release-date-sort:hover {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  gap: 10px;
   padding: 10px 20px;
   background-color: var(--dark-color);
 }
 .author-dashboard-header > h3 {
   font-size: 32px;
+}
+.author-dashboard-header .sub-title {
+  font-size: 24px;
+  color: var(--white-hover-color);
 }
 .author-dashboard-info {
   display: grid;
