@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { useToast } from "../context/useToast";
 import {
   IoIosLogIn,
   IoIosLogOut,
@@ -12,7 +13,6 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import { HiOutlinePencil } from "react-icons/hi";
 import { MdPerson } from "react-icons/md";
 import DefaultAvatarImage from "/avatar_default.webp";
-// import DropDownMenu from "./DropDownMenu";
 import Button from "./FormFields/Button";
 
 const iconStyles = {
@@ -27,9 +27,14 @@ const iconSize = "30px";
 const Header = function () {
   const { user, isLoggedIn, logout } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
+  const { showToast } = useToast();
 
   const handleClick = () => {
     setShowMenu(!showMenu);
+  };
+  const onClick = () => {
+    logout();
+    showToast("Logout successful!", "success");
   };
 
   return (
@@ -83,7 +88,7 @@ const Header = function () {
                       Favorites
                     </Link>
                     <hr />
-                    <button className="log-out menu-option" onClick={logout}>
+                    <button className="log-out menu-option" onClick={onClick}>
                       <IoIosLogOut style={iconStyles} size={iconSize} />
                       Log out
                     </button>
