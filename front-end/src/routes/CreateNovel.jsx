@@ -2,6 +2,8 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useState } from "react";
 import { useAuth } from "../context/useAuth";
+import { useToast } from "../context/useToast";
+import { uploadCoverTemp, createNovel } from "../api/novel";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
@@ -9,8 +11,16 @@ import TextEditor from "../components/FormFields/TextEditor/TextEditor";
 
 const CreateNovel = () => {
   const [title, setTitle] = useState("");
-  const [converURL, setCoverUrl] = useState("");
+  // const [converURL, setCoverUrl] = useState("");
+
+  const [coverFile, setCoverFile] = useState(null);
+  const [tempFileId, setTempFileId] = useState(null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
   const { isLoggedIn } = useAuth();
+  const { showToast } = useToast();
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: "<p>Write your synopsis here...</p>",
@@ -18,7 +28,44 @@ const CreateNovel = () => {
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 
-  const handleSubmit = (e) => {
+  const handleCoverChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    // client-side quick checks
+    if (!file.type.startsWith("image/"))
+      return showToast("Please select an image", "error");
+    if (file.size > 5 * 1024 * 1024) return showToast("Max 5MB", "error");
+
+    setCoverFile(file);
+    // upload immediately
+    setIsUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      const response = await uploadCoverTemp(fd);
+
+      console.log(response);
+
+      // if (!res.ok) {
+      //   const err = await res.text();
+      //   alert("Upload failed: " + err);
+      //   setIsUploading(false);
+      //   return;
+      // }
+
+      // const data = await res.json();
+      // setTempFileId(data.tempFileId);
+      // setCoverPreviewUrl(data.url);
+    } catch (err) {
+      console.error("Upload erro: ", err);
+      showToast(err.message, "error");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!editor) return;
@@ -28,13 +75,17 @@ const CreateNovel = () => {
 
     const formData = {
       title,
-      converURL, //File if possible instead of url
+      tempCoverFileId: tempFileId, //File if possible instead of url
       synopsis: safeHTML,
     };
 
-    console.log("Form data ready to submit:", formData);
-    //Assume that this will already make a post request with a the cover file if possible and then
-    //in the database the cover link will be saved into the table as normal
+    try {
+      const response = await CreateNovel(formData);
+      console.log("Submit response: ", response);
+    } catch (err) {
+      console.log(err);
+      showToast(err.message, "error");
+    }
   };
 
   return (
@@ -54,13 +105,22 @@ const CreateNovel = () => {
 
         <div>
           <label htmlFor="coverURL">Cover URL</label>
-          <input
+          {/* <input
             type="url"
             name="coverURL"
             value={converURL}
             onChange={(e) => setCoverUrl(e.target.value)}
             className=""
-          />
+          /> */}
+          <input type="file" accept="image/*" onChange={handleCoverChange} />
+          {isUploading && <p>Uploading…</p>}
+          {coverPreviewUrl && (
+            <img
+              src={coverPreviewUrl}
+              alt="cover preview"
+              style={{ maxWidth: 200 }}
+            />
+          )}
         </div>
 
         <div>
@@ -79,7 +139,7 @@ export default CreateNovel;
 // import { useState } from "react";
 // import DOMPurify from "dompurify";
 
-// const CreateNovel = () => {
+// const CreateNovelTemp = () => {
 //   const [title, setTitle] = useState("");
 //   const [coverFile, setCoverFile] = useState(null);
 //   const [tempFileId, setTempFileId] = useState(null);
@@ -90,8 +150,9 @@ export default CreateNovel;
 //     const file = e.target.files[0];
 //     if (!file) return;
 //     // client-side quick checks
-//     if (!file.type.startsWith("image/")) return alert("Please select an image.");
-//     if (file.size > 5 * 1024 * 1024) return alert("Max 5MB.");
+//     if (!file.type.startsWith("image/"))
+//       return showToast("Please select an image", "error");
+//     if (file.size > 5 * 1024 * 1024) return showToast("Max 5MB", "error");
 
 //     setCoverFile(file);
 //     // upload immediately
@@ -100,25 +161,27 @@ export default CreateNovel;
 //       const fd = new FormData();
 //       fd.append("file", file);
 
-//       const res = await fetch("/api/upload/cover-temp", {
-//         method: "POST",
-//         // include auth cookies / headers if necessary
-//         body: fd,
-//       });
+//       // const res = await fetch("/api/upload/cover-temp", {
+//       //   method: "POST",
+//       //   // include auth cookies / headers if necessary
+//       //   body: fd,
+//       // });
 
-//       if (!res.ok) {
-//         const err = await res.text();
-//         alert("Upload failed: " + err);
-//         setIsUploading(false);
-//         return;
-//       }
+//       const response = await uploadCoverTemp(fd);
 
-//       const data = await res.json();
-//       setTempFileId(data.tempFileId);
-//       setCoverPreviewUrl(data.url);
+//       // if (!res.ok) {
+//       //   const err = await res.text();
+//       //   alert("Upload failed: " + err);
+//       //   setIsUploading(false);
+//       //   return;
+//       // }
+
+//       // const data = await res.json();
+//       // setTempFileId(data.tempFileId);
+//       // setCoverPreviewUrl(data.url);
 //     } catch (err) {
-//       console.error(err);
-//       alert("Upload error");
+//       console.error("Upload erro: ", err);
+//       showToast(err.message, "error");
 //     } finally {
 //       setIsUploading(false);
 //     }
@@ -126,14 +189,14 @@ export default CreateNovel;
 
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
-//     const safeHTML = DOMPurify.sanitize(/* whatever editor html */ "<p>...</p>");
+//     const safeHTML = DOMPurify.sanitize(
+//       /* whatever editor html */ "<p>...</p>",
+//     );
 
 //     const payload = {
 //       title,
 //       synopsis: safeHTML,
-//       userId: /* your user id source */,
-//       status: "Draft",
-//       tempCoverFileId: tempFileId // or null
+//       tempCoverFileId: tempFileId,
 //     };
 
 //     const res = await fetch("/api/novels", {
@@ -156,14 +219,20 @@ export default CreateNovel;
 //     <form onSubmit={handleSubmit}>
 //       <div>
 //         <label>Title</label>
-//         <input value={title} onChange={e => setTitle(e.target.value)} />
+//         <input value={title} onChange={(e) => setTitle(e.target.value)} />
 //       </div>
 
 //       <div>
 //         <label>Cover Image</label>
 //         <input type="file" accept="image/*" onChange={handleCoverChange} />
 //         {isUploading && <p>Uploading…</p>}
-//         {coverPreviewUrl && <img src={coverPreviewUrl} alt="cover preview" style={{ maxWidth: 200 }} />}
+//         {coverPreviewUrl && (
+//           <img
+//             src={coverPreviewUrl}
+//             alt="cover preview"
+//             style={{ maxWidth: 200 }}
+//           />
+//         )}
 //       </div>
 
 //       <button type="submit">Submit Novel</button>
@@ -171,4 +240,4 @@ export default CreateNovel;
 //   );
 // };
 
-// export default CreateNovel;
+// export { CreateNovelTemp };

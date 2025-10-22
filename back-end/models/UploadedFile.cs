@@ -3,8 +3,8 @@ using Api.Models;
 public class UploadedFile
 {
     public int Id { get; set; }
-    public int NovelId { get; set; }
-    public Novel Novel { get; set; } = null!;
+    public int? NovelId { get; set; }
+    public Novel? Novel { get; set; } = null!;
     public int UserId { get; set; }
     public User User { get; set; } = null!;
     public string FileName { get; set; } = null!; // e.g. "guid.jpg"
