@@ -81,7 +81,7 @@ namespace Api.Controllers
             if (chapter == null)
                 return NotFound("Chapter not found");
 
-             _mapper.Map(updatedChapterDto, chapter);
+            _mapper.Map(updatedChapterDto, chapter);
             
             chapter.UpdatedAt = DateTime.UtcNow;
 

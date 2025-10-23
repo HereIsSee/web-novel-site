@@ -13,9 +13,11 @@ namespace Api.Profiles
             CreateMap<CreateUserDto, User>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
 
-            CreateMap<UpdateUserDto, User>();
-
             CreateMap<User, UserSummaryDto>();
+
+            CreateMap<UpdateUserDto, User>()
+                .ForAllMembers(opt =>
+                    opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

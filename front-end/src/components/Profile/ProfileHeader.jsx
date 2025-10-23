@@ -1,12 +1,14 @@
 import ProfilePicture from "/avatar_default.webp";
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ onClick }) => {
   return (
     <div className="profile-header">
       <div className="upper-bar blurred-picture-cover">
         <img src={ProfilePicture} alt="" />
 
-        <button className="edit">Edit</button>
+        <button className="edit" onClick={onClick}>
+          Edit
+        </button>
       </div>
 
       <div className="lower-bar">

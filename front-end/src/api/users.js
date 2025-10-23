@@ -13,3 +13,10 @@ export const registerUser = (data) =>
     method: "POST",
     body: JSON.stringify(data),
   });
+
+export const updateUserData = (id, data) => {
+  return httpRequest(`/api/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};

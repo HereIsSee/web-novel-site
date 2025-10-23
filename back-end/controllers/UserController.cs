@@ -6,6 +6,7 @@ using Api.DTOs;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -49,7 +50,7 @@ namespace Api.Controllers
 
             if (used != "")
                 return Conflict(new { message = used });
-            
+
             var user = _mapper.Map<User>(dto);
 
             var hasher = new PasswordHasher<User>();
@@ -64,18 +65,34 @@ namespace Api.Controllers
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, readDto);
         }
-
+        
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto updatedUser)
         {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+            if (userId != id)
+                return BadRequest(new { message = "Only the user can update his information" });
+
+            var used = "";
+            if (updatedUser.Email != null && updatedUser.UserName != null)
+                used = await EmailOrUserNameAlreadyUsed(updatedUser.Email, updatedUser.UserName, userId);
+            else if (updatedUser.Email != null)
+                used = await EmailAlreadyUsed(updatedUser.Email, userId);
+            else if (updatedUser.UserName != null)
+                used = await UserNameAlreadyUsed(updatedUser.UserName, userId);
+            
+            if (used != "")
+                return Conflict(new { message = used });
+
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
 
-            user.UserName = updatedUser.UserName;
-            user.Email = updatedUser.Email;
-            user.Bio = updatedUser.Bio;
-            user.AvatarUrl = updatedUser.AvatarUrl;
+            _mapper.Map(updatedUser, user);
 
             await _db.SaveChangesAsync();
             return NoContent();
@@ -94,16 +111,34 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private async Task<string> EmailOrUserNameAlreadyUsed(string email, string userName)
+        private async Task<string> EmailOrUserNameAlreadyUsed(string email, string userName, int? userId = null)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email || u.UserName == userName);
+            var user = await _db.Users.FirstOrDefaultAsync(u => (u.Email == email || u.UserName == userName) && (userId == null || u.Id != userId));
             if (user == null)
                 return "";
 
-            if (user.Email == email)
+            if (user.Email == email && user.UserName == userName)
+                return "Email and Username already used";
+            else if (user.Email == email)
                 return "Email already used";
             else
                 return "UserName already used";
+        }
+        private async Task<string> EmailAlreadyUsed(string email, int? userId = null)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => (u.Email == email) && (userId == null || u.Id != userId));
+            if (user == null)
+                return "";
+            
+            return "Email already used";
+        }
+        private async Task<string> UserNameAlreadyUsed(string userName, int? userId = null)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => (u.UserName == userName) && (userId == null || u.Id != userId));
+            if (user == null)
+                return "";
+
+            return "UserName already used";
         }
     }
 

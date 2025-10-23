@@ -51,13 +51,10 @@ namespace Api.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<UserReadDto>> GetCurrentUser()
         {
-            var userIdClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            var userId = GetCurrentUserId();
 
-            if (string.IsNullOrEmpty(userIdClaim))
-                return Unauthorized(new { message = "User ID not found in token." });
-
-            if (!int.TryParse(userIdClaim, out int userId))
-                return BadRequest(new { message = "Invalid user ID in token." });
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
 
             var user = await _db.Users.FindAsync(userId);
             if (user == null)
