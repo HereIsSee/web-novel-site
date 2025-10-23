@@ -64,7 +64,12 @@ const Home = () => {
           {novels.map((novel, index) => {
             if (index > 4) return;
             return (
-              <NovelMiniCard key={novel.id} id={novel.id} title={novel.title} />
+              <NovelMiniCard
+                key={novel.id}
+                id={novel.id}
+                title={novel.title}
+                tags={[]}
+              />
             );
           })}
         </SectionWrapper>
@@ -73,7 +78,12 @@ const Home = () => {
           {novels.map((novel, index) => {
             if (index > 4) return;
             return (
-              <NovelMiniCard key={novel.id} id={novel.id} title={novel.title} />
+              <NovelMiniCard
+                key={novel.id}
+                id={novel.id}
+                title={novel.title}
+                tags={[]}
+              />
             );
           })}
         </SectionWrapper>

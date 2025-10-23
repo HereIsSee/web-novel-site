@@ -1,9 +1,13 @@
-const NovelTags = () => {
+const NovelTags = ({ tags }) => {
   return (
     <div className="novel-tags">
-      <div className="novel-tag">LitRpg</div>
-      <div className="novel-tag">Male Lead</div>
-      <div className="novel-tag">Reincarnation</div>
+      {tags.map((tag) => {
+        return (
+          <div key={tag.id} className="novel-tag">
+            {tag.name}
+          </div>
+        );
+      })}
     </div>
   );
 };

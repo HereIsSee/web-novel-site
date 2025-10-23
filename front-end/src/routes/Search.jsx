@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getTags } from "../api/tags";
 import { novelStatusData } from "../helpers/novelStatusData";
+import { getNovels } from "../api/novel";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
@@ -9,22 +10,6 @@ import MultiRangeSlider from "../components/FormFields/MultiRangeSlider";
 import DropDown from "../components/FormFields/DropDown";
 import NovelCard from "../components/NovelCards/NovelCard";
 
-// const allTags = [
-//   "Anti-Hero Lead",
-//   "Romantic Comedy",
-//   "Tragic Hero",
-//   "Redemption Arc",
-//   "Found Family",
-//   "Enemies to Lovers",
-// ];
-// const allStatus = [
-//   "All",
-//   "Completed",
-//   "Dropped",
-//   "Ongoing",
-//   "Hiatus",
-//   "Inactive",
-// ];
 const orderBy = [
   "Last Update",
   "Release Date",
@@ -49,6 +34,9 @@ const Search = () => {
   // Data for selection like tags and novel status
   const [tags, setTags] = useState([]);
 
+  // Fetched novels
+  const [novels, setNovels] = useState([]);
+
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -61,7 +49,18 @@ const Search = () => {
         console.error("Error while gettings tags: ", err);
       }
     };
+    const fetchNovels = async () => {
+      try {
+        const response = await getNovels();
+        console.log(response);
+        setNovels(response);
+      } catch (err) {
+        console.error("Error while fetching novels: ", err);
+      }
+    };
+
     fetchTags();
+    fetchNovels();
   }, []);
 
   return (
@@ -127,10 +126,6 @@ const Search = () => {
             <div className="search-item">
               <label htmlFor="status">Status</label>
 
-              {/* <DropDownListSelection
-                placeholder="Search status..."
-                items={allStatus}
-              /> */}
               <DropDownListSelection
                 items={novelStatusData}
                 placeholder="Search status..."
@@ -167,11 +162,18 @@ const Search = () => {
       </form>
 
       <div className="search-results card">
-        <NovelCard
-          id="2"
-          title="The Legend Of Wiliam Oh"
-          synopsis="asldkfjlksdajflksdjklf"
-        />
+        {novels.map((novel) => {
+          return (
+            <NovelCard
+              key={novel.id}
+              id={novel.id}
+              title={novel.title}
+              synopsis={novel.synopsis}
+              coverImageUrl={novel.coverImageUrl}
+              tags={novel.tags}
+            />
+          );
+        })}
       </div>
     </App>
   );

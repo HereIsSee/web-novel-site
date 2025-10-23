@@ -4,11 +4,11 @@ import NovelMiniCardLayout from "./NovelMiniCardLayout";
 import NovelTags from "../Novel/NovelTags";
 import { MdGroups } from "react-icons/md";
 
-const NovelMiniCard = ({ id, title, coverUrl }) => {
+const NovelMiniCard = ({ id, title, coverUrl, tags }) => {
   return (
     <NovelMiniCardLayout id={id} title={title} coverUrl={coverUrl}>
       <div className={styles["latest-update-chapters"]}>
-        <NovelTags />
+        <NovelTags tags={tags} />
         <div className={styles["follows"]}>
           <MdGroups
             style={{

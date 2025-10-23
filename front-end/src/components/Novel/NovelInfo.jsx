@@ -1,12 +1,12 @@
 import NovelTags from "./NovelTags";
 import NovelSummary from "./NovelSummary";
 
-const NovelInfo = () => {
+const NovelInfo = ({ tags, synopsis }) => {
   return (
     <div className="novel-info card">
-      <NovelTags />
+      <NovelTags tags={tags} />
 
-      <NovelSummary />
+      <NovelSummary synopsis={synopsis} />
     </div>
   );
 };

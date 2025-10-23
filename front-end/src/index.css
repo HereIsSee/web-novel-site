@@ -324,6 +324,7 @@ a.title:focus {
 }
 .novel-title {
   font-size: 48px;
+  text-align: center;
 }
 .novel-author {
   font-size: 24px;

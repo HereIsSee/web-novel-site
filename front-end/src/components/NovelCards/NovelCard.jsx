@@ -1,20 +1,19 @@
 import { Link } from "react-router-dom";
 import styles from "./NovelCard.module.css";
 import { useState } from "react";
-import NovelCover from "/the-legend-of-william-oh.png";
 
 import NovelTags from "../Novel/NovelTags";
 import NovelSummary from "../Novel/NovelSummary";
 
 import NovelCardLayout from "./NovelCardLayout";
 
-const NovelCard = ({ id, title, synopsis, coverImageUrl, stats }) => {
+const NovelCard = ({ id, title, synopsis, coverImageUrl, tags, stats }) => {
   const [showMore, setShowMore] = useState(false);
 
   const novelSlog = "the-legend-of-william-oh";
 
   return (
-    <NovelCardLayout id={id} coverUrl={NovelCover}>
+    <NovelCardLayout id={id} coverUrl={coverImageUrl}>
       <Link
         className={styles["novel-card-title"]}
         to={`/novels/${id}/${novelSlog}`}
@@ -23,7 +22,7 @@ const NovelCard = ({ id, title, synopsis, coverImageUrl, stats }) => {
       </Link>
 
       <div className={`${styles["novel-meta"]} ${styles["with-button"]}`}>
-        <NovelTags />
+        <NovelTags tags={tags} />
         <button
           className={styles["show-more"]}
           onClick={() => setShowMore(!showMore)}

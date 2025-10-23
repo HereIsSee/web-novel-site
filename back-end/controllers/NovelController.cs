@@ -38,7 +38,7 @@ namespace Api.Controllers
 
             var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
 
-            return Ok(novels);
+            return Ok(novelDtos);
         }
 
         [HttpGet("{id}")]

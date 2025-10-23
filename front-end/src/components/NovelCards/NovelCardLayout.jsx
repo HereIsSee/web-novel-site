@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./NovelCard.module.css";
+import DefaultCover from "/default-image.png";
 
 const NovelCardLayout = ({
   id,
@@ -15,7 +16,7 @@ const NovelCardLayout = ({
         to={`/novels/${id}/${novelSlog}`}
         className={styles["link-with-image"]}
       >
-        <img src={coverUrl} alt="novel cover" />
+        <img src={coverUrl ?? DefaultCover} alt="novel cover" />
       </Link>
       <div className={styles["novel-card-info"]}>{children}</div>
     </div>

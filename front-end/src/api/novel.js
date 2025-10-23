@@ -1,5 +1,7 @@
 import { httpRequest } from "./http";
 
+export const getNovels = () => httpRequest("/api/novels");
+
 export const uploadCoverTemp = (formData) =>
   httpRequest("/api/upload/cover-temp", {
     method: "POST",
