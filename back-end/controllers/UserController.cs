@@ -74,7 +74,6 @@ namespace Api.Controllers
 
             user.UserName = updatedUser.UserName;
             user.Email = updatedUser.Email;
-            user.DisplayName = updatedUser.DisplayName;
             user.Bio = updatedUser.Bio;
             user.AvatarUrl = updatedUser.AvatarUrl;
 

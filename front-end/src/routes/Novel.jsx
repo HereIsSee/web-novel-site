@@ -47,7 +47,7 @@ const Novel = () => {
         </>
       ) : (
         <div className="novel container">
-          <NovelHeader title={novel.title} author={novel.author.displayName} />
+          <NovelHeader title={novel.title} author={novel.author.userName} />
 
           <NovelInfo />
 

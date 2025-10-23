@@ -4,9 +4,8 @@ namespace Api.Models
 {
     public enum UserRole
     {
-        Reader,
-        Author,
-        Admin
+        Admin,
+        User
     }
     public class User
     {
@@ -15,12 +14,11 @@ namespace Api.Models
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
 
-        public string? DisplayName { get; set; }
         public string? Bio { get; set; }
         public string? AvatarUrl { get; set; }
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 
-        public UserRole Role { get; set; } = UserRole.Reader;
+        public UserRole Role { get; set; } = UserRole.User;
 
         //Navigation properties
         public ICollection<Novel>? Novels { get; set; }

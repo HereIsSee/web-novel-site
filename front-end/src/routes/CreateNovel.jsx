@@ -1,28 +1,54 @@
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../context/useToast";
 import { uploadCoverTemp, createNovel } from "../api/novel";
+import { getTags } from "../api/tags";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
 import TextEditor from "../components/FormFields/TextEditor/TextEditor";
 import checkImageRatio from "../helpers/checkImageRatio";
+import InputField from "../components/FormFields/InputField";
+import Button from "../components/FormFields/Button";
 import DropDown from "../components/FormFields/DropDown";
+import DropDownListSelection from "../components/FormFields/DropDownListSelection";
 
 const novelStatusArray = { Draft: 0, Published: 1, Hidden: 3 };
 
 const CreateNovel = () => {
+  //Novel data
   const [title, setTitle] = useState("");
   const editor = useEditor({
     extensions: [StarterKit],
     content: "<p>Write your synopsis here...</p>",
   });
   const [novelStatus, setNovelStatus] = useState(0);
+  const [selectedTags, setSelectedTags] = useState([]);
 
+  // Search fields inputs
+  const [inputTagsValue, setInputTagsValue] = useState("");
+
+  // Preview of uploaded image
   const [tempFileId, setTempFileId] = useState(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  // Data for selection like tags and novel status
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await getTags();
+
+        setTags(response);
+      } catch (err) {
+        console.error("Error while gettings tags: ", err);
+      }
+    };
+    fetchTags();
+  }, []);
 
   const { showToast } = useToast();
 
@@ -75,8 +101,11 @@ const CreateNovel = () => {
       Title: title,
       Synopsis: safeHTML,
       CoverImageId: tempFileId,
-      Status: novelStatus,
+      Status: Number(novelStatus),
+      Tags: selectedTags,
     };
+
+    console.log(formData);
 
     try {
       const response = await createNovel(formData);
@@ -94,14 +123,14 @@ const CreateNovel = () => {
       <form className="novel-form card" onSubmit={(e) => handleSubmit(e)}>
         <div>
           <label htmlFor="title">Title</label>
-          <input
+          <InputField
             type="text"
             id="title"
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className=""
-            required
+            required={true}
           />
         </div>
 
@@ -119,11 +148,6 @@ const CreateNovel = () => {
         </div>
 
         <div>
-          <label htmlFor="synopsis">Synopsis</label>
-          <TextEditor editor={editor} />
-        </div>
-
-        <div>
           <label htmlFor="novelStatus">Novel Status</label>
           <DropDown
             items={novelStatusArray}
@@ -133,7 +157,27 @@ const CreateNovel = () => {
           />
         </div>
 
-        <button type="submit">Submit</button>
+        <div>
+          <label htmlFor="">Novel tags</label>
+          <DropDownListSelection
+            items={tags}
+            placeholder="Select tags..."
+            selectedItems={selectedTags}
+            inputValue={inputTagsValue}
+            onInputChange={(value) => setInputTagsValue(value)}
+            onAddItem={(tag) => setSelectedTags((prev) => [...prev, tag])}
+            onRemoveItem={(itemToRemove) =>
+              setSelectedTags((prev) => prev.filter((i) => i !== itemToRemove))
+            }
+          />
+        </div>
+
+        <div>
+          <label htmlFor="synopsis">Synopsis</label>
+          <TextEditor editor={editor} />
+        </div>
+
+        <Button type="submit">Submit</Button>
       </form>
     </AuthorDashboardLayout>
   );

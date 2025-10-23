@@ -81,6 +81,25 @@ namespace Api.Controllers
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
 
+            if (novelDto.Tags != null && novelDto.Tags.Any())
+            {
+                var tagIds = novelDto.Tags.Select(t => t.Id).ToList();
+                var existingTags = await _db.Tags
+                    .Where(t => tagIds.Contains(t.Id))
+                    .ToListAsync();
+
+                foreach (var tag in existingTags)
+                {
+                    _db.NovelTags.Add(new NovelTag
+                    {
+                        NovelId = novel.Id,
+                        TagId = tag.Id
+                    });
+                }
+
+                await _db.SaveChangesAsync();
+            }
+
             // Relate the temp image with created novel, and move it to uploads folder
             if (novelDto.CoverImageId.HasValue)
             {

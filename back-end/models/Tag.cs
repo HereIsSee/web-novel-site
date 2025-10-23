@@ -10,6 +10,7 @@ namespace Api.Models
         public int Id { get; set; }
 
         public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
 
         // Many-to-many relationship
         public ICollection<NovelTag>? NovelTags { get; set; } = new List<NovelTag>();

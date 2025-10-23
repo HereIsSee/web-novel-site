@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getTags } from "../api/tags";
+import { novelStatusData } from "../helpers/novelStatusData";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
@@ -7,22 +9,22 @@ import MultiRangeSlider from "../components/FormFields/MultiRangeSlider";
 import DropDown from "../components/FormFields/DropDown";
 import NovelCard from "../components/NovelCards/NovelCard";
 
-const allTags = [
-  "Anti-Hero Lead",
-  "Romantic Comedy",
-  "Tragic Hero",
-  "Redemption Arc",
-  "Found Family",
-  "Enemies to Lovers",
-];
-const allStatus = [
-  "All",
-  "Completed",
-  "Dropped",
-  "Ongoing",
-  "Hiatus",
-  "Inactive",
-];
+// const allTags = [
+//   "Anti-Hero Lead",
+//   "Romantic Comedy",
+//   "Tragic Hero",
+//   "Redemption Arc",
+//   "Found Family",
+//   "Enemies to Lovers",
+// ];
+// const allStatus = [
+//   "All",
+//   "Completed",
+//   "Dropped",
+//   "Ongoing",
+//   "Hiatus",
+//   "Inactive",
+// ];
 const orderBy = [
   "Last Update",
   "Release Date",
@@ -34,7 +36,33 @@ const orderBy = [
 ];
 
 const Search = () => {
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  // Form data
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState([]);
+
+  // Search fields inputs
+  const [inputTagsValue, setInputTagsValue] = useState("");
+  const [inputStatusValue, setInputStatusValue] = useState("");
+
+  // Data for selection like tags and novel status
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await getTags();
+
+        console.log(response);
+
+        setTags(response);
+      } catch (err) {
+        console.error("Error while gettings tags: ", err);
+      }
+    };
+    fetchTags();
+  }, []);
 
   return (
     <App>
@@ -66,8 +94,17 @@ const Search = () => {
               <label htmlFor="tags">Tags</label>
 
               <DropDownListSelection
-                placeholder="Search tags..."
-                items={allTags}
+                items={tags}
+                placeholder="Select tags..."
+                selectedItems={selectedTags}
+                inputValue={inputTagsValue}
+                onInputChange={(value) => setInputTagsValue(value)}
+                onAddItem={(tag) => setSelectedTags((prev) => [...prev, tag])}
+                onRemoveItem={(itemToRemove) =>
+                  setSelectedTags((prev) =>
+                    prev.filter((i) => i !== itemToRemove),
+                  )
+                }
               />
             </div>
 
@@ -90,9 +127,24 @@ const Search = () => {
             <div className="search-item">
               <label htmlFor="status">Status</label>
 
-              <DropDownListSelection
+              {/* <DropDownListSelection
                 placeholder="Search status..."
                 items={allStatus}
+              /> */}
+              <DropDownListSelection
+                items={novelStatusData}
+                placeholder="Search status..."
+                selectedItems={selectedStatuses}
+                inputValue={inputStatusValue}
+                onInputChange={(value) => setInputStatusValue(value)}
+                onAddItem={(status) =>
+                  setSelectedStatuses((prev) => [...prev, status])
+                }
+                onRemoveItem={(itemToRemove) =>
+                  setSelectedStatuses((prev) =>
+                    prev.filter((i) => i !== itemToRemove),
+                  )
+                }
               />
             </div>
 

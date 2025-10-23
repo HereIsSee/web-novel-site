@@ -8,7 +8,11 @@ namespace Api.Profiles
     {
         public TagProfile()
         {
-            CreateMap<Tag, TagReadDto>();
+            CreateMap<Tag, TagDto>();
+
+            CreateMap<TagDto, Tag>()
+            .ForAllMembers(opt =>
+                opt.Condition((src, dest, srcMember) => srcMember != null));
         }
     }
 }

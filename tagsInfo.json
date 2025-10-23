@@ -1,0 +1,198 @@
+[
+  {
+    "name": "Anti-Hero Lead",
+    "description": "Anti-Hero Lead stories depict leading characters that lack the usual heroic qualities such as idealism, courage, or mora..."
+  },
+  {
+    "name": "Artificial Intelligence",
+    "description": "A subgenre focusing on characters or major actors that are advanced AI. ..."
+  },
+  {
+    "name": "Attractive Lead",
+    "description": "The main character of this novel is exceptionally attractive - to the point where it deserves an extra tag on the story ..."
+  },
+  {
+    "name": "Cyberpunk",
+    "description": "Cyberpunk is a subgenre of science fiction that focuses on technological advancements themselves. They usually feature a..."
+  },
+  {
+    "name": "Dungeon",
+    "description": "A type of fiction that takes place or focuses on loot-bearing Dungeons similar to the eponymous RPG. Also includes a the..."
+  },
+  {
+    "name": "Dystopia",
+    "description": "A society where the common person's living conditions are undesirable or frightening, often with a totalitarian governme..."
+  },
+  {
+    "name": "Female Lead",
+    "description": "Female Lead stories have, unsurprisingly, a leading female human character, or of any particular sapient humanoid race...."
+  },
+  {
+    "name": "First Contact",
+    "description": "A story focusing on the first meeting between two or more species or societies and the events that occur because of it...."
+  },
+  {
+    "name": "GameLit",
+    "description": "Novels set in game-like worlds of any game genre. Does not need to heavily focus on visual statistics...."
+  },
+  {
+    "name": "Gender Bender",
+    "description": "Gender Bender fictions utilise the theme of gender swapping. The gender swapping can be temporary or permanent, full or ..."
+  },
+  {
+    "name": "Genetically Engineered",
+    "description": "Characters are genetically modified to be superior to their original species...."
+  },
+  {
+    "name": "Grimdark",
+    "description": "Grimdark is a subgenre or a way to describe the tone, style or setting of speculative fiction (especially fantasy) that ..."
+  },
+  {
+    "name": "Hard Sci-fi",
+    "description": "Uses theoretically possible science and attempts to explain how the science works; does not include fantasy elements...."
+  },
+  {
+    "name": "Harem",
+    "description": "Harem stories depict characters, which may or may not be the main character, in polyamorous and/or polygamous relationsh..."
+  },
+  {
+    "name": "High Fantasy",
+    "description": "Defined by its epic nature, High Fantasy takes place in an alternate world with its own rules and laws...."
+  },
+  {
+    "name": "LitRPG",
+    "description": "Novels where linear progression, such as levels, are main themes of the story. Almost always shows stat boxes, EXP gain,..."
+  },
+  {
+    "name": "Low Fantasy",
+    "description": "A type of fantasy that takes place in the real world, putting fantastical elements in an otherwise natural setting...."
+  },
+  {
+    "name": "Magic",
+    "description": "Magic fictions contain the use or means of magic (as charms or spells) that have supernatural power over natural forces...."
+  },
+  {
+    "name": "Male Lead",
+    "description": "Male Lead stories have, you guessed it, a leading male human character, or of any particular sapient humanoid race...."
+  },
+  {
+    "name": "Martial Arts",
+    "description": "Martial Arts stories commonly describe to great detail the intricacies of western or eastern combat...."
+  },
+  {
+    "name": "Multiple Lead Characters",
+    "description": "Multiple Lead Characters fictions depict stories said from points of view of a number of characters, the actual number v..."
+  },
+  {
+    "name": "Mythos",
+    "description": "A type of fiction focusing on mythology, such as deities and elements of the divine, or the occult...."
+  },
+  {
+    "name": "Non-Human Lead",
+    "description": "Non-Human Lead stories have main character(s) not be human, whether partially or completely. The term may include or exc..."
+  },
+  {
+    "name": "Portal Fantasy / Isekai",
+    "description": "Features a fantastical world that is entered through a portal or some other means, and differs from the real world. In J..."
+  },
+  {
+    "name": "Post Apocalyptic",
+    "description": "The world has been ruined, and this is the story of the survivors...."
+  },
+  {
+    "name": "Progression",
+    "description": "Characters work to improve themselves over time rather than acquiring rapid growth, usually through training, grinding, ..."
+  },
+  {
+    "name": "Reader Interactive",
+    "description": "Reader Interactive uses reader inputs (usually polls) to define the progression of the novel. They can also be “choose y..."
+  },
+  {
+    "name": "Reincarnation",
+    "description": "Reincarnation utilises a common theme of a person's life restarting or beginning anew after their death, not necessarily..."
+  },
+  {
+    "name": "Ruling Class",
+    "description": "Focuses on managing cities, castles, or entire worlds. Usually features nobility...."
+  },
+  {
+    "name": "School Life",
+    "description": "School Life stories usually place their characters in a setting regarding education and schooling. The main character(s)..."
+  },
+  {
+    "name": "Secret Identity",
+    "description": "Secret Identity fictions use the theme of subterfuge and secrecy employed by one or more characters (main or otherwise) ..."
+  },
+  {
+    "name": "Slice of Life",
+    "description": "Slice of Life stories usually depict snippets or parts of one or more characters’ life, which may or may not be connecte..."
+  },
+  {
+    "name": "Soft Sci-fi",
+    "description": "Uses futuristic-type science, but doesn't explain how the technology works and the science isn’t necessarily realistic o..."
+  },
+  {
+    "name": "Space Opera",
+    "description": "A subgenre of science fiction that focuses on space warfare, interplanetary battles, futuristic weapons, and is usually ..."
+  },
+  {
+    "name": "Sports",
+    "description": "Sports fictions focus on competitive displays of physical or mental prowess. The sports can be real or imaginary, but us..."
+  },
+  {
+    "name": "Steampunk",
+    "description": "A subgenre of science fiction inspired by and incorporating 19th-century industrial steam-powered machinery and technolo..."
+  },
+  {
+    "name": "Strategy",
+    "description": "Strategy stories depict characters or setting that do not rely on pure physical prowess, combat, or clashing, instead de..."
+  },
+  {
+    "name": "Strong Lead",
+    "description": "Strong Lead stories depict characters which are unnaturally or unusually potent compared to the norm of the setting they..."
+  },
+  {
+    "name": "Super Heroes",
+    "description": "A subgenre focusing on people with supernatural abilities, or ones that focus on fighting the evil of the universe, usua..."
+  },
+  {
+    "name": "Supernatural",
+    "description": "Supernatural stories contain an unnatural element which cannot be found in reality. Common themes include magic, zombies..."
+  },
+  {
+    "name": "Technologically Engineered",
+    "description": "Characters are enhanced or created through technology, such as cyborgs or robots. ..."
+  },
+  {
+    "name": "Time Loop",
+    "description": "Characters relive the same time period through a loop; may or may not involve alternate timelines...."
+  },
+  {
+    "name": "Time Travel",
+    "description": "Characters directly travel through time, possibly within the same timeline, alternate timelines, or even creating new ti..."
+  },
+  {
+    "name": "Urban Fantasy",
+    "description": "Works that feature fantastical or supernatural elements in an urban setting, which may or may not be contemporary...."
+  },
+  {
+    "name": "Villainous Lead",
+    "description": "As opposed to Anti-Hero, villain leads are not benevolent. Usually features protagonists with immoral or evil goals...."
+  },
+  {
+    "name": "Virtual Reality",
+    "description": "Virtual Reality stories often incorporate headsets or full-body machines that simulate a different reality or depict mov..."
+  },
+  {
+    "name": "War and Military",
+    "description": "Fictions that focus on war and the military life of soldiers...."
+  },
+  {
+    "name": "Wuxia",
+    "description": "Based on Chinese literature wuxia (Martial Heroes) features itinerant warriors of ancient China, often depicted as capab..."
+  },
+  {
+    "name": "Xianxia",
+    "description": "A type of Chinese martial arts novel that typically focuses on cultivation and a quest for immortality...."
+  }
+]

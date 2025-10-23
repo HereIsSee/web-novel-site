@@ -1,27 +1,29 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import styles from "./DropDownListSelection.module.css";
 
-const DropDownListSelection = ({ items, placeholder }) => {
-  const [showItemSelection, setShowItemSelection] = useState(false);
-  const [selectedItems, setselectedItems] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+const DropDownListSelection = ({
+  items,
+  placeholder,
+  selectedItems,
+  inputValue,
+  onInputChange,
+  onAddItem,
+  onRemoveItem,
+}) => {
   const searchField = useRef(null);
+  const [showItemSelection, setShowItemSelection] = useState(false);
 
   const filteredItems = items.filter(
     (item) =>
-      item.toLowerCase().includes(inputValue.toLowerCase()) &&
+      item.name.toLowerCase().includes(inputValue.toLowerCase()) &&
       !selectedItems.includes(item),
   );
 
   const handleItemClick = (item) => {
-    setselectedItems([...selectedItems, item]);
-    setInputValue("");
+    onAddItem(item);
+    onInputChange("");
     setShowItemSelection(false);
     searchField.current.focus();
-  };
-
-  const handleRemoveItem = (itemToRemove) => {
-    setselectedItems(selectedItems.filter((item) => item !== itemToRemove));
   };
 
   return (
@@ -31,12 +33,12 @@ const DropDownListSelection = ({ items, placeholder }) => {
         onClick={() => searchField.current.focus()}
       >
         {selectedItems.map((item) => (
-          <div key={item} className={styles.selectedItem}>
-            <span>{item}</span>
+          <div key={item.id} className={styles.selectedItem}>
+            <span>{item.name}</span>
             <button
               type="button"
               className={styles.removeButton}
-              onClick={() => handleRemoveItem(item)}
+              onClick={() => onRemoveItem(item)}
             >
               ×
             </button>
@@ -47,7 +49,7 @@ const DropDownListSelection = ({ items, placeholder }) => {
           ref={searchField}
           type="text"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => onInputChange(e.target.value)}
           onClick={() => setShowItemSelection(!showItemSelection)}
           onBlur={() => setShowItemSelection(false)}
           placeholder={placeholder}
@@ -59,11 +61,12 @@ const DropDownListSelection = ({ items, placeholder }) => {
         <div className={styles.itemSelection}>
           {filteredItems.map((item) => (
             <div
-              key={item}
+              key={item.id}
               className={styles.item}
               onMouseDown={() => handleItemClick(item)}
             >
-              <div className={styles.itemName}>{item}</div>
+              <div className={styles.itemName}>{item.name}</div>
+              <div className={styles.itemDescription}>{item.description}</div>
             </div>
           ))}
         </div>

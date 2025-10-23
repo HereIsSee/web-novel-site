@@ -11,7 +11,6 @@ namespace Api.DTOs
         public string Email { get; set; } = null!;
         [Required]
         public string Password { get; set; } = null!; // raw password, to be hashed in service
-        public string? DisplayName { get; set; }
         public string? Bio { get; set; }
         public string? AvatarUrl { get; set; }
     }
@@ -20,7 +19,6 @@ namespace Api.DTOs
     {
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string? DisplayName { get; set; }
         public string? Bio { get; set; }
         public string? AvatarUrl { get; set; }
     }
@@ -30,7 +28,6 @@ namespace Api.DTOs
         public int Id { get; set; }
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string? DisplayName { get; set; }
         public string? Bio { get; set; }
         public string? AvatarUrl { get; set; }
         public DateTime JoinedAt { get; set; }
@@ -41,7 +38,6 @@ namespace Api.DTOs
     {
         public int Id { get; set; }
         public string UserName { get; set; } = null!;
-        public string? DisplayName { get; set; }
         public string? AvatarUrl { get; set; }
     }
 

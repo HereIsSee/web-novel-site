@@ -8,6 +8,7 @@ namespace Api.DTOs
         public string? Synopsis { get; set; }
         public int? CoverImageId { get; set; }
         public NovelStatus Status { get; set; } = NovelStatus.Draft;
+        public IEnumerable<TagDto> Tags { get; set; } = [];
     }
 
     public class UpdateNovelDto
@@ -34,6 +35,6 @@ namespace Api.DTOs
         public UserSummaryDto Author { get; set; } = null!;
 
         // Tags (flat list)
-        public List<TagReadDto> Tags { get; set; } = new();
+        public List<TagDto> Tags { get; set; } = new();
     }
 }

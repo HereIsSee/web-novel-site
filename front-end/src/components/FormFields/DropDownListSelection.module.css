@@ -65,6 +65,10 @@
 }
 
 .itemName {
+  font-size: 24px;
+  color: rgb(235, 235, 235);
+}
+.itemDescription {
   font-size: 18px;
-  color: white;
+  color: rgba(199, 199, 199, 0.753);
 }
