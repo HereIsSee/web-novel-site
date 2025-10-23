@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -16,31 +17,21 @@ export const AuthProvider = ({ children }) => {
         if (exp > Date.now() / 1000) {
           setToken(storedToken);
           setUser({ id, username });
+          setIsLoggedIn(true);
         } else {
           localStorage.removeItem("token");
+          setIsLoggedIn(false);
         }
       } catch {
         localStorage.removeItem("token");
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      try {
-        const { exp } = jwtDecode(token);
-        if (exp > Date.now() / 1000) {
-          setIsLoggedIn(true);
-        } else {
-          logout();
-        }
-      } catch {
-        logout();
+        setIsLoggedIn(false);
       }
     } else {
       setIsLoggedIn(false);
     }
-  }, [token]);
+
+    setIsLoading(false);
+  }, []);
 
   const login = (token) => {
     localStorage.setItem("token", token);
@@ -58,7 +49,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, isLoggedIn, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

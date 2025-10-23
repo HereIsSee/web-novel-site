@@ -6,7 +6,9 @@ import NovelFollowCard from "../components/NovelCards/NovelFollowCard";
 import SectionWrapper from "../components/SectionWrapper";
 
 const Follows = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  if (isLoading) return <div> Loading... </div>;
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 

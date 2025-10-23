@@ -6,7 +6,9 @@ import NovelReadLaterCard from "../components/NovelCards/NovelReadLaterCard";
 import SectionWrapper from "../components/SectionWrapper";
 
 const ReadLater = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  if (isLoading) return <div> Loading... </div>;
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 

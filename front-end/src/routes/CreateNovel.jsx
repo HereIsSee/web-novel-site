@@ -1,7 +1,6 @@
 import { Link, useNavigate, Navigate } from "react-router-dom";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useState } from "react";
-import { useAuth } from "../context/useAuth";
 import { useToast } from "../context/useToast";
 import { uploadCoverTemp, createNovel } from "../api/novel";
 import StarterKit from "@tiptap/starter-kit";
@@ -25,12 +24,9 @@ const CreateNovel = () => {
   const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
-  const { isLoggedIn } = useAuth();
   const { showToast } = useToast();
 
   const navigate = useNavigate();
-
-  if (!isLoggedIn) return <Navigate to="/" replace />;
 
   const handleCoverChange = async (e) => {
     const file = e.target.files[0];

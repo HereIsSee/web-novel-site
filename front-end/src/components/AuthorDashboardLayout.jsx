@@ -1,14 +1,20 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import App from "../App";
-import Button from "../components/FormFields/Button";
-import novelPicture from "/the-legend-of-william-oh.png";
 
 const AuthorDashboardLayout = ({ subTitle, children }) => {
-  const { user, isLoggedIn } = useAuth();
-  const navigate = useNavigate();
+  const { user, isLoggedIn, isLoading } = useAuth();
 
-  if (!isLoggedIn) return <Navigate to="/" replace />;
+  if (isLoading) {
+    console.log("Loading user id");
+    return <div>Loading...</div>;
+  }
+
+  if (!isLoggedIn) {
+    console.log("isLoggedIn: ", isLoggedIn);
+    console.log("User data: ", user);
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <App>

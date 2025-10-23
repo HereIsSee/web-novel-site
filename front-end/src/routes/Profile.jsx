@@ -8,7 +8,9 @@ import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
 
 const Profile = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  if (isLoading) return <div> Loading... </div>;
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 

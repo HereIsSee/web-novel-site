@@ -6,7 +6,9 @@ import NovelFavoriteCard from "../components/NovelCards/NovelFavoriteCard";
 import SectionWrapper from "../components/SectionWrapper";
 
 const Favorites = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+
+  if (isLoading) return <div> Loading... </div>;
 
   if (!isLoggedIn) return <Navigate to="/" replace />;
 
