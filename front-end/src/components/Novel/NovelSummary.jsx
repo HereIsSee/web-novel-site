@@ -1,8 +1,9 @@
 const NovelSummary = ({ synopsis }) => {
   return (
-    <div className="novel-summary">
-      <div dangerouslySetInnerHTML={{ __html: synopsis }} />
-    </div>
+    <div
+      className="novel-summary"
+      dangerouslySetInnerHTML={{ __html: synopsis }}
+    />
   );
 };
 

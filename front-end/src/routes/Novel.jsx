@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { getNovel } from "../api/novel";
 
 import App from "../App";
 
@@ -13,21 +14,21 @@ const Novel = () => {
   const { id } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [novel, SetNovel] = useState({});
-  const [error, SetError] = useState("");
+  const [novel, setNovel] = useState({});
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const novelData = () => {
-      fetch(`/api/novels/${id}`)
-        .then((response) => {
-          if (response.status >= 400) {
-            throw new Error("Server Error");
-          }
-          return response.json();
-        })
-        .then((response) => SetNovel(response))
-        .catch((error) => SetError(error.message))
-        .finally(() => setIsLoading(false));
+    const novelData = async () => {
+      try {
+        console.log("NovelId: ", id);
+        const response = await getNovel(id);
+        console.log(response);
+        setNovel(response);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     novelData();
@@ -49,7 +50,7 @@ const Novel = () => {
         <div className="novel container">
           <NovelHeader title={novel.title} author={novel.author.userName} />
 
-          <NovelInfo />
+          <NovelInfo tags={novel.tags} synopsis={novel.synopsis} />
 
           <NovelStatistics />
 
