@@ -1,16 +1,42 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/useAuth";
+import { getUserNovels } from "../api/novel";
 import { IoBookSharp, IoDocumentTextSharp } from "react-icons/io5";
 import { FaPuzzlePiece, FaBookmark } from "react-icons/fa";
 import { TbStarFilled } from "react-icons/tb";
 import App from "../App";
 import Button from "../components/FormFields/Button";
-import novelPicture from "/the-legend-of-william-oh.png";
+import DefaultCover from "/default-image.png";
 import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
 
 const AuthorDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [userNovels, setUserNovels] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserNovels = async () => {
+      if (user == null) return;
+      try {
+        const response = await getUserNovels(user.id);
+
+        setUserNovels(response);
+        console.log(response);
+      } catch (err) {
+        setError(err.message);
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserNovels();
+  }, [user]);
+
+  if (isLoading) return <div>Loading ...</div>;
+  if (error) return <div>{error}</div>;
 
   const onClick = () => navigate(`/author-dashboard/${user.id}/create-novel`);
 
@@ -60,49 +86,33 @@ const AuthorDashboard = () => {
 
       <div className="author-dashboard-novels card">
         <div className="novels">
-          <div className="novel">
-            <img src={novelPicture} alt="novel cover" />
-            <div>
-              <div className="title">The Legend of William Oh</div>
-              <div className="rating">
-                <div className="star-value">5</div>
-                <TbStarFilled size="20px" />
+          {userNovels.map((novel) => {
+            return (
+              <div className="novel" key={novel.id}>
+                <Link
+                  to={`/novels/${novel.id}/${"novelSlog"}`}
+                  className="link-with-image"
+                >
+                  <img
+                    src={novel.coverImageUrl ?? DefaultCover}
+                    alt="novel cover"
+                  />
+                </Link>
+                <div>
+                  <Link
+                    className="title"
+                    to={`/novels/${novel.id}/${"novelSlog"}`}
+                  >
+                    {novel.title}
+                  </Link>
+                  <div className="rating">
+                    <div className="star-value">5</div>
+                    <TbStarFilled size="20px" />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div className="novel">
-            <img src={novelPicture} alt="novel cover" />
-            <div>
-              <div className="title">The Legend of William Oh</div>
-              <div className="rating">
-                <div className="star-value">5</div>
-                <TbStarFilled size="20px" />
-              </div>
-            </div>
-          </div>
-
-          <div className="novel">
-            <img src={novelPicture} alt="novel cover" />
-            <div>
-              <div className="title">The Legend of William Oh</div>
-              <div className="rating">
-                <div className="star-value">5</div>
-                <TbStarFilled size="20px" />
-              </div>
-            </div>
-          </div>
-
-          <div className="novel">
-            <img src={novelPicture} alt="novel cover" />
-            <div>
-              <div className="title">The Legend of William Oh</div>
-              <div className="rating">
-                <div className="star-value">5</div>
-                <TbStarFilled size="20px" />
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
         <Button align="left" onClick={onClick} styleType="gray-blue">
           Add new

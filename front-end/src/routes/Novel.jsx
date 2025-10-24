@@ -48,7 +48,11 @@ const Novel = () => {
         </>
       ) : (
         <div className="novel container">
-          <NovelHeader title={novel.title} author={novel.author.userName} />
+          <NovelHeader
+            title={novel.title}
+            author={novel.author.userName}
+            coverImageUrl={novel.coverImageUrl}
+          />
 
           <NovelInfo tags={novel.tags} synopsis={novel.synopsis} />
 

@@ -132,53 +132,6 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetNovel), new { id = novel.Id }, novelReadDto);
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
-        // {
-        //     // basic validation omitted...
-        //     // create novel entity
-        //     var novel = new Novel
-        //     {
-        //         Title = novelDto.Title,
-        //         Synopsis = novelDto.Synopsis,
-        //         UserId = novelDto.UserId,
-        //         CreatedAt = DateTime.UtcNow,
-        //         Status = novelDto.Status
-        //     };
-
-        //     _db.Novels.Add(novel);
-        //     await _db.SaveChangesAsync(); // get novel.Id
-
-        //     if (novelDto.TempCoverFileId.HasValue)
-        //     {
-        //         var temp = await _db.UploadedFiles.FindAsync(novelDto.TempCoverFileId.Value);
-        //         if (temp != null && temp.UserId == novelDto.UserId && temp.IsTemporary)
-        //         {
-        //             // Move file from temp dir to permanent
-        //             var permDir = Path.Combine(_env.WebRootPath, "uploads", "covers", novel.UserId.ToString());
-        //             if (!Directory.Exists(permDir)) Directory.CreateDirectory(permDir);
-        //             var newPath = Path.Combine(permDir, temp.FileName);
-        //             System.IO.File.Move(temp.FilePath, newPath);
-
-        //             var newUrl = $"{Request.Scheme}://{Request.Host}/uploads/covers/{novel.UserId}/{temp.FileName}";
-
-        //             // Update record
-        //             temp.FilePath = newPath;
-        //             temp.FileUrl = newUrl;
-        //             temp.IsTemporary = false;
-        //             temp.NovelId = novel.Id;
-        //             temp.ExpiresAt = null;
-
-        //             // set novel cover url
-        //             novel.CoverImageUrl = newUrl;
-        //             await _db.SaveChangesAsync();
-        //         }
-        //     }
-
-        //     var novelReadDto = _mapper.Map<NovelReadDto>(novel);
-        //     return CreatedAtAction(nameof(GetNovel), new { id = novel.Id }, novelReadDto);
-        // }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateNovel(int id, [FromBody] UpdateNovelDto updatedNovelDto)
         {
@@ -241,6 +194,21 @@ namespace Api.Controllers
             await _db.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("user/{id}")]
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserNovels(int id)
+        {
+            var novels = await _db.Novels
+                .Where(n => n.UserId == id)
+                .Include(n => n.User)
+                .Include(n => n.NovelTags)
+                    .ThenInclude(nt => nt.Tag)
+                .ToListAsync();
+
+            var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
+
+            return Ok(novelDtos);
         }
     }
 

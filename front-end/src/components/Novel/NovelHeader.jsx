@@ -1,9 +1,9 @@
-import NovelCover from "/the-legend-of-william-oh.png";
+import DefaultCover from "/default-image.png";
 
-const NovelHeader = ({ title, author }) => {
+const NovelHeader = ({ title, author, coverImageUrl }) => {
   return (
     <div className="novel-header">
-      <img src={NovelCover} alt="novel cover art" />
+      <img src={coverImageUrl ?? DefaultCover} alt="novel cover art" />
       <div>
         <div className="novel-title">{title}</div>
         <div className="novel-author">by {author}</div>

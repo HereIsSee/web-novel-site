@@ -67,7 +67,7 @@ a.mini-novel-card-title:hover {
   flex-shrink: 0;
 }
 .novel-card img {
-  height: 250px;
+  width: 170px;
 }
 a.novel-card-title {
   font-size: 42px;

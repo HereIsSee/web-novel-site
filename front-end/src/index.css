@@ -662,7 +662,6 @@ button.release-date-sort:hover {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  justify-content: center;
   align-items: center;
   width: 300px;
   border: 2px solid var(--light-white-border-color);
@@ -678,6 +677,11 @@ button.release-date-sort:hover {
 .author-dashboard-novels .novel .title {
   font-size: 24px;
 }
+.author-dashboard-novels .novel .title:hover,
+.author-dashboard-novels .novel .title:focus {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
 .author-dashboard-novels .novel .rating {
   font-size: 18px;
   font-weight: bold;
@@ -685,8 +689,13 @@ button.release-date-sort:hover {
   align-items: center;
   gap: 10px;
 }
+.author-dashboard-novels .novel .link-with-image {
+  flex-shrink: 0;
+  display: flex;
+}
 .author-dashboard-novels .novel img {
-  width: 100px;
+  flex-shrink: 0;
+  height: 200px;
   border-radius: 10px;
 }
 /* Author Dashboard DONE */

@@ -4,6 +4,9 @@ export const getNovels = () => httpRequest("/api/novels");
 
 export const getNovel = (id) => httpRequest(`/api/novels/${id}`);
 
+export const getUserNovels = (userId) =>
+  httpRequest(`/api/novels/user/${userId}`);
+
 export const uploadCoverTemp = (formData) =>
   httpRequest("/api/upload/cover-temp", {
     method: "POST",

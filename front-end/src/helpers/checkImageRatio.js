@@ -1,4 +1,4 @@
-const checkImageRatio = (file, targetWidth, targetHeight, tolerance = 0.05) => {
+const checkImageRatio = (file, targetWidth, targetHeight, tolerance = 0.2) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
