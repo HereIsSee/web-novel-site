@@ -19,3 +19,9 @@ export const createNovel = (data) =>
     method: "POST",
     body: JSON.stringify(data),
   });
+
+export const updateNovel = (id, data) =>
+  httpRequest(`/api/novels/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });

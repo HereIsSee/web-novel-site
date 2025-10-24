@@ -559,7 +559,7 @@ button.release-date-sort:hover {
   border-radius: 50%;
   border: 2px solid white;
 }
-.upper-bar button.edit {
+button.edit {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -567,7 +567,7 @@ button.release-date-sort:hover {
   color: white;
   border: none;
 }
-.upper-bar button.edit:hover {
+button.edit:hover {
   background-color: var(--dark-blue-color);
 }
 .lower-bar {
@@ -791,3 +791,12 @@ button.release-date-sort:hover {
 /* Search DONE */
 
 /* CSS DONE */
+
+/* Author Novel START */
+
+.author-novel-header {
+  position: relative;
+  margin-top: -20px;
+}
+
+/* Author Novel DONE */

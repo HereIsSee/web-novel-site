@@ -13,10 +13,11 @@ namespace Api.DTOs
 
     public class UpdateNovelDto
     {
-        public string? Title { get; set; }
+        public string? Title { get; set; } = null!;
         public string? Synopsis { get; set; }
-        public string? CoverImageUrl { get; set; }
-        public NovelStatus? Status { get; set; }
+        public int? CoverImageId { get; set; }
+        public NovelStatus? Status { get; set; } = NovelStatus.Draft;
+        public IEnumerable<TagDto>? Tags { get; set; } = [];
     }
 
     public class NovelReadDto

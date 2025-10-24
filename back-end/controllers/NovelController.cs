@@ -133,24 +133,59 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateNovel(int id, [FromBody] UpdateNovelDto updatedNovelDto)
+        [Authorize]
+        public async Task<ActionResult<NovelReadDto>> UpdateNovel(int id, [FromBody] UpdateNovelDto novelDto)
         {
-            if (updatedNovelDto.Status != null && !Enum.IsDefined(typeof(NovelStatus), updatedNovelDto.Status))
-                return BadRequest($"Invalid novel status: {updatedNovelDto.Status}");
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
 
-            var novel = await _db.Novels.FindAsync(id);
+            var novel = await _db.Novels
+                .Include(n => n.NovelTags)
+                .FirstOrDefaultAsync(n => n.Id == id);
 
             if (novel == null)
-                return NotFound();
+                return NotFound(new { message = "Novel not found." });
 
-            _mapper.Map(updatedNovelDto, novel);
+            if (novel.UserId != userId)
+                return Forbid("Only the author can update this novel.");
 
+            if (novelDto.Status != null && !Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
+                return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
+
+            _mapper.Map(novelDto, novel);
             novel.UpdatedAt = DateTime.UtcNow;
+
+            if (novelDto.Tags != null)
+            {
+                var existingTags = _db.NovelTags.Where(nt => nt.NovelId == novel.Id);
+                _db.NovelTags.RemoveRange(existingTags);
+
+                if (novelDto.Tags.Any())
+                {
+                    var tagIds = novelDto.Tags.Select(t => t.Id).ToList();
+                    var validTags = await _db.Tags.Where(t => tagIds.Contains(t.Id)).ToListAsync();
+
+                    foreach (var tag in validTags)
+                    {
+                        _db.NovelTags.Add(new NovelTag
+                        {
+                            NovelId = novel.Id,
+                            TagId = tag.Id
+                        });
+                    }
+                }
+            }
+
+            if (novelDto.CoverImageId.HasValue)
+                await ReplaceNovelCoverAsync(novel, novelDto.CoverImageId.Value, userId.Value);
 
             await _db.SaveChangesAsync();
 
-            return NoContent();
+            var novelReadDto = _mapper.Map<NovelReadDto>(novel);
+            return Ok(novelReadDto);
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNovel(int id)
@@ -210,6 +245,52 @@ namespace Api.Controllers
 
             return Ok(novelDtos);
         }
+
+        private async Task ReplaceNovelCoverAsync(Novel novel, int newCoverId, int userId)
+        {
+            var newCoverTemp = await _db.UploadedFiles.FindAsync(newCoverId);
+            if (newCoverTemp == null || newCoverTemp.UserId != userId || !newCoverTemp.IsTemporary)
+                return;
+
+            // Remove existing cover if any
+            var oldCover = await _db.UploadedFiles
+                .FirstOrDefaultAsync(f => f.NovelId == novel.Id && !f.IsTemporary);
+
+            if (oldCover != null)
+            {
+                try
+                {
+                    if (System.IO.File.Exists(oldCover.FilePath))
+                        System.IO.File.Delete(oldCover.FilePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to delete old cover file: {ex.Message}");
+                }
+
+                _db.UploadedFiles.Remove(oldCover);
+            }
+
+            // Move new temp file to permanent location
+            var permDir = Path.Combine(_env.WebRootPath, "uploads", "covers", novel.UserId.ToString());
+            if (!Directory.Exists(permDir))
+                Directory.CreateDirectory(permDir);
+
+            var newPath = Path.Combine(permDir, newCoverTemp.FileName);
+            if (System.IO.File.Exists(newCoverTemp.FilePath))
+                System.IO.File.Move(newCoverTemp.FilePath, newPath, true);
+
+            var newUrl = $"{Request.Scheme}://{Request.Host}/uploads/covers/{novel.UserId}/{newCoverTemp.FileName}";
+
+            newCoverTemp.FilePath = newPath;
+            newCoverTemp.FileUrl = newUrl;
+            newCoverTemp.IsTemporary = false;
+            newCoverTemp.NovelId = novel.Id;
+            newCoverTemp.ExpiresAt = null;
+
+            novel.CoverImageUrl = newUrl;
+        }
+
     }
 
 }

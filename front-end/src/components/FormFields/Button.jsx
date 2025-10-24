@@ -16,15 +16,17 @@ const Button = ({
   type = "button",
   align = "center",
   onClick,
+  style = {},
 }) => {
   if (!Styles.includes(styleType))
-    console.error("Button does have such a style type");
+    console.error(`Button does not have such a style type: "${styleType}"`);
 
   const className = `${ButtonStyles[styleType]} ${ButtonStyles[align]}`;
 
   const buttonProps = {
     type,
     className,
+    style,
     ...(onClick && { onClick }),
   };
 

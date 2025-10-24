@@ -7,7 +7,7 @@ const AuthorDashboardLayout = ({ subTitle, children }) => {
 
   if (isLoading) {
     console.log("Loading user id");
-    return <div>Loading...</div>;
+    return <div>Loading...sdf</div>;
   }
 
   if (!isLoggedIn) {

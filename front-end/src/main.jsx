@@ -6,7 +6,8 @@ import { ToastProvider } from "./context/ToastContext";
 import { AuthProvider } from "./context/AuthContext";
 
 import AuthorDashboard from "./routes/AuthorDashboard";
-import CreateNovel from "./routes/CreateNovel";
+import AuthorNovel from "./routes/AuthorNovel";
+import NovelForm from "./routes/NovelForm";
 import Favorites from "./routes/Favorites";
 import Follows from "./routes/Follows";
 import Home from "./routes/Home";
@@ -21,7 +22,15 @@ import Chapter from "./routes/Chapter";
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/author-dashboard/:id", element: <AuthorDashboard /> },
-  { path: "/author-dashboard/:id/create-novel", element: <CreateNovel /> },
+  { path: "/author-dashboard/:id/create-novel", element: <NovelForm /> },
+  {
+    path: "/author-dashboard/:userId/novel/:novelId",
+    element: <AuthorNovel />,
+  },
+  {
+    path: "/author-dashboard/:userId/novel/:novelId/edit",
+    element: <NovelForm />,
+  },
   { path: "/favorites", element: <Favorites /> },
   { path: "/follows", element: <Follows /> },
   { path: "/read-later", element: <ReadLater /> },
