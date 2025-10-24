@@ -4,6 +4,7 @@ const InputField = ({
   id,
   type,
   styleType = "basic",
+  style = {},
   placeholder,
   name,
   value,
@@ -17,6 +18,7 @@ const InputField = ({
     value,
     required,
     placeholder,
+    style,
     className: InputStyles[styleType],
     ...(onChange && { onChange }),
   };
