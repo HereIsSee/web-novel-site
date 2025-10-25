@@ -98,6 +98,7 @@ const ReviewModal = ({ userId, novelId, showModal, onClose }) => {
       }
 
       showToast("Review submited successfully", "success");
+      setReviewAlreadyExists(true);
       console.log(response);
     } catch (err) {
       showToast(err.message, "error");
