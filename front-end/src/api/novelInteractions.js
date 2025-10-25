@@ -31,3 +31,8 @@ export const getUserNovelStatus = (novelId) =>
 
 export const getNovelStats = (novelId) =>
   httpRequest(`/api/novelinteractions/stats/novel/${novelId}`);
+
+export const incrementView = (novelId) =>
+  httpRequest(`/api/novelinteractions/view/${novelId}`, {
+    method: "POST",
+  });

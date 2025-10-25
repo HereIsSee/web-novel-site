@@ -29,15 +29,15 @@ const NovelStatistics = ({ novelStats }) => {
         <div className="novel-statistics-metrics">
           <div className="metric">
             <div className="metric-title">TOTAL VIEWS :</div>
-            <div className="metric-value">100,313</div>
+            <div className="metric-value">{novelStats.views}</div>
           </div>
           <div className="metric">
             <div className="metric-title">FOLLOWERS :</div>
-            <div className="metric-value">2003</div>
+            <div className="metric-value">{novelStats.followsCount}</div>
           </div>
           <div className="metric">
             <div className="metric-title">FAVORITES :</div>
-            <div className="metric-value">1003</div>
+            <div className="metric-value">{novelStats.favoritesCount}</div>
           </div>
           <div className="metric">
             <div className="metric-title">RATINGS :</div>

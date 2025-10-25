@@ -11,19 +11,24 @@ const NovelActionButtons = ({
   novelId,
   userNovelStatus,
   setUserNovelStatus,
+  setNovelStats,
 }) => {
-  const handleInteraction = async (key, apiPair) => {
+  const handleInteraction = async (key, apiPair, countKey) => {
     const prev = userNovelStatus[key];
 
-    // optimistic update
     setUserNovelStatus((prevState) => ({
       ...prevState,
       [key]: !prev,
     }));
 
-    const [doAction, undoAction] = apiPair;
+    if (countKey && setNovelStats) {
+      setNovelStats((prevStats) => ({
+        ...prevStats,
+        [countKey]: prev ? prevStats[countKey] - 1 : prevStats[countKey] + 1,
+      }));
+    }
 
-    console.log(userNovelStatus);
+    const [doAction, undoAction] = apiPair;
 
     try {
       if (prev) await undoAction(novelId);
@@ -33,14 +38,28 @@ const NovelActionButtons = ({
         ...prevState,
         [key]: prev,
       }));
+
+      if (countKey && setNovelStats) {
+        setNovelStats((prevStats) => ({
+          ...prevStats,
+          [countKey]: prev ? prevStats[countKey] + 1 : prevStats[countKey] - 1,
+        }));
+      }
+
       console.error(`Error updating ${key}:`, err.message);
     }
   };
-  const onFollow = () => handleInteraction("isFollowed", [follow, unFollow]);
+
+  const onFollow = () =>
+    handleInteraction("isFollowed", [follow, unFollow], "followsCount");
   const onFavorite = () =>
-    handleInteraction("isFavorited", [favorite, unFavorite]);
+    handleInteraction("isFavorited", [favorite, unFavorite], "favoritesCount");
   const onReadLater = () =>
-    handleInteraction("isReadLater", [readLater, unReadLater]);
+    handleInteraction(
+      "isReadLater",
+      [readLater, unReadLater],
+      "readLatersCount",
+    );
 
   return (
     <div className="novel-action-buttons card">

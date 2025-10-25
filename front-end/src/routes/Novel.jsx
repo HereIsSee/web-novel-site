@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getNovel } from "../api/novel";
 import { useAuth } from "../context/useAuth";
-import { getUserNovelStatus, getNovelStats } from "../api/novelInteractions";
+import {
+  getUserNovelStatus,
+  getNovelStats,
+  incrementView,
+} from "../api/novelInteractions";
 
 import App from "../App";
 
@@ -30,14 +34,16 @@ const Novel = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [novelData, novelStatsData, userStatusData] = await Promise.all([
-          getNovel(novelId),
-          getNovelStats(novelId),
-          isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
-        ]);
+        const [novelData, novelStatsData, userStatusData, updatedViews] =
+          await Promise.all([
+            getNovel(novelId),
+            getNovelStats(novelId),
+            isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
+            incrementView(novelId),
+          ]);
 
         setNovel(novelData);
-        setNovelStats(novelStatsData);
+        setNovelStats({ ...novelStatsData, views: updatedViews.views });
         if (userStatusData) setUserNovelStatus(userStatusData);
 
         console.log(novelData);
@@ -80,6 +86,7 @@ const Novel = () => {
               novelId={novelId}
               userNovelStatus={userNovelStatus}
               setUserNovelStatus={setUserNovelStatus}
+              setNovelStats={setNovelStats}
             />
           )}
 

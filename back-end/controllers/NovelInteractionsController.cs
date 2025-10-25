@@ -254,15 +254,16 @@ namespace Api.Controllers
         [HttpGet("stats/novel/{novelId}")]
         public async Task<ActionResult<NovelStatsDto>> GetNovelStats(int novelId)
         {
-            var novelExists = await _db.Novels.AnyAsync(n => n.Id == novelId);
-            if (!novelExists)
+            var novel = await _db.Novels.FindAsync(novelId);
+            if (novel == null)
                 return NotFound(new { message = "Novel not found" });
 
             var stats = new NovelStatsDto
             {
                 FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId),
                 FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId),
-                ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId)
+                ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId),
+                Views = novel.Views,
             };
 
             return Ok(stats);
@@ -289,6 +290,19 @@ namespace Api.Controllers
 
             return Ok(stats);
         }
+
+        [HttpPost("view/{novelId}")]
+        public async Task<IActionResult> IncrementView(int novelId)
+        {
+            var novel = await _db.Novels.FindAsync(novelId);
+            if (novel == null) return NotFound();
+
+            novel.Views += 1;
+            await _db.SaveChangesAsync();
+
+            return Ok(new { views = novel.Views });
+        }
+
     }
 
 }
