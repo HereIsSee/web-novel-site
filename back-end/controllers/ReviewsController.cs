@@ -13,12 +13,12 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ReviewController : BaseController
+    public class ReviewsController : BaseController
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
 
-        public ReviewController(AppDbContext db, IMapper mapper)
+        public ReviewsController(AppDbContext db, IMapper mapper)
         {
             _db = db;
             _mapper = mapper;

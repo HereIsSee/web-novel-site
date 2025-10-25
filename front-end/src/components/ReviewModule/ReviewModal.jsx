@@ -1,12 +1,14 @@
 import { useRef, useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { createReview, updateReview } from "../../api/reviews";
+import { useToast } from "../../context/useToast";
 import styles from "./ReviewModal.module.css";
 import Button from "../FormFields/Button";
 import InputField from "../FormFields/InputField";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 import TextEditor from "../FormFields/TextEditor/TextEditor";
-const ReviewModal = ({ onClose }) => {
+const ReviewModal = ({ novelId, onClose }) => {
   const [reviewInputs, setReviewInputs] = useState({
     Title: "",
     OverallScore: null,
@@ -22,6 +24,8 @@ const ReviewModal = ({ onClose }) => {
     content: "<p>Write your review here...</p>",
   });
 
+  const { showToast } = useToast();
+
   const dialogRef = useRef(null);
 
   useEffect(() => {
@@ -36,8 +40,28 @@ const ReviewModal = ({ onClose }) => {
     return () => dialog.removeEventListener("close", handleClose);
   }, [onClose]);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    if (!editor) return;
+
+    const rawHTML = editor.getHTML();
+    const safeHTML = DOMPurify.sanitize(rawHTML);
+
+    const formData = {
+      ...reviewInputs,
+      ReviewContent: safeHTML,
+    };
+
+    try {
+      const response = await createReview(novelId, formData);
+
+      showToast("Review submited successfully", "success");
+      console.log(response);
+    } catch (err) {
+      showToast(err.message, "error");
+      console.log(err);
+    }
 
     dialogRef.current.close();
   };

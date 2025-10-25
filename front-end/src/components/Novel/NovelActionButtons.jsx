@@ -87,7 +87,9 @@ const NovelActionButtons = ({
         Read Later
       </button>
 
-      {showModal && <ReviewModal onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <ReviewModal novelId={novelId} onClose={() => setShowModal(false)} />
+      )}
     </div>
   );
 };
