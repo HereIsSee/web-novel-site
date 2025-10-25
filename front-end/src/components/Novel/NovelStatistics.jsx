@@ -6,23 +6,25 @@ const NovelStatistics = ({ novelStats }) => {
         <div className="novel-statistics-star-rating">
           <div className="metric">
             <div className="metric-title">OVERALL SCORE :</div>
-            <div className="metric-value">5 STARS</div>
+            <div className="metric-value">{novelStats.overallScore} STARS</div>
           </div>
           <div className="metric">
             <div className="metric-title">STYLE SCORE :</div>
-            <div className="metric-value">5 STARS</div>
+            <div className="metric-value">{novelStats.styleScore} STARS</div>
           </div>
           <div className="metric">
             <div className="metric-title">STORY SCORE :</div>
-            <div className="metric-value">5 STARS</div>
+            <div className="metric-value">{novelStats.storyScore} STARS</div>
           </div>
           <div className="metric">
             <div className="metric-title">GRAMMAR SCORE :</div>
-            <div className="metric-value">5 STARS</div>
+            <div className="metric-value">{novelStats.grammarScore} STARS</div>
           </div>
           <div className="metric">
             <div className="metric-title">CHARACTER SCORE :</div>
-            <div className="metric-value">5 STARS</div>
+            <div className="metric-value">
+              {novelStats.characterScore} STARS
+            </div>
           </div>
         </div>
 
@@ -41,7 +43,7 @@ const NovelStatistics = ({ novelStats }) => {
           </div>
           <div className="metric">
             <div className="metric-title">RATINGS :</div>
-            <div className="metric-value">1043</div>
+            <div className="metric-value">{novelStats.ratings}</div>
           </div>
           <div className="metric">
             <div className="metric-title">PAGES :</div>
