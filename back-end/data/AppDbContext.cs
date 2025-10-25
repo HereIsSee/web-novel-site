@@ -16,7 +16,9 @@ namespace Api.Data
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<NovelTag> NovelTags { get; set; } = null!;
         public DbSet<UploadedFile> UploadedFiles { get; set; } = null!;
-
+        public DbSet<Follow> Follows { get; set; } = null!;
+        public DbSet<Favorite> Favorites { get; set; } = null!;
+        public DbSet<ReadLater> ReadLaters { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -83,9 +85,46 @@ namespace Api.Data
                 .WithMany(u => u.UploadedFiles)
                 .HasForeignKey(uf => uf.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             
+            // Tables between user 
+            modelBuilder.Entity<Follow>()
+                .HasKey(f => new { f.UserId, f.NovelId });
+            modelBuilder.Entity<Follow>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Follow>()
+                .HasOne(f => f.Novel)
+                .WithMany()
+                .HasForeignKey(f => f.NovelId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Favorite>()
+                .HasKey(f => new { f.UserId, f.NovelId });
+            modelBuilder.Entity<Favorite>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Favorite>()
+                .HasOne(f => f.Novel)
+                .WithMany()
+                .HasForeignKey(f => f.NovelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ReadLater>()
+                .HasKey(r => new { r.UserId, r.NovelId });
+            modelBuilder.Entity<ReadLater>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<ReadLater>()
+                .HasOne(r => r.Novel)
+                .WithMany()
+                .HasForeignKey(r => r.NovelId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
