@@ -19,6 +19,7 @@ namespace Api.Data
         public DbSet<Follow> Follows { get; set; } = null!;
         public DbSet<Favorite> Favorites { get; set; } = null!;
         public DbSet<ReadLater> ReadLaters { get; set; } = null!;
+        public DbSet<Review> Reviews { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -121,6 +122,19 @@ namespace Api.Data
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ReadLater>()
+                .HasOne(r => r.Novel)
+                .WithMany()
+                .HasForeignKey(r => r.NovelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasKey(r => new { r.UserId, r.NovelId });
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Review>()
                 .HasOne(r => r.Novel)
                 .WithMany()
                 .HasForeignKey(r => r.NovelId)
