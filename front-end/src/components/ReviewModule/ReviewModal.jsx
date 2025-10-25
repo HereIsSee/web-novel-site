@@ -54,13 +54,10 @@ const ReviewModal = ({ userId, novelId, showModal, onClose }) => {
         editor.commands.setContent(
           review.reviewContent || "<p>Write your review here...</p>",
         );
-        setReviewAlreadyExists(false);
+        setReviewAlreadyExists(true);
       } catch (err) {
         console.log("Caught error in fetchData:", err);
-        if (err.status === 404) {
-          setReviewAlreadyExists(true);
-          return;
-        }
+        setReviewAlreadyExists(false);
       }
     };
     fetchData();
@@ -95,9 +92,9 @@ const ReviewModal = ({ userId, novelId, showModal, onClose }) => {
     try {
       let response;
       if (reviewAlreadyExists) {
-        response = await createReview(novelId, formData);
-      } else {
         response = await updateReview(novelId, formData);
+      } else {
+        response = await createReview(novelId, formData);
       }
 
       showToast("Review submited successfully", "success");
