@@ -6,6 +6,8 @@ import {
   unFavorite,
   unReadLater,
 } from "../../api/novelInteractions";
+import { useState } from "react";
+import ReviewModal from "../ReviewModule/ReviewModal";
 
 const NovelActionButtons = ({
   novelId,
@@ -13,6 +15,8 @@ const NovelActionButtons = ({
   setUserNovelStatus,
   setNovelStats,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+
   const handleInteraction = async (key, apiPair, countKey) => {
     const prev = userNovelStatus[key];
 
@@ -63,7 +67,7 @@ const NovelActionButtons = ({
 
   return (
     <div className="novel-action-buttons card">
-      <button>Rate it!</button>
+      <button onClick={() => setShowModal(true)}>Rate it!</button>
       <button
         onClick={onFollow}
         className={userNovelStatus.isFollowed ? "active" : ""}
@@ -82,6 +86,8 @@ const NovelActionButtons = ({
       >
         Read Later
       </button>
+
+      {showModal && <ReviewModal onClose={() => setShowModal(false)} />}
     </div>
   );
 };

@@ -10,6 +10,9 @@ const InputField = ({
   value,
   onChange,
   required = false,
+  min,
+  max,
+  step,
 }) => {
   const buttonProps = {
     id,
@@ -21,6 +24,9 @@ const InputField = ({
     style,
     className: InputStyles[styleType],
     ...(onChange && { onChange }),
+    ...(min !== undefined && { min }),
+    ...(max !== undefined && { max }),
+    ...(step !== undefined && { step }),
   };
 
   return <input {...buttonProps} />;

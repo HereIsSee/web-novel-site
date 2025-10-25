@@ -15,6 +15,7 @@ import NovelInfo from "../components/Novel/NovelInfo";
 import NovelStatistics from "../components/Novel/NovelStatistics";
 import NovelActionButtons from "../components/Novel/NovelActionButtons";
 import NovelTableOfContents from "../components/Novel/NovelTableOfContents";
+import ReviewModal from "../components/ReviewModule/ReviewModal";
 
 const Novel = () => {
   const { id: novelId } = useParams();

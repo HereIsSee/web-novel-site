@@ -386,7 +386,7 @@ a.title:focus {
   flex-direction: column;
   gap: 10px;
 }
-.novel-action-buttons button {
+.novel-action-buttons > button {
   border: none;
   padding: 10px;
   color: white;
@@ -395,13 +395,13 @@ a.title:focus {
   background-color: var(--dark-light-color);
   transition: background-color 0.3s ease-out;
 }
-.novel-action-buttons button.active {
+.novel-action-buttons > button.active {
   background-color: var(--light-blue-color);
 }
-.novel-action-buttons button:hover {
+.novel-action-buttons > button:hover {
   background-color: var(--dark-color);
 }
-.novel-action-buttons button.active:hover {
+.novel-action-buttons > button.active:hover {
   background-color: var(--dark-blue-color);
 }
 
