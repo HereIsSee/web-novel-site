@@ -14,7 +14,7 @@ const InputField = ({
   max,
   step,
 }) => {
-  const buttonProps = {
+  const inputProps = {
     id,
     type,
     name,
@@ -29,7 +29,7 @@ const InputField = ({
     ...(step !== undefined && { step }),
   };
 
-  return <input {...buttonProps} />;
+  return <input {...inputProps} />;
 };
 
 export default InputField;

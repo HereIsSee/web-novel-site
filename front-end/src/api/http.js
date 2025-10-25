@@ -19,14 +19,14 @@ export async function httpRequest(url, options = {}) {
     },
   };
 
-  const response = await fetch(url, config);
+  let response = await fetch(url, config);
 
-  // if (response.status === 401) {
-  //   // Token expired or invalid
-  //   localStorage.removeItem("token");
-  //   window.location.href = "/login";
-  //   throw new Error("Unauthorized, please log in again.");
-  // }
+  if (response.status === 401) {
+    // Token expired or invalid
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    throw new Error("Unauthorized, please log in again.");
+  }
 
   if (!response.ok) {
     let errorMessage;
@@ -37,7 +37,9 @@ export async function httpRequest(url, options = {}) {
       errorMessage = await response.text().catch(() => "Unknown error");
     }
 
-    throw new Error(errorMessage);
+    const error = new Error(errorMessage);
+    error.status = response.status;
+    throw error;
   }
 
   const contentType = response.headers.get("content-type");

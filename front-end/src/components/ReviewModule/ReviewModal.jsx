@@ -1,6 +1,10 @@
 import { useRef, useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { createReview, updateReview } from "../../api/reviews";
+import {
+  createReview,
+  updateReview,
+  getUserNovelReview,
+} from "../../api/reviews";
 import { useToast } from "../../context/useToast";
 import styles from "./ReviewModal.module.css";
 import Button from "../FormFields/Button";
@@ -8,14 +12,14 @@ import InputField from "../FormFields/InputField";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 import TextEditor from "../FormFields/TextEditor/TextEditor";
-const ReviewModal = ({ novelId, onClose }) => {
+const ReviewModal = ({ userId, novelId, showModal, onClose }) => {
   const [reviewInputs, setReviewInputs] = useState({
     Title: "",
-    OverallScore: null,
-    StyleScore: null,
-    StoryScore: null,
-    GrammarScore: null,
-    CharacterScore: null,
+    OverallScore: "",
+    StyleScore: "",
+    StoryScore: "",
+    GrammarScore: "",
+    CharacterScore: "",
     ReviewContent: "",
   });
 
@@ -24,21 +28,56 @@ const ReviewModal = ({ novelId, onClose }) => {
     content: "<p>Write your review here...</p>",
   });
 
+  const [reviewAlreadyExists, setReviewAlreadyExists] = useState(false);
+
   const { showToast } = useToast();
 
   const dialogRef = useRef(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const review = await getUserNovelReview(userId, novelId);
+
+        console.log(review);
+
+        setReviewInputs({
+          Title: review.title || "",
+          OverallScore: review.overallScore ?? "",
+          StyleScore: review.styleScore ?? "",
+          StoryScore: review.storyScore ?? "",
+          GrammarScore: review.grammarScore ?? "",
+          CharacterScore: review.characterScore ?? "",
+          ReviewContent: review.reviewContent || "",
+        });
+
+        editor.commands.setContent(
+          review.reviewContent || "<p>Write your review here...</p>",
+        );
+        setReviewAlreadyExists(false);
+      } catch (err) {
+        console.log("Caught error in fetchData:", err);
+        if (err.status === 404) {
+          setReviewAlreadyExists(true);
+          return;
+        }
+      }
+    };
+    fetchData();
+  }, [userId, novelId, editor]);
+
+  useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-
-    dialog.showModal();
+    if (showModal) {
+      dialog.showModal();
+    }
 
     const handleClose = () => onClose();
     dialog.addEventListener("close", handleClose);
 
     return () => dialog.removeEventListener("close", handleClose);
-  }, [onClose]);
+  }, [showModal, onClose]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +93,12 @@ const ReviewModal = ({ novelId, onClose }) => {
     };
 
     try {
-      const response = await createReview(novelId, formData);
+      let response;
+      if (reviewAlreadyExists) {
+        response = await createReview(novelId, formData);
+      } else {
+        response = await updateReview(novelId, formData);
+      }
 
       showToast("Review submited successfully", "success");
       console.log(response);
@@ -69,7 +113,7 @@ const ReviewModal = ({ novelId, onClose }) => {
     const { value } = e.target;
 
     if (value === "") {
-      setReviewInputs((prev) => ({ ...prev, [key]: null }));
+      setReviewInputs((prev) => ({ ...prev, [key]: "" }));
       return;
     }
 
@@ -90,8 +134,6 @@ const ReviewModal = ({ novelId, onClose }) => {
     <dialog className={styles["review-module"]} ref={dialogRef}>
       <button
         className={styles["close-button"]}
-        styleType="blue-white-rounded"
-        style={{ position: "absolute", top: "10px", right: "10px" }}
         onClick={() => dialogRef.current.close()}
       >
         X

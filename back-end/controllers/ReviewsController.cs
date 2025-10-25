@@ -61,11 +61,29 @@ namespace Api.Controllers
 
             return Ok(reviewsDto);
         }
-        
-        [HttpGet("{reviewId}")]
-        public async Task<ActionResult<ReadReviewDto>> GetReview(int reviewId)
+
+        // [HttpGet("{reviewId}")]
+        // public async Task<ActionResult<ReadReviewDto>> GetReview(int reviewId)
+        // {
+        //     var review = await _db.Reviews
+        //         .Include(r => r.User)
+        //         .FirstOrDefaultAsync(r => r)
+
+        //     if (review == null)
+        //         return NotFound(new { message = "Review not found." });
+
+        //     var reviewDto = _mapper.Map<ReadReviewDto>(review);
+
+        //     return Ok(reviewDto);
+        // }
+        [HttpGet("novel/{novelId}/user/{userId}")]
+        public async Task<ActionResult<ReadReviewDto>> GetUserReviewOnNovel(int novelId, int userId)
         {
-            var review = await _db.Reviews.FindAsync(reviewId);
+            var review = await _db.Reviews
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.NovelId == novelId && r.UserId == userId);
+            if (review == null)
+                return NotFound(new { message = "Review not found" });
 
             var reviewDto = _mapper.Map<ReadReviewDto>(review);
 
@@ -155,15 +173,16 @@ namespace Api.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{reviewId}")]
-        public async Task<IActionResult> DeleteReview(int reviewId)
+        [HttpDelete("novel/{novelId}")]
+        public async Task<IActionResult> DeleteReview(int novelId)
         {
             // Will have to update so that the admin can also delete reviews
             var userId = GetCurrentUserId();
             if (userId == null)
                 return Unauthorized(new { message = "Invalid or missing user Id." });
 
-            var review = await _db.Reviews.FindAsync(reviewId);
+            var review = await _db.Reviews
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.NovelId == novelId);
             if (review == null)
                 return NotFound(new { message = "Review not found" });
 

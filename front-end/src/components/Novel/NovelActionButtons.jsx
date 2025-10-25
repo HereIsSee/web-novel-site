@@ -11,6 +11,7 @@ import ReviewModal from "../ReviewModule/ReviewModal";
 
 const NovelActionButtons = ({
   novelId,
+  userId = null,
   userNovelStatus,
   setUserNovelStatus,
   setNovelStats,
@@ -87,9 +88,13 @@ const NovelActionButtons = ({
         Read Later
       </button>
 
-      {showModal && (
-        <ReviewModal novelId={novelId} onClose={() => setShowModal(false)} />
-      )}
+      <ReviewModal
+        style={{ display: showModal ? "block" : "none" }}
+        userId={userId}
+        novelId={novelId}
+        showModal={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 };
