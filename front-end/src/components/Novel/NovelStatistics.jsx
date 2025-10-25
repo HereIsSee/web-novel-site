@@ -1,4 +1,4 @@
-const NovelStatistics = () => {
+const NovelStatistics = ({ novelStats }) => {
   return (
     <div className="novel-statistics card">
       <h3>Statistics</h3>

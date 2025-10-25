@@ -25,7 +25,7 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPost("follow/{novelId}")]
-        public async Task<IActionResult> UserFollowNovel(int novelId)
+        public async Task<IActionResult> FollowNovel(int novelId)
         {
             var userId = GetCurrentUserId();
 
@@ -43,7 +43,7 @@ namespace Api.Controllers
             var existingFollow = await _db.Follows
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.NovelId == novelId);
             if (existingFollow != null)
-                return BadRequest(new { message = "You are already following this novel." });
+                return Ok(new { message = "You are already following this novel." });
 
             var follow = new Follow
             {
@@ -70,7 +70,7 @@ namespace Api.Controllers
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.NovelId == novelId);
 
             if (follow == null)
-                return NotFound(new { message = "You are not following this novel." });
+                return Ok(new { message = "You are not following this novel." });
 
             _db.Follows.Remove(follow);
             await _db.SaveChangesAsync();
@@ -92,7 +92,6 @@ namespace Api.Controllers
             return Ok(isFollowing);
         }
         
-
         [Authorize]
         [HttpPost("favorite/{novelId}")]
         public async Task<IActionResult> UserFavoriteNovel(int novelId)
@@ -113,7 +112,7 @@ namespace Api.Controllers
             var existingFavorite = await _db.Favorites
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.NovelId == novelId);
             if (existingFavorite != null)
-                return BadRequest(new { message = "You have already favorited this novel." });
+                return Ok(new { message = "You have already favorited this novel." });
 
             var favorite = new Favorite
             {
@@ -140,7 +139,7 @@ namespace Api.Controllers
                 .FirstOrDefaultAsync(f => f.UserId == userId && f.NovelId == novelId);
 
             if (favorite == null)
-                return NotFound(new { message = "You have not favorited this novel." });
+                return Ok(new { message = "You have not favorited this novel." });
 
             _db.Favorites.Remove(favorite);
             await _db.SaveChangesAsync();
@@ -183,7 +182,7 @@ namespace Api.Controllers
             var existingReadLater = await _db.ReadLaters
                 .FirstOrDefaultAsync(rd => rd.UserId == userId && rd.NovelId == novelId);
             if (existingReadLater != null)
-                return BadRequest(new { message = "You have already marked this novel as read later." });
+                return Ok(new { message = "You have already marked this novel as read later." });
 
             var readLater = new ReadLater
             {
@@ -210,7 +209,7 @@ namespace Api.Controllers
                 .FirstOrDefaultAsync(rd => rd.UserId == userId && rd.NovelId == novelId);
 
             if (readLater == null)
-                return NotFound(new { message = "You have not not marked this novel as read later." });
+                return Ok(new { message = "You have not not marked this novel as read later." });
 
             _db.ReadLaters.Remove(readLater);
             await _db.SaveChangesAsync();
@@ -252,7 +251,7 @@ namespace Api.Controllers
             });
         }
 
-        [HttpGet("stats/{novelId}")]
+        [HttpGet("stats/novel/{novelId}")]
         public async Task<ActionResult<NovelStatsDto>> GetNovelStats(int novelId)
         {
             var novelExists = await _db.Novels.AnyAsync(n => n.Id == novelId);

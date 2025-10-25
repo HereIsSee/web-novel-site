@@ -395,8 +395,14 @@ a.title:focus {
   background-color: var(--dark-light-color);
   transition: background-color 0.3s ease-out;
 }
+.novel-action-buttons button.active {
+  background-color: var(--light-blue-color);
+}
 .novel-action-buttons button:hover {
   background-color: var(--dark-color);
+}
+.novel-action-buttons button.active:hover {
+  background-color: var(--dark-blue-color);
 }
 
 .novel-table-of-contents {

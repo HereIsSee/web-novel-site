@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getNovel } from "../api/novel";
+import { useAuth } from "../context/useAuth";
+import { getUserNovelStatus, getNovelStats } from "../api/novelInteractions";
 
 import App from "../App";
 
@@ -11,19 +13,36 @@ import NovelActionButtons from "../components/Novel/NovelActionButtons";
 import NovelTableOfContents from "../components/Novel/NovelTableOfContents";
 
 const Novel = () => {
-  const { id } = useParams();
+  const { id: novelId } = useParams();
+
+  const { isLoading: authIsLoading, isLoggedIn } = useAuth();
+
+  const [novel, setNovel] = useState({});
+  const [userNovelStatus, setUserNovelStatus] = useState({});
+  const [novelStats, setNovelStats] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
-  const [novel, setNovel] = useState({});
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const novelData = async () => {
+    if (authIsLoading) return;
+
+    const fetchData = async () => {
       try {
-        console.log("NovelId: ", id);
-        const response = await getNovel(id);
-        console.log(response);
-        setNovel(response);
+        setIsLoading(true);
+        const [novelData, novelStatsData, userStatusData] = await Promise.all([
+          getNovel(novelId),
+          getNovelStats(novelId),
+          isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
+        ]);
+
+        setNovel(novelData);
+        setNovelStats(novelStatsData);
+        if (userStatusData) setUserNovelStatus(userStatusData);
+
+        console.log(novelData);
+        console.log(novelStatsData);
+        console.log(userStatusData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,10 +50,8 @@ const Novel = () => {
       }
     };
 
-    novelData();
-  }, [id]);
-
-  console.log(novel);
+    fetchData();
+  }, [novelId, authIsLoading, isLoggedIn]);
 
   return (
     <App>
@@ -56,9 +73,15 @@ const Novel = () => {
 
           <NovelInfo tags={novel.tags} synopsis={novel.synopsis} />
 
-          <NovelStatistics />
+          <NovelStatistics novelStats={novelStats} />
 
-          <NovelActionButtons />
+          {isLoggedIn && (
+            <NovelActionButtons
+              novelId={novelId}
+              userNovelStatus={userNovelStatus}
+              setUserNovelStatus={setUserNovelStatus}
+            />
+          )}
 
           <NovelTableOfContents />
 
