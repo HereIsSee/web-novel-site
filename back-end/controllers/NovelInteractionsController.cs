@@ -16,11 +16,13 @@ namespace Api.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly INovelStatsService _statsService;
 
-        public NovelInteractionsController(AppDbContext db, IMapper mapper)
+        public NovelInteractionsController(AppDbContext db, IMapper mapper, INovelStatsService statsService)
         {
             _db = db;
             _mapper = mapper;
+            _statsService = statsService;
         }
 
         [Authorize]
@@ -254,40 +256,13 @@ namespace Api.Controllers
         [HttpGet("stats/novel/{novelId}")]
         public async Task<ActionResult<NovelStatsDto>> GetNovelStats(int novelId)
         {
-            var novel = await _db.Novels.FindAsync(novelId);
-            if (novel == null)
+            var stats = await _statsService.GetNovelStatsAsync(novelId);
+            if (stats == null)
                 return NotFound(new { message = "Novel not found" });
-
-            var reviewStats = await _db.Reviews
-                .Where(r => r.NovelId == novelId)
-                .GroupBy(r => r.NovelId)
-                .Select(g => new
-                {
-                    OverallScore = g.Average(r => r.OverallScore),
-                    StyleScore = g.Average(r => r.StyleScore),
-                    StoryScore = g.Average(r => r.StoryScore),
-                    GrammarScore = g.Average(r => r.GrammarScore),
-                    CharacterScore = g.Average(r => r.CharacterScore),
-                    Ratings = g.Count()
-                })
-                .FirstOrDefaultAsync();
-
-            var stats = new NovelStatsDto
-            {
-                OverallScore = reviewStats?.OverallScore ?? 0,
-                StyleScore = reviewStats?.StyleScore ?? 0,
-                StoryScore = reviewStats?.StoryScore ?? 0,
-                GrammarScore = reviewStats?.GrammarScore ?? 0,
-                CharacterScore = reviewStats?.CharacterScore ?? 0,
-                FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId),
-                FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId),
-                ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId),
-                Views = novel.Views,
-                Ratings = reviewStats?.Ratings ?? 0
-            };
 
             return Ok(stats);
         }
+
 
         [HttpGet("stats/author/{authorId}")]
         public async Task<ActionResult<AuthorInteractionStatsDto>> GetAuthorNovelStats(int authorId)

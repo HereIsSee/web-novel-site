@@ -29,7 +29,7 @@ namespace Api.DTOs
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public int Views { get; set; }
+        // public int Views { get; set; }
         public NovelStatus Status { get; set; }
 
         // Simple author info
@@ -37,5 +37,6 @@ namespace Api.DTOs
 
         // Tags (flat list)
         public List<TagDto> Tags { get; set; } = new();
+        public NovelStatsDto Stats { get; set; }
     }
 }

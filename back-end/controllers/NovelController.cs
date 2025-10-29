@@ -19,12 +19,14 @@ namespace Api.Controllers
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _env;
+        private readonly INovelStatsService _statsService;
 
-        public NovelController(IWebHostEnvironment env, AppDbContext db, IMapper mapper)
+        public NovelController(IWebHostEnvironment env, AppDbContext db, IMapper mapper,INovelStatsService statsService)
         {
             _db = db;
             _mapper = mapper;
             _env = env;
+            _statsService = statsService;
         }
 
         [HttpGet]
@@ -36,7 +38,16 @@ namespace Api.Controllers
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
-            var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
+            // var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            var ids = novelDtos.Select(n => n.Id).ToList();
+            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+
+            foreach (var dto in novelDtos)
+                if (statsDict.TryGetValue(dto.Id, out var stats))
+                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
