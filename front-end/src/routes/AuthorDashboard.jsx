@@ -14,6 +14,13 @@ const AuthorDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [userNovels, setUserNovels] = useState([]);
+  const [authorStats, setAuthorStats] = useState({
+    fictionsCount: 0,
+    chaptersCount: 0,
+    totalWordsCount: 0,
+    reviewsCount: 0,
+    followersCount: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,10 +28,29 @@ const AuthorDashboard = () => {
     const fetchUserNovels = async () => {
       if (user == null) return;
       try {
-        const response = await getUserNovels(user.id);
+        const authorNovels = await getUserNovels(user.id);
 
-        setUserNovels(response);
-        console.log(response);
+        setUserNovels(authorNovels);
+        setAuthorStats({
+          fictionsCount: authorNovels.length,
+          chaptersCount: authorNovels.reduce(
+            (acc, novel) => acc + novel.stats.chaptersCount,
+            0,
+          ),
+          totalWordsCount: authorNovels.reduce(
+            (acc, novel) => acc + novel.stats.wordCount,
+            0,
+          ),
+          reviewsCount: authorNovels.reduce(
+            (acc, novel) => acc + novel.stats.ratings,
+            0,
+          ),
+          followersCount: authorNovels.reduce(
+            (acc, novel) => acc + novel.stats.followsCount,
+            0,
+          ),
+        });
+        console.log(authorNovels);
       } catch (err) {
         setError(err.message);
         console.error(err);
@@ -34,6 +60,8 @@ const AuthorDashboard = () => {
     };
     fetchUserNovels();
   }, [user]);
+
+  // const fictionsCount =
 
   const onClick = () => navigate(`/author-dashboard/${user.id}/create-novel`);
 
@@ -50,7 +78,7 @@ const AuthorDashboard = () => {
               <IoBookSharp size="50px" color="rgba(212, 212, 212, 0.76)" />
               <div>
                 <div>Fictions</div>
-                <div>0</div>
+                <div>{authorStats.fictionsCount}</div>
               </div>
             </div>
 
@@ -61,7 +89,7 @@ const AuthorDashboard = () => {
               />
               <div>
                 <div>Total Chapters</div>
-                <div>0</div>
+                <div>{authorStats.chaptersCount}</div>
               </div>
             </div>
 
@@ -69,7 +97,7 @@ const AuthorDashboard = () => {
               <FaPuzzlePiece size="50px" color="rgba(212, 212, 212, 0.76)" />
               <div>
                 <div>Total Words</div>
-                <div>0</div>
+                <div>{authorStats.totalWordsCount}</div>
               </div>
             </div>
 
@@ -77,15 +105,15 @@ const AuthorDashboard = () => {
               <TbStarFilled size="50px" color="rgba(212, 212, 212, 0.76)" />
               <div>
                 <div>Reviews Received</div>
-                <div>0</div>
+                <div>{authorStats.reviewsCount}</div>
               </div>
             </div>
 
             <div className="info">
               <FaBookmark size="50px" color="rgba(212, 212, 212, 0.76)" />
               <div>
-                <div>Unique Followers</div>
-                <div>0</div>
+                <div>Followers</div>
+                <div>{authorStats.followersCount}</div>
               </div>
             </div>
           </div>
@@ -112,7 +140,9 @@ const AuthorDashboard = () => {
                         {novel.title}
                       </Link>
                       <div className="rating">
-                        <div className="star-value">5</div>
+                        <div className="star-value">
+                          {novel.stats.overallScore}
+                        </div>
                         <TbStarFilled size="20px" />
                       </div>
                     </div>

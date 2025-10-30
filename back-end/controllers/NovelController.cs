@@ -255,7 +255,15 @@ namespace Api.Controllers
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
-            var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            var ids = novelDtos.Select(n => n.Id).ToList();
+            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+
+            foreach (var dto in novelDtos)
+                if (statsDict.TryGetValue(dto.Id, out var stats))
+                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
