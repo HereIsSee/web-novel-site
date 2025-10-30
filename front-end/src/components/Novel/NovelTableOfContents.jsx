@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { timeAgo } from "../../helpers/timeFormating";
 import toSlug from "../../helpers/toSlug";
 import Button from "../FormFields/Button";
 
@@ -17,7 +18,7 @@ const NovelTableOfContents = ({
     <div className="novel-table-of-contents card">
       <div className="novel-table-of-contents-header">
         <h3>TABLE OF CONTENTS</h3>
-        <div>231 Chapters</div>
+        <div>{chapters && chapters.length} Chapters</div>
       </div>
 
       <div className="novel-table-of-contents-sorting-options">
@@ -39,7 +40,9 @@ const NovelTableOfContents = ({
                 }
               >
                 <div className="chapter-name">{chapter.title}</div>
-                <div className="chapter-release-date"> 1 year ago</div>
+                <div className="chapter-release-date">
+                  {timeAgo(chapter.createdAt)}
+                </div>
               </div>
             );
           })

@@ -3,11 +3,7 @@ import { useParams } from "react-router-dom";
 import { getNovel } from "../api/novel";
 import { getNovelChapters } from "../api/chapter";
 import { useAuth } from "../context/useAuth";
-import {
-  getUserNovelStatus,
-  getNovelStats,
-  incrementView,
-} from "../api/novelInteractions";
+import { getUserNovelStatus, incrementView } from "../api/novelInteractions";
 import App from "../App";
 
 import NovelHeader from "../components/Novel/NovelHeader";
