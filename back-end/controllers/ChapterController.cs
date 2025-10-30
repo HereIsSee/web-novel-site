@@ -72,6 +72,14 @@ namespace Api.Controllers
             chapter.CreatedAt = DateTime.UtcNow;
             chapter.WordCount = CountWordsFromHtml(chapter.Content);
 
+            var lastChapterNumber = await _db.Chapters
+                .Where(c => c.NovelId == novelId)
+                .OrderByDescending(c => c.ChapterNumber)
+                .Select(c => c.ChapterNumber)
+                .FirstOrDefaultAsync();
+
+            chapter.ChapterNumber = lastChapterNumber + 1;
+
             _db.Chapters.Add(chapter);
             await _db.SaveChangesAsync();
 

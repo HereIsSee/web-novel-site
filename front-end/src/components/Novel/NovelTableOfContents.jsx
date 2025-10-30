@@ -34,7 +34,7 @@ const NovelTableOfContents = ({
                 className="chapter"
                 onClick={() =>
                   navigate(
-                    `/novels/${novelId}/${toSlug(novelTitle)}/chapters/${chapter.id}/${toSlug(chapter.title)}`,
+                    `/novels/${novelId}/${toSlug(novelTitle)}/read/chapters/${chapter.id}/${toSlug(chapter.title)}`,
                   )
                 }
               >

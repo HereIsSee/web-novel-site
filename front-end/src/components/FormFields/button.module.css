@@ -13,6 +13,12 @@
   align-self: stretch;
 }
 
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .dark-golden {
   padding: 10px 30px;
   background-color: var(--dark-light-color);
