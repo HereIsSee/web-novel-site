@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { formatDateTime } from "../../helpers/timeFormating";
 import styles from "./NovelCard.module.css";
 
 import NovelTags from "../Novel/NovelTags";
@@ -43,7 +44,9 @@ const NovelCard = ({
           <div className={styles["novel-card-statistic"]}>
             {stats.followsCount} FOLLOWERS
           </div>
-          <div className={styles["novel-card-statistic"]}>2,223 PAGES</div>
+          <div className={styles["novel-card-statistic"]}>
+            {Math.ceil(stats.wordCount / 275)} PAGES
+          </div>
           <div className={styles["novel-card-statistic"]}>
             {stats.chaptersCount} CHAPTERS
           </div>
@@ -56,7 +59,9 @@ const NovelCard = ({
           <div className={styles["novel-card-statistic"]}>
             {stats.views} VIEWS
           </div>
-          <div className={styles["novel-card-statistic"]}>{createdAt}</div>
+          <div className={styles["novel-card-statistic"]}>
+            {formatDateTime(createdAt)}
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ namespace Api.DTOs
         public int ChaptersCount { get; set; }
         public int Views { get; set; }
         public int Ratings { get; set; }
+        public int WordCount { get; set; }
     }
 
 }

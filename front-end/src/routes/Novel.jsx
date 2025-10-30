@@ -43,9 +43,9 @@ const Novel = () => {
         setNovelStats(novelData.stats);
         if (userStatusData) setUserNovelStatus(userStatusData);
 
-        // console.log(novelData);
-        // console.log(chaptersData);
-        // console.log(userStatusData);
+        console.log(novelData);
+        console.log(chaptersData);
+        console.log(userStatusData);
       } catch (err) {
         setError(err.message);
       } finally {

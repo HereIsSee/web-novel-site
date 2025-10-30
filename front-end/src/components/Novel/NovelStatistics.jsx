@@ -47,7 +47,9 @@ const NovelStatistics = ({ novelStats }) => {
           </div>
           <div className="metric">
             <div className="metric-title">PAGES :</div>
-            <div className="metric-value">154</div>
+            <div className="metric-value">
+              {Math.ceil(novelStats.wordCount / 275)}
+            </div>
           </div>
         </div>
       </div>
