@@ -7,7 +7,15 @@ import NovelSummary from "../Novel/NovelSummary";
 
 import NovelCardLayout from "./NovelCardLayout";
 
-const NovelCard = ({ id, title, synopsis, coverImageUrl, tags, stats }) => {
+const NovelCard = ({
+  id,
+  title,
+  synopsis,
+  coverImageUrl,
+  createdAt,
+  tags,
+  stats,
+}) => {
   const [showMore, setShowMore] = useState(false);
 
   const novelSlog = "the-legend-of-william-oh";
@@ -33,17 +41,23 @@ const NovelCard = ({ id, title, synopsis, coverImageUrl, tags, stats }) => {
 
       <div className={styles["novel-card-statistics"]}>
         <div>
-          <div className={styles["novel-card-statistic"]}>10,032 FOLLOWERS</div>
+          <div className={styles["novel-card-statistic"]}>
+            {stats.followsCount} FOLLOWERS
+          </div>
           <div className={styles["novel-card-statistic"]}>2,223 PAGES</div>
-          <div className={styles["novel-card-statistic"]}>13 CHAPTERS</div>
+          <div className={styles["novel-card-statistic"]}>
+            {stats.chaptersCount} CHAPTERS
+          </div>
         </div>
 
         <div>
-          <div className={styles["novel-card-statistic"]}>4.82 STARS</div>
-          <div className={styles["novel-card-statistic"]}>23,002 VIEWS</div>
           <div className={styles["novel-card-statistic"]}>
-            7/6/2023, 8:23 PM
+            {stats.overallScore} STARS
           </div>
+          <div className={styles["novel-card-statistic"]}>
+            {stats.views} VIEWS
+          </div>
+          <div className={styles["novel-card-statistic"]}>{createdAt}</div>
         </div>
       </div>
 

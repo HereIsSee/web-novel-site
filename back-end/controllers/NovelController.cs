@@ -38,7 +38,6 @@ namespace Api.Controllers
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
-            // var novelDtos = _mapper.Map<IEnumerable<NovelReadDto>>(novels);
 
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
 
@@ -65,6 +64,10 @@ namespace Api.Controllers
                 return NotFound("Novel not found");
 
             var novelDto = _mapper.Map<NovelReadDto>(novel);
+
+            var stats = await _statsService.GetNovelStatsAsync(id);
+
+            novelDto.Stats = stats;
 
             return Ok(novelDto);
         }

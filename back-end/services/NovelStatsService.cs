@@ -47,6 +47,7 @@ public class NovelStatsService : INovelStatsService
             FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId),
             FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId),
             ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId),
+            ChaptersCount = await _db.Chapters.CountAsync(c => c.NovelId == novelId),
             Views = novel.Views,
             Ratings = reviewStats?.Ratings ?? 0
         };
@@ -94,6 +95,13 @@ public class NovelStatsService : INovelStatsService
             .Select(g => new { NovelId = g.Key, Count = g.Count() })
             .ToDictionaryAsync(x => x.NovelId);
 
+        // Bulk fetch read-laters
+        var chaptersCount = await _db.Chapters
+            .Where(c => novelIds.Contains(c.NovelId))
+            .GroupBy(c => c.NovelId)
+            .Select(g => new { NovelId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.NovelId);
+        
         // Load novels (for views)
         var novels = await _db.Novels
             .Where(n => novelIds.Contains(n.Id))
@@ -108,6 +116,7 @@ public class NovelStatsService : INovelStatsService
             favorites.TryGetValue(id, out var fav);
             readLaters.TryGetValue(id, out var rl);
             novels.TryGetValue(id, out var novel);
+            chaptersCount.TryGetValue(id, out var ch);
 
             result[id] = new NovelStatsDto
             {
@@ -120,6 +129,7 @@ public class NovelStatsService : INovelStatsService
                 FollowsCount = f?.Count ?? 0,
                 FavoritesCount = fav?.Count ?? 0,
                 ReadLatersCount = rl?.Count ?? 0,
+                ChaptersCount = ch?.Count ?? 0,
                 Views = novel?.Views ?? 0
             };
         }

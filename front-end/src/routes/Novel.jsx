@@ -37,17 +37,15 @@ const Novel = () => {
         const [novelData, novelStatsData, userStatusData, updatedViews] =
           await Promise.all([
             getNovel(novelId),
-            getNovelStats(novelId),
             isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
             incrementView(novelId),
           ]);
 
         setNovel(novelData);
-        setNovelStats({ ...novelStatsData, views: updatedViews.views });
+        setNovelStats(novelData.stats);
         if (userStatusData) setUserNovelStatus(userStatusData);
 
         console.log(novelData);
-        console.log(novelStatsData);
         console.log(userStatusData);
       } catch (err) {
         setError(err.message);

@@ -12,6 +12,7 @@ namespace Api.DTOs
         public int FollowsCount { get; set; }
         public int FavoritesCount { get; set; }
         public int ReadLatersCount { get; set; }
+        public int ChaptersCount { get; set; }
         public int Views { get; set; }
         public int Ratings { get; set; }
     }
