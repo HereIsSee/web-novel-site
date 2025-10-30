@@ -37,6 +37,6 @@ namespace Api.DTOs
 
         // Tags (flat list)
         public List<TagDto> Tags { get; set; } = new();
-        public NovelStatsDto Stats { get; set; }
+        public NovelStatsDto Stats { get; set; } = null!;
     }
 }

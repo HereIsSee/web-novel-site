@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import AuthorDashboard from "./routes/AuthorDashboard";
 import AuthorNovel from "./routes/AuthorNovel";
 import NovelForm from "./routes/NovelForm";
+import ChapterForm from "./routes/ChapterForm";
 import Favorites from "./routes/Favorites";
 import Follows from "./routes/Follows";
 import Home from "./routes/Home";
@@ -17,6 +18,7 @@ import ReadLater from "./routes/ReadLater";
 import Search from "./routes/Search";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
+import NovelReaderLayout from "./routes/NovelReaderLayout";
 import Chapter from "./routes/Chapter";
 
 const router = createBrowserRouter([
@@ -40,8 +42,22 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   {
-    path: "/novels/:id/:novelSlug/chapters/:id/:chapterSlug",
-    element: <Chapter />,
+    path: "/novels/:novelId/:novelSlug/read",
+    element: <NovelReaderLayout />,
+    children: [
+      {
+        path: "chapters/:chapterId/:chapterSlug",
+        element: <Chapter />,
+      },
+    ],
+  },
+  {
+    path: "/author-dashboard/:userId/novel/:novelId/chapters/create-chapter",
+    element: <ChapterForm />,
+  },
+  {
+    path: "/author-dashboard/:userId/novel/:novelId/chapters/:chapterId/edit",
+    element: <ChapterForm />,
   },
 ]);
 

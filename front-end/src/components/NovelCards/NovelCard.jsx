@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import styles from "./NovelCard.module.css";
 import { useState } from "react";
+import styles from "./NovelCard.module.css";
 
 import NovelTags from "../Novel/NovelTags";
 import NovelSummary from "../Novel/NovelSummary";
@@ -10,6 +10,7 @@ import NovelCardLayout from "./NovelCardLayout";
 const NovelCard = ({
   id,
   title,
+  novelSlog,
   synopsis,
   coverImageUrl,
   createdAt,
@@ -17,8 +18,6 @@ const NovelCard = ({
   stats,
 }) => {
   const [showMore, setShowMore] = useState(false);
-
-  const novelSlog = "the-legend-of-william-oh";
 
   return (
     <NovelCardLayout id={id} coverUrl={coverImageUrl}>

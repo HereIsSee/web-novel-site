@@ -467,6 +467,7 @@ button.release-date-sort:hover {
 .chapter:hover .chapter-name,
 .chapter:hover .chapter-release-date {
   background-color: var(--dark-very-light-color);
+  cursor: pointer;
 }
 .chapter-name,
 .chapter-release-date {

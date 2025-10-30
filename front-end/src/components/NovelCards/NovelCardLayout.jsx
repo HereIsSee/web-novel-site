@@ -5,11 +5,10 @@ import DefaultCover from "/default-image.png";
 const NovelCardLayout = ({
   id,
   coverUrl,
+  novelSlog,
   fitMode = "center", // Options: center or hide
   children,
 }) => {
-  const novelSlog = "the-legend-of-william-oh";
-
   return (
     <div className={`${styles["novel-card"]} ${styles[fitMode]}`}>
       <Link

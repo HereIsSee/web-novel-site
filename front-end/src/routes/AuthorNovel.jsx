@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getNovel } from "../api/novel";
-import { getNovelStats } from "../api/novelInteractions";
 import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
 
 import NovelHeader from "../components/Novel/NovelHeader";
@@ -23,13 +22,10 @@ const AuthorNovel = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [novelData, novelStatsData] = await Promise.all([
-          getNovel(novelId),
-          getNovelStats(novelId),
-        ]);
+        const novelData = await getNovel(novelId);
 
         setNovel(novelData);
-        setNovelStats(novelStatsData);
+        setNovelStats(novelData.stats);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -66,7 +62,15 @@ const AuthorNovel = () => {
 
           <NovelStatistics novelStats={novelStats} />
 
-          <NovelTableOfContents />
+          <NovelTableOfContents
+            chapters={novel.chapters}
+            isAuthor={true}
+            onClick={() =>
+              navigate(
+                `/author-dashboard/${userId}/novel/${novelId}/chapters/create-chapter`,
+              )
+            }
+          />
         </div>
       )}
     </AuthorDashboardLayout>

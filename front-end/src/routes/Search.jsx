@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getTags } from "../api/tags";
 import { novelStatusData } from "../helpers/novelStatusData";
 import { getNovels } from "../api/novel";
+import toSlug from "../helpers/toSlug";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
@@ -168,6 +169,7 @@ const Search = () => {
               key={novel.id}
               id={novel.id}
               title={novel.title}
+              novelSlog={toSlug(novel.title)}
               synopsis={novel.synopsis}
               coverImageUrl={novel.coverImageUrl}
               createdAt={novel.createdAt}

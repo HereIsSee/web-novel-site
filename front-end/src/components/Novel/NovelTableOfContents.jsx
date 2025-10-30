@@ -1,4 +1,18 @@
-const NovelTableOfContents = () => {
+import { useNavigate } from "react-router-dom";
+import toSlug from "../../helpers/toSlug";
+import Button from "../FormFields/Button";
+
+const NovelTableOfContents = ({
+  novelId,
+  novelTitle,
+  chapters = [],
+  isAuthor = false,
+  onClick,
+}) => {
+  const navigate = useNavigate();
+
+  console.log(chapters);
+
   return (
     <div className="novel-table-of-contents card">
       <div className="novel-table-of-contents-header">
@@ -12,41 +26,29 @@ const NovelTableOfContents = () => {
       </div>
 
       <div className="chapters">
-        <div className="chapter">
-          <div className="chapter-name">Chapter 1</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 2</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 3</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 4</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 5</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 6</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
-
-        <div className="chapter">
-          <div className="chapter-name">Chapter 7</div>
-          <div className="chapter-release-date"> 1 year ago</div>
-        </div>
+        {chapters.length > 0 ? (
+          chapters.map((chapter) => {
+            return (
+              <div
+                key={chapter.id}
+                className="chapter"
+                onClick={() =>
+                  navigate(
+                    `/novels/${novelId}/${toSlug(novelTitle)}/chapters/${chapter.id}/${toSlug(chapter.title)}`,
+                  )
+                }
+              >
+                <div className="chapter-name">{chapter.title}</div>
+                <div className="chapter-release-date"> 1 year ago</div>
+              </div>
+            );
+          })
+        ) : (
+          <div> No posted chapters</div>
+        )}
       </div>
+
+      {isAuthor && <Button onClick={onClick}>Create Chapter</Button>}
     </div>
   );
 };

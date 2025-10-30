@@ -4,6 +4,8 @@ using Api.Data;
 using Api.Models;
 using Api.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace Api.Controllers
 {
@@ -49,18 +51,26 @@ namespace Api.Controllers
 
             return Ok(chapterDto);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ChapterReadDto>> CreateChapter(int novelId, [FromBody] CreateChapterDto createChapterDto)
         {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
             var novel = await _db.Novels.FindAsync(novelId);
             if (novel == null)
                 return NotFound("Novel not found!");
+            
+            if (novel.UserId != userId)
+                return Forbid("Only the author can create chapters.");
 
             var chapter = _mapper.Map<Chapter>(createChapterDto);
 
             chapter.NovelId = novelId;
             chapter.CreatedAt = DateTime.UtcNow;
+            chapter.WordCount = CountWordsFromHtml(chapter.Content);
 
             _db.Chapters.Add(chapter);
             await _db.SaveChangesAsync();
@@ -77,13 +87,25 @@ namespace Api.Controllers
         [HttpPut("{chapterId}")]
         public async Task<IActionResult> UpdateChapter(int novelId, int chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
         {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+            
             var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)
                 return NotFound("Chapter not found");
+            
+            var novel = await _db.Novels.FindAsync(novelId);
+            if (novel == null)
+                return NotFound("Novel not found!");
+            
+            if (novel.UserId != userId)
+                return Forbid("Only the author can update chapters.");
 
             _mapper.Map(updatedChapterDto, chapter);
-            
+
             chapter.UpdatedAt = DateTime.UtcNow;
+            chapter.WordCount = CountWordsFromHtml(chapter.Content);
 
             await _db.SaveChangesAsync();
             return NoContent();
@@ -101,6 +123,17 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        private int CountWordsFromHtml(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html))
+                return 0;
+
+            var text = Regex.Replace(html, "<.*?>", " ");
+
+            text = System.Net.WebUtility.HtmlDecode(text);
+
+            return text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+        }
 
     }
 

@@ -15,6 +15,7 @@ namespace Api.Models
         public int ChapterNumber { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public int WordCount { get; set; }
         public int Views { get; set; } = 0;
 
         // Parent Novel

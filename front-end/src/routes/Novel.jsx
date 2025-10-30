@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getNovel } from "../api/novel";
+import { getNovelChapters } from "../api/chapter";
 import { useAuth } from "../context/useAuth";
 import {
   getUserNovelStatus,
   getNovelStats,
   incrementView,
 } from "../api/novelInteractions";
-
 import App from "../App";
 
 import NovelHeader from "../components/Novel/NovelHeader";
@@ -22,6 +22,7 @@ const Novel = () => {
   const { user, isLoading: authIsLoading, isLoggedIn } = useAuth();
 
   const [novel, setNovel] = useState({});
+  const [chapters, setChapters] = useState([]);
   const [userNovelStatus, setUserNovelStatus] = useState({});
   const [novelStats, setNovelStats] = useState({});
 
@@ -34,19 +35,21 @@ const Novel = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [novelData, novelStatsData, userStatusData, updatedViews] =
-          await Promise.all([
-            getNovel(novelId),
-            isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
-            incrementView(novelId),
-          ]);
+        const [novelData, chaptersData, userStatusData] = await Promise.all([
+          getNovel(novelId),
+          getNovelChapters(novelId),
+          isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
+          incrementView(novelId),
+        ]);
 
         setNovel(novelData);
+        setChapters(chaptersData);
         setNovelStats(novelData.stats);
         if (userStatusData) setUserNovelStatus(userStatusData);
 
-        console.log(novelData);
-        console.log(userStatusData);
+        // console.log(novelData);
+        // console.log(chaptersData);
+        // console.log(userStatusData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -89,7 +92,11 @@ const Novel = () => {
             />
           )}
 
-          <NovelTableOfContents />
+          <NovelTableOfContents
+            novelId={novelId}
+            novelTitle={novel.title}
+            chapters={chapters}
+          />
 
           <div>Comments</div>
         </div>
