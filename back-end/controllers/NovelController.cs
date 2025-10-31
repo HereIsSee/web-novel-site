@@ -268,6 +268,92 @@ namespace Api.Controllers
             return Ok(novelDtos);
         }
 
+        [HttpGet("user/{id}/follows")]
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserFollowedNovels(int id)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User not found." });
+
+            var follows = await _db.Follows
+               .Where(f => f.UserId == id)
+               .Include(f => f.Novel)
+                   .ThenInclude(n => n.NovelTags)
+                       .ThenInclude(nt => nt.Tag)
+               .ToListAsync();
+
+            var novels = follows.Select(f => f.Novel).ToList();
+
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            var ids = novelDtos.Select(n => n.Id).ToList();
+            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+
+            foreach (var dto in novelDtos)
+                if (statsDict.TryGetValue(dto.Id, out var stats))
+                    dto.Stats = stats;
+
+            return Ok(novelDtos);
+        }
+        [HttpGet("user/{id}/favorites")]
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserFavoriteNovels(int id)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User not found." });
+
+            var favorites = await _db.Favorites
+               .Where(f => f.UserId == id)
+               .Include(f => f.Novel)
+                   .ThenInclude(n => n.NovelTags)
+                       .ThenInclude(nt => nt.Tag)
+               .ToListAsync();
+
+            var novels = favorites.Select(f => f.Novel).ToList();
+
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            var ids = novelDtos.Select(n => n.Id).ToList();
+            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+
+            foreach (var dto in novelDtos)
+                if (statsDict.TryGetValue(dto.Id, out var stats))
+                    dto.Stats = stats;
+
+            return Ok(novelDtos);
+        }
+        [HttpGet("user/{id}/readlater")]
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserReadLaterNovels(int id)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "User not found." });
+
+            var readLaters = await _db.ReadLaters
+               .Where(f => f.UserId == id)
+               .Include(f => f.Novel)
+                   .ThenInclude(n => n.NovelTags)
+                       .ThenInclude(nt => nt.Tag)
+               .ToListAsync();
+            
+            var novels = readLaters.Select(f => f.Novel).ToList();
+
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            var ids = novelDtos.Select(n => n.Id).ToList();
+            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+
+            foreach (var dto in novelDtos)
+                if (statsDict.TryGetValue(dto.Id, out var stats))
+                    dto.Stats = stats;
+
+            return Ok(novelDtos);
+        }
+
+
         private async Task ReplaceNovelCoverAsync(Novel novel, int newCoverId, int userId)
         {
             var newCoverTemp = await _db.UploadedFiles.FindAsync(newCoverId);
