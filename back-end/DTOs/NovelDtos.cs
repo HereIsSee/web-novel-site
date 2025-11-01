@@ -7,7 +7,7 @@ namespace Api.DTOs
         public string Title { get; set; } = null!;
         public string? Synopsis { get; set; }
         public int? CoverImageId { get; set; }
-        public NovelStatus Status { get; set; } = NovelStatus.Draft;
+        // public NovelStatus Status { get; set; } = NovelStatus.Draft;
         public IEnumerable<TagDto> Tags { get; set; } = [];
     }
 

@@ -81,17 +81,16 @@ namespace Api.Controllers
 
             if (userId == null)
                 return Unauthorized(new { message = "Invalid or missing user Id." });
-
-            if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
-                return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
-
+            
             var user = await _db.Users.FindAsync(userId);
             if (user == null)
                 return BadRequest($"User with id {userId} does not exist.");
+            
 
             var novel = _mapper.Map<Novel>(novelDto);
             novel.UserId = (int)userId;
             novel.CreatedAt = DateTime.UtcNow;
+            novel.Status = NovelStatus.Draft;
 
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
@@ -157,6 +156,7 @@ namespace Api.Controllers
 
             var novel = await _db.Novels
                 .Include(n => n.NovelTags)
+                .Include(n => n.Chapters)
                 .FirstOrDefaultAsync(n => n.Id == id);
 
             if (novel == null)
@@ -165,8 +165,19 @@ namespace Api.Controllers
             if (novel.UserId != userId)
                 return Forbid("Only the author can update this novel.");
 
-            if (novelDto.Status != null && !Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
-                return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
+            if (novelDto.Status != null)
+            {
+                if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
+                    return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
+                
+                if (novelDto.Status != NovelStatus.Draft && (novel.Chapters?.Count ?? 0) == 0)
+                {
+                    return BadRequest(new
+                    {
+                        message = "You must add at least 1 chapter before changing the novel's status."
+                    });
+                }
+            }
 
             _mapper.Map(novelDto, novel);
             novel.UpdatedAt = DateTime.UtcNow;

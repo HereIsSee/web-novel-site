@@ -8,8 +8,10 @@ namespace Api.Models
     public enum NovelStatus
     {
         Draft,
-        Published,
-        Hidden
+        Completed,
+        Ongoing,
+        Dropped,
+        Hidden,
     }
     public class Novel
     {
