@@ -36,3 +36,14 @@ export const incrementView = (novelId) =>
   httpRequest(`/api/novelinteractions/view/${novelId}`, {
     method: "POST",
   });
+export const getFollow = (userId, novelId) =>
+  httpRequest(`/api/NovelInteractions/follow/${novelId}/user/${userId}`);
+
+export const updateFollowLastReadChapter = (novelId, chapterId) => {
+  httpRequest(
+    `/api/novelInteractions/follow/${novelId}/last-read/${chapterId}`,
+    {
+      method: "POST",
+    },
+  );
+};

@@ -22,7 +22,7 @@ const Button = ({
   if (!Styles.includes(styleType))
     console.error(`Button does not have such a style type: "${styleType}"`);
 
-  const className = `${ButtonStyles[styleType]} ${ButtonStyles[align]} ${disabled ? ButtonStyles.disabled : ""}`;
+  const className = `${ButtonStyles[styleType]} ${ButtonStyles.button} ${ButtonStyles[align]} ${disabled ? ButtonStyles.disabled : ""}`;
 
   const buttonProps = {
     type,

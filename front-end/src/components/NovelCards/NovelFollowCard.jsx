@@ -48,7 +48,7 @@ const NovelFollowCard = ({
         to={`/novels/${id}/${novelSlug}/read/chapters/${latestChapter.id}/${toSlug(latestChapter.title)}`}
       >
         <div>{latestChapter.title}</div>
-        <div>19 hours ago</div>
+        <div>{timeAgo(latestChapter.createdAt)}</div>
       </Link>
 
       {hasReadNovel && !allRead && (
@@ -59,7 +59,7 @@ const NovelFollowCard = ({
             to={`/novels/${id}/${novelSlug}/read/chapters/${lastReadChapter.id}/${toSlug(lastReadChapter.title)}`}
           >
             <div>{lastReadChapter.title}</div>
-            <div>19 hours ago</div>
+            <div>{timeAgo(lastReadChapter.createdAt)}</div>
           </Link>
         </>
       )}

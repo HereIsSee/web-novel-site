@@ -80,19 +80,32 @@ namespace Api.Controllers
             return Ok(new { message = "Unfollowed the novel successfully." });
         }
 
-        [Authorize]
-        [HttpGet("follow/{novelId}")]
-        public async Task<ActionResult<bool>> IsFollowingNovel(int novelId)
+        [HttpGet("follow/{novelId}/user/{userId}")]
+        public async Task<ActionResult<ReadFollowDto>> GetFollow(int novelId, int userId)
         {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized(new { message = "Invalid or missing user Id." });
+            var followDto = await _db.Follows
+                .Where(f => f.UserId == userId && f.NovelId == novelId)
+                .Select(f => new ReadFollowDto
+                {
+                    NovelId = f.NovelId,
+                    UserId = f.UserId,
+                    LastReadChapterId = f.LastReadChapterId,
+                    LastReadChapterNumber = f.LastReadChapterId != null
+                        ? _db.Chapters
+                            .Where(c => c.Id == f.LastReadChapterId)
+                            .Select(c => c.ChapterNumber)
+                            .FirstOrDefault()
+                        : null,
+                    IsFollowing = true
+                })
+                .FirstOrDefaultAsync();
 
-            bool isFollowing = await _db.Follows
-                .AnyAsync(f => f.UserId == userId && f.NovelId == novelId);
+            if (followDto == null)
+                return Ok(new ReadFollowDto { NovelId = novelId, UserId = userId, IsFollowing = false });
 
-            return Ok(isFollowing);
+            return Ok(followDto);
         }
+
         
         [Authorize]
         [HttpPost("favorite/{novelId}")]
@@ -297,7 +310,7 @@ namespace Api.Controllers
 
             return Ok(new { views = novel.Views });
         }
-        [HttpPost("follow/{novelId}/update-last-read-chapter/{chapterId}")]
+        [HttpPost("follow/{novelId}/last-read/{chapterId}")]
         public async Task<IActionResult> UpdateFollowLastReadChapter(int novelId, int chapterId)
         {
             var userId = GetCurrentUserId();
@@ -323,7 +336,6 @@ namespace Api.Controllers
 
             return Ok(new { message = "Last read chapter updated successfully." });
         }
-
 
     }
 

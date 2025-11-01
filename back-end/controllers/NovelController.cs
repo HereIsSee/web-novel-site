@@ -326,21 +326,24 @@ namespace Api.Controllers
                     {
                         Id = latestChapter.Id,
                         Title = latestChapter.Title,
-                        ChapterNumber = latestChapter.ChapterNumber
+                        ChapterNumber = latestChapter.ChapterNumber,
+                        CreatedAt = latestChapter.CreatedAt,
 
                     } : null;
                     dto.LastReadChapter = lastReadChapter != null ? new ChapterListItemDto
                     {
                         Id = lastReadChapter.Id,
                         Title = lastReadChapter.Title,
-                        ChapterNumber = lastReadChapter.ChapterNumber
+                        ChapterNumber = lastReadChapter.ChapterNumber,
+                        CreatedAt = lastReadChapter.CreatedAt,
 
                     } : null;
                     dto.NextChapter = nextChapter != null ? new ChapterListItemDto
                     {
                         Id = nextChapter.Id,
                         Title = nextChapter.Title,
-                        ChapterNumber = nextChapter.ChapterNumber
+                        ChapterNumber = nextChapter.ChapterNumber,
+                        CreatedAt = nextChapter.CreatedAt,
 
                     } : null;
 

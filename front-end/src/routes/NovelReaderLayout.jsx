@@ -3,9 +3,20 @@ import { useParams, Outlet, useNavigate } from "react-router-dom";
 import { getNovel } from "../api/novel";
 import { getNovelChapters } from "../api/chapter";
 import { TbStarFilled } from "react-icons/tb";
+import { FaBook } from "react-icons/fa";
+import { FaTriangleExclamation } from "react-icons/fa6";
 import toSlug from "../helpers/toSlug";
 import App from "../App";
 import Button from "../components/FormFields/Button";
+
+const iconStyles = {
+  display: "inline",
+  verticalAlign: "middle",
+  marginRight: "4px",
+  marginTop: "-3px",
+  color: "#ffffffff",
+};
+const iconSize = "22px";
 
 const NovelReaderLayout = () => {
   const { novelId, novelSlug, chapterId } = useParams();
@@ -57,6 +68,7 @@ const NovelReaderLayout = () => {
   if (!novel || !currentChapter) return <div>Loading...</div>;
 
   const contextValue = {
+    novelId,
     novel,
     chapters,
     currentChapter,
@@ -90,9 +102,11 @@ const NovelReaderLayout = () => {
 
         <div className="chapter-title">{currentChapter.title}</div>
         <Button styleType="blue-white" align="stretch" onClick={goToFiction}>
+          <FaBook style={iconStyles} size={iconSize} />
           Fiction Page
         </Button>
         <Button styleType="red-white" align="stretch">
+          <FaTriangleExclamation style={iconStyles} size={iconSize} />
           Report Chapter
         </Button>
       </div>

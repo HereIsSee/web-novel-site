@@ -18,7 +18,9 @@
   cursor: not-allowed;
   pointer-events: none;
 }
-
+.button {
+  white-space: nowrap;
+}
 .dark-golden {
   padding: 10px 30px;
   background-color: var(--dark-light-color);
@@ -27,9 +29,9 @@
   border-radius: 20px;
   border: 1px solid var(--light-white-border-color);
 }
-.button:hover {
+/* .button:hover {
   background-color: var(--dark-very-light-color);
-}
+} */
 .blue-white {
   padding: 10px 30px;
   background-color: var(--light-blue-color);
