@@ -73,6 +73,21 @@ namespace Api.Controllers
             return Ok(novelDto);
         }
 
+        [HttpGet("statuses")]
+        public ActionResult<IEnumerable<object>> GetNovelStatuses()
+        {
+            var statuses = Enum.GetValues(typeof(NovelStatus))
+                            .Cast<NovelStatus>()
+                            .Select(s => new 
+                            {
+                                key = s.ToString(),
+                                value = (int)s
+                            })
+                            .ToList();
+
+            return Ok(statuses);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<NovelReadDto>> CreateNovel([FromBody] CreateNovelDto novelDto)
@@ -81,17 +96,19 @@ namespace Api.Controllers
 
             if (userId == null)
                 return Unauthorized(new { message = "Invalid or missing user Id." });
-            
+
             var user = await _db.Users.FindAsync(userId);
             if (user == null)
-                return BadRequest($"User with id {userId} does not exist.");
-            
+                return BadRequest(new { message = $"User with id {userId} does not exist."});
 
+            if (novelDto.Tags == null || !novelDto.Tags.Any())
+                return BadRequest(new {message = "A novel must have at least one tag."} );
+            
             var novel = _mapper.Map<Novel>(novelDto);
             novel.UserId = (int)userId;
             novel.CreatedAt = DateTime.UtcNow;
             novel.Status = NovelStatus.Draft;
-
+            
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
 
@@ -169,7 +186,7 @@ namespace Api.Controllers
             {
                 if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
                     return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
-                
+
                 if (novelDto.Status != NovelStatus.Draft && (novel.Chapters?.Count ?? 0) == 0)
                 {
                     return BadRequest(new
@@ -177,7 +194,10 @@ namespace Api.Controllers
                         message = "You must add at least 1 chapter before changing the novel's status."
                     });
                 }
+
             }
+            if (novelDto.Tags != null && !novelDto.Tags.Any())
+                return BadRequest(new {message = "A novel must have at least one tag."} );
 
             _mapper.Map(novelDto, novel);
             novel.UpdatedAt = DateTime.UtcNow;
