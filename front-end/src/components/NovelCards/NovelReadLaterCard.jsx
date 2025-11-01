@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { follow, unReadLater } from "../../api/novelInteractions";
 import { useToast } from "../../context/useToast";
 import styles from "./NovelCard.module.css";
-import NovelCover from "/the-legend-of-william-oh.png";
 import Button from "../FormFields/Button";
 import NovelCardLayout from "./NovelCardLayout";
 
