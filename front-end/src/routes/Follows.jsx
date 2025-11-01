@@ -41,8 +41,9 @@ const Follows = () => {
               title={novel.title}
               coverUrl={novel.coverImageUrl}
               author={novel.author}
-              latestChapter={"nothing"}
-              lastReadChapter={"nothing"}
+              latestChapter={novel.latestChapter}
+              lastReadChapter={novel.lastReadChapter}
+              nextChapter={novel.nextChapter}
             />
           );
         })}

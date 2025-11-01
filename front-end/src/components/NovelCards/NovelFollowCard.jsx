@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { timeAgo } from "../../helpers/timeFormating";
+import toSlug from "../../helpers/toSlug";
 import styles from "./NovelCard.module.css";
-import NovelCover from "/the-legend-of-william-oh.png";
 import Button from "../FormFields/Button";
 import NovelCardLayout from "./NovelCardLayout";
 
@@ -11,68 +12,71 @@ const NovelFollowCard = ({
   author,
   latestChapter,
   lastReadChapter,
-  allRead = false,
+  nextChapter,
 }) => {
-  const novelSlog = "the-legend-of-william-oh";
+  const navigate = useNavigate();
+
+  const allRead =
+    lastReadChapter !== null && latestChapter.id === lastReadChapter.id;
+  const hasReadNovel = lastReadChapter !== null;
+  const novelSlug = toSlug(title);
 
   return (
-    <NovelCardLayout id={id} coverUrl={coverUrl} fitMode="hide">
+    <NovelCardLayout
+      id={id}
+      coverUrl={coverUrl}
+      novelSlug={novelSlug}
+      fitMode="hide"
+    >
       <Link
         className={styles["novel-card-title"]}
-        to={`/novels/${id}/${novelSlog}`}
+        to={`/novels/${id}/${novelSlug}`}
       >
         {title}
       </Link>
 
-      {allRead ? (
-        <>
-          <div className={styles["novel-meta"]}>
-            <div className={styles["novel-status"]}>
-              Last Update & Last Read
-            </div>
-            <div className={styles["novel-author"]}>
-              by <span>{author.userName}</span>
-            </div>
-          </div>
-          <Link
-            className={`${styles["last-update"]} ${styles["last-read"]}}`}
-            to={`/novels/${2}/chapters/${2}`}
-          >
-            <div>Chapter Name</div>
-            <div>19 hours ago</div>
-          </Link>
-        </>
-      ) : (
-        <>
-          <div className={styles["novel-meta"]}>
-            <div className={styles["novel-status"]}>Last Update</div>
-            <div className={styles["novel-author"]}>
-              by <span>{author.userName}</span>
-            </div>
-          </div>
-          <Link
-            className={styles["last-update"]}
-            to={`/novels/${2}/chapters/${2}`}
-          >
-            <div>Chapter Name</div>
-            <div>19 hours ago</div>
-          </Link>
+      <div className={styles["novel-meta"]}>
+        <div className={styles["novel-status"]}>
+          Last Update {allRead && "& Last Read"}
+        </div>
+        <div className={styles["novel-author"]}>
+          by <span>{author.userName}</span>
+        </div>
+      </div>
+      <Link
+        className={styles["last-update"]}
+        to={`/novels/${id}/${novelSlug}/read/chapters/${latestChapter.id}/${toSlug(latestChapter.title)}`}
+      >
+        <div>{latestChapter.title}</div>
+        <div>19 hours ago</div>
+      </Link>
 
+      {hasReadNovel && !allRead && (
+        <>
           <div className={styles["novel-status"]}>Last Read Chapter</div>
           <Link
             className={styles["last-read"]}
-            to={`/novels/${2}/chapters/${2}`}
+            to={`/novels/${id}/${novelSlug}/read/chapters/${lastReadChapter.id}/${toSlug(lastReadChapter.title)}`}
           >
-            <div>Chapter Name</div>
+            <div>{lastReadChapter.title}</div>
             <div>19 hours ago</div>
           </Link>
         </>
       )}
 
       {!allRead && (
-        <Button styleType="blue-white" align="right">
-          Nex Chapter
-        </Button>
+        <div className={styles["button-wrapper"]}>
+          <Button
+            styleType="blue-white"
+            onClick={() =>
+              navigate(
+                `/novels/${id}/${novelSlug}/read/chapters/${nextChapter.id}/${toSlug(nextChapter.title)}`,
+              )
+            }
+          >
+            {hasReadNovel ? "Nex Chapter" : "Start reading"}
+          </Button>
+        </div>
       )}
     </NovelCardLayout>
   );

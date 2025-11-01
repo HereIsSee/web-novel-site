@@ -5,14 +5,14 @@ import DefaultCover from "/default-image.png";
 const NovelCardLayout = ({
   id,
   coverUrl,
-  novelSlog,
+  novelSlug,
   fitMode = "center", // Options: center or hide
   children,
 }) => {
   return (
     <div className={`${styles["novel-card"]} ${styles[fitMode]}`}>
       <Link
-        to={`/novels/${id}/${novelSlog}`}
+        to={`/novels/${id}/${novelSlug}`}
         className={styles["link-with-image"]}
       >
         <img src={coverUrl ?? DefaultCover} alt="novel cover" />
