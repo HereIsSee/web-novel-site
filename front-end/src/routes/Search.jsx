@@ -169,7 +169,7 @@ const Search = () => {
               key={novel.id}
               id={novel.id}
               title={novel.title}
-              novelSlog={toSlug(novel.title)}
+              novelSlug={toSlug(novel.title)}
               synopsis={novel.synopsis}
               coverImageUrl={novel.coverImageUrl}
               createdAt={novel.createdAt}

@@ -346,6 +346,14 @@ a.title:focus {
 }
 .novel-summary {
   font-size: 22px;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.novel-summary.collapsed {
+  max-height: 140px;
+}
+.novel-summary.expanded {
+  max-height: 2000px;
 }
 .novel-summary > * {
   margin: 20px 0px;

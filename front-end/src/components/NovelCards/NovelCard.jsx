@@ -11,7 +11,7 @@ import NovelCardLayout from "./NovelCardLayout";
 const NovelCard = ({
   id,
   title,
-  novelSlog,
+  novelSlug,
   synopsis,
   coverImageUrl,
   createdAt,
@@ -21,10 +21,10 @@ const NovelCard = ({
   const [showMore, setShowMore] = useState(false);
 
   return (
-    <NovelCardLayout id={id} coverUrl={coverImageUrl}>
+    <NovelCardLayout id={id} novelSlug={novelSlug} coverUrl={coverImageUrl}>
       <Link
         className={styles["novel-card-title"]}
-        to={`/novels/${id}/${novelSlog}`}
+        to={`/novels/${id}/${novelSlug}`}
       >
         {title}
       </Link>
