@@ -26,6 +26,13 @@ namespace Api.Profiles
                 // Only overwrite fields that are non-null (partial update)
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<Novel, NovelFollowDto>()
+                .ForMember(dest => dest.Author,
+                    opt => opt.MapFrom(src => src.User))
+                .ForMember(dest => dest.LatestChapter, opt => opt.Ignore())
+                .ForMember(dest => dest.LastReadChapter, opt => opt.Ignore())
+                .ForMember(dest => dest.NextChapter, opt => opt.Ignore());
         }
     }
 }

@@ -5,6 +5,7 @@ using Api.Models;
 using Api.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper.QueryableExtensions;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -269,33 +270,87 @@ namespace Api.Controllers
         }
 
         [HttpGet("user/{id}/follows")]
-        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserFollowedNovels(int id)
+        public async Task<ActionResult<IEnumerable<NovelFollowDto>>> GetUserFollowedNovels(int id)
         {
-            var user = await _db.Users.FindAsync(id);
-            if (user == null)
+            var userExists = await _db.Users.AnyAsync(u => u.Id == id);
+            if (!userExists)
                 return NotFound(new { message = "User not found." });
 
             var follows = await _db.Follows
-               .Where(f => f.UserId == id)
-               .Include(f => f.Novel)
-                   .ThenInclude(n => n.NovelTags)
-                       .ThenInclude(nt => nt.Tag)
-               .ToListAsync();
+                .Where(f => f.UserId == id)
+                .Include(f => f.Novel)
+                    .ThenInclude(n => n.User)
+                .ToListAsync();
 
-            var novels = follows.Select(f => f.Novel).ToList();
+            var novelIds = follows.Select(f => f.NovelId).ToList();
 
+            var chapters = await _db.Chapters
+                .Where(c => novelIds.Contains(c.NovelId))
+                .ToListAsync();
 
-            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+            var novelDtos = follows
+                .Select(f =>
+                {
+                    var novel = f.Novel;
+                    var dto = new NovelFollowDto
+                    {
+                        Id = novel.Id,
+                        Title = novel.Title,
+                        CoverImageUrl = novel.CoverImageUrl,
+                        CreatedAt = novel.CreatedAt,
+                        UpdatedAt = novel.UpdatedAt,
+                        Status = novel.Status,
+                        Author = new UserSummaryDto
+                        {
+                            Id = novel.User.Id,
+                            UserName = novel.User.UserName,
+                            AvatarUrl = novel.User.AvatarUrl
+                        }
+                    };
 
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
+                    var novelChapters = chapters.Where(c => c.NovelId == novel.Id);
+                    var latestChapter = novelChapters.OrderByDescending(c => c.ChapterNumber).FirstOrDefault();
 
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
+                    var lastReadChapter = f.LastReadChapterId.HasValue
+                        ? novelChapters.FirstOrDefault(c => c.Id == f.LastReadChapterId.Value)
+                        : null;
+
+                    var nextChapter = f.LastReadChapterId.HasValue
+                        ? novelChapters
+                            .Where(c => c.ChapterNumber >= lastReadChapter!.ChapterNumber)
+                            .OrderBy(c => c.ChapterNumber)
+                            .FirstOrDefault()
+                        : novelChapters.OrderBy(c => c.ChapterNumber).FirstOrDefault();
+
+                    dto.LatestChapter = latestChapter != null ? new ChapterListItemDto
+                    {
+                        Id = latestChapter.Id,
+                        Title = latestChapter.Title,
+                        ChapterNumber = latestChapter.ChapterNumber
+
+                    } : null;
+                    dto.LastReadChapter = lastReadChapter != null ? new ChapterListItemDto
+                    {
+                        Id = lastReadChapter.Id,
+                        Title = lastReadChapter.Title,
+                        ChapterNumber = lastReadChapter.ChapterNumber
+
+                    } : null;
+                    dto.NextChapter = nextChapter != null ? new ChapterListItemDto
+                    {
+                        Id = nextChapter.Id,
+                        Title = nextChapter.Title,
+                        ChapterNumber = nextChapter.ChapterNumber
+
+                    } : null;
+
+                    return dto;
+                })
+                .ToList();
 
             return Ok(novelDtos);
         }
+
         [HttpGet("user/{id}/favorites")]
         public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserFavoriteNovels(int id)
         {
@@ -352,7 +407,6 @@ namespace Api.Controllers
 
             return Ok(novelDtos);
         }
-
 
         private async Task ReplaceNovelCoverAsync(Novel novel, int newCoverId, int userId)
         {

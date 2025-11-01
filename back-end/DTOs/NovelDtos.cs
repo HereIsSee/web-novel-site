@@ -39,4 +39,21 @@ namespace Api.DTOs
         public List<TagDto> Tags { get; set; } = new();
         public NovelStatsDto Stats { get; set; } = null!;
     }
+
+    public class NovelFollowDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string? CoverImageUrl { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public NovelStatus Status { get; set; }
+        // Simple author info
+        public UserSummaryDto Author { get; set; } = null!;
+
+        public ChapterListItemDto? LatestChapter { get; set; }
+        public ChapterListItemDto? LastReadChapter { get; set; }
+        public ChapterListItemDto? NextChapter { get; set; }
+    }
 }

@@ -28,4 +28,10 @@ namespace Api.DTOs
         public string? Content { get; set; }
         public int? ChapterNumber { get; set; }
     }
+
+    public class ChapterListItemDto{
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public int ChapterNumber { get; set; }
+    }
 }

@@ -9,6 +9,8 @@ namespace Api.MappingProfiles
         public ChapterProfile()
         {
             CreateMap<Chapter, ChapterReadDto>();
+            
+            CreateMap<Chapter, ChapterListItemDto>();
 
             CreateMap<CreateChapterDto, Chapter>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

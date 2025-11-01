@@ -7,6 +7,15 @@ export const getNovel = (id) => httpRequest(`/api/novels/${id}`);
 export const getUserNovels = (userId) =>
   httpRequest(`/api/novels/user/${userId}`);
 
+export const getUserFollowedNovels = (userId) =>
+  httpRequest(`/api/novels/user/${userId}/follows`);
+
+export const getUserFavoritedNovels = (userId) =>
+  httpRequest(`/api/novels/user/${userId}/favorites`);
+
+export const getUserReadLaterNovels = (userId) =>
+  httpRequest(`/api/novels/user/${userId}/readlater`);
+
 export const uploadCoverTemp = (formData) =>
   httpRequest("/api/upload/cover-temp", {
     method: "POST",

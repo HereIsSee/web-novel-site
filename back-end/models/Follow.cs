@@ -11,5 +11,7 @@ namespace Api.Models
         public User User { get; set; } = null!;
         public int NovelId { get; set; }
         public Novel Novel { get; set; } = null!;
+        public int? LastReadChapterId { get; set; }
+        public Chapter? LastReadChapter { get; set; }
     }
 }

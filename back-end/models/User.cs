@@ -24,5 +24,9 @@ namespace Api.Models
         public ICollection<Novel>? Novels { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<UploadedFile>? UploadedFiles { get; set; }
+        public ICollection<Follow>? Follows { get; set; }
+        public ICollection<Favorite>? Favorites { get; set; }
+        public ICollection<ReadLater>? ReadLaters { get; set; }
+        public ICollection<Review>? Reviews { get; set; }
     }
 }

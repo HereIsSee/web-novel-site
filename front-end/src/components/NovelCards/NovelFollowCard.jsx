@@ -4,16 +4,24 @@ import NovelCover from "/the-legend-of-william-oh.png";
 import Button from "../FormFields/Button";
 import NovelCardLayout from "./NovelCardLayout";
 
-const NovelFollowCard = ({ id, title, allRead = false }) => {
+const NovelFollowCard = ({
+  id,
+  title,
+  coverUrl,
+  author,
+  latestChapter,
+  lastReadChapter,
+  allRead = false,
+}) => {
   const novelSlog = "the-legend-of-william-oh";
 
   return (
-    <NovelCardLayout id={id} coverUrl={NovelCover} fitMode="hide">
+    <NovelCardLayout id={id} coverUrl={coverUrl} fitMode="hide">
       <Link
         className={styles["novel-card-title"]}
         to={`/novels/${id}/${novelSlog}`}
       >
-        The Legend Of William Oh
+        {title}
       </Link>
 
       {allRead ? (
@@ -23,7 +31,7 @@ const NovelFollowCard = ({ id, title, allRead = false }) => {
               Last Update & Last Read
             </div>
             <div className={styles["novel-author"]}>
-              by <span>Macronomicon</span>
+              by <span>{author.userName}</span>
             </div>
           </div>
           <Link
@@ -39,7 +47,7 @@ const NovelFollowCard = ({ id, title, allRead = false }) => {
           <div className={styles["novel-meta"]}>
             <div className={styles["novel-status"]}>Last Update</div>
             <div className={styles["novel-author"]}>
-              by <span>Macronomicon</span>
+              by <span>{author.userName}</span>
             </div>
           </div>
           <Link

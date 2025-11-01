@@ -297,6 +297,33 @@ namespace Api.Controllers
 
             return Ok(new { views = novel.Views });
         }
+        [HttpPost("follow/{novelId}/update-last-read-chapter/{chapterId}")]
+        public async Task<IActionResult> UpdateFollowLastReadChapter(int novelId, int chapterId)
+        {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
+            var follow = await _db.Follows
+                .FirstOrDefaultAsync(f => f.UserId == userId && f.NovelId == novelId);
+
+            if (follow == null)
+                return NotFound(new { message = "You are not following this novel." });
+
+            var chapter = await _db.Chapters
+                .FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
+
+            if (chapter == null)
+                return BadRequest(new { message = "Invalid chapter for this novel." });
+
+            follow.LastReadChapterId = chapterId;
+            follow.LastReadChapter = chapter;
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Last read chapter updated successfully." });
+        }
+
 
     }
 

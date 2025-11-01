@@ -92,7 +92,7 @@ namespace Api.Data
                 .HasKey(f => new { f.UserId, f.NovelId });
             modelBuilder.Entity<Follow>()
                 .HasOne(f => f.User)
-                .WithMany()
+                .WithMany(u => u.Follows)
                 .HasForeignKey(f => f.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Follow>()
@@ -100,12 +100,17 @@ namespace Api.Data
                 .WithMany()
                 .HasForeignKey(f => f.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Follow>()
+                .HasOne(f => f.LastReadChapter)
+                .WithMany()
+                .HasForeignKey(f => f.LastReadChapterId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Favorite>()
                 .HasKey(f => new { f.UserId, f.NovelId });
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.User)
-                .WithMany()
+                .WithMany(u => u.Favorites)
                 .HasForeignKey(f => f.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Favorite>()
@@ -118,7 +123,7 @@ namespace Api.Data
                 .HasKey(r => new { r.UserId, r.NovelId });
             modelBuilder.Entity<ReadLater>()
                 .HasOne(r => r.User)
-                .WithMany()
+                .WithMany(u => u.ReadLaters)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ReadLater>()
@@ -131,7 +136,7 @@ namespace Api.Data
                 .HasKey(r => new { r.UserId, r.NovelId });
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.User)
-                .WithMany()
+                .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Review>()
