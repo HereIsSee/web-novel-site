@@ -16,7 +16,7 @@ const DropDownListSelection = ({
   const filteredItems = items.filter(
     (item) =>
       item.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedItems.includes(item),
+      !selectedItems.some((selected) => selected.id === item.id),
   );
 
   const handleItemClick = (item) => {

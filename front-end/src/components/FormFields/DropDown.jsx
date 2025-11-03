@@ -1,12 +1,17 @@
-import React from "react";
+import { useMemo } from "react";
 import styles from "./DropDown.module.css";
 import isPlainObject from "../../helpers/isPlainObject";
 
 const DropDown = ({ items = [], name, id, selectedValue, onChange }) => {
   // Normalize items: if it’s a plain object, convert to array of { key, value }
-  const normalizedItems = isPlainObject(items)
-    ? Object.entries(items).map(([key, value]) => ({ key, value }))
-    : items;
+  const normalizedItems = useMemo(() => {
+    if (isPlainObject(items)) {
+      return Object.entries(items).map(([key, value]) => ({ key, value }));
+    }
+    return items;
+  }, [items]);
+
+  console.log(normalizedItems);
 
   return (
     <select

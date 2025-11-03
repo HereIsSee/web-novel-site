@@ -1,5 +1,14 @@
 import { httpRequest } from "./http";
 
+// Public novel routes
+export const getPublicNovels = () => httpRequest("/api/public-novels");
+
+export const getPublicNovel = (id) => httpRequest(`/api/public-novels/${id}`);
+
+// Get novel status values
+export const getNovelStatusValues = () => httpRequest("/api/novels/statuses");
+
+// Old routes that may be recategorized
 export const getNovels = () => httpRequest("/api/novels");
 
 export const getNovel = (id) => httpRequest(`/api/novels/${id}`);

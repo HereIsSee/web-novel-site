@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getTags } from "../api/tags";
 import { novelStatusData } from "../helpers/novelStatusData";
-import { getNovels } from "../api/novel";
+import { getPublicNovels } from "../api/novel";
 import toSlug from "../helpers/toSlug";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
@@ -52,7 +52,7 @@ const Search = () => {
     };
     const fetchNovels = async () => {
       try {
-        const response = await getNovels();
+        const response = await getPublicNovels();
         console.log(response);
         setNovels(response);
       } catch (err) {

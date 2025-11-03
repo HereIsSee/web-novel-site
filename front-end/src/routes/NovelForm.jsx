@@ -7,6 +7,7 @@ import {
   createNovel,
   getNovel,
   updateNovel,
+  getNovelStatusValues,
 } from "../api/novel";
 import { getTags } from "../api/tags";
 import StarterKit from "@tiptap/starter-kit";
@@ -18,8 +19,6 @@ import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
 import DropDown from "../components/FormFields/DropDown";
 import DropDownListSelection from "../components/FormFields/DropDownListSelection";
-
-const novelStatusArray = { Draft: 0, Published: 1, Hidden: 3 };
 
 const NovelForm = () => {
   const { userId, novelId } = useParams();
@@ -36,7 +35,7 @@ const NovelForm = () => {
 
   // Search fields inputs
   const [inputTagsValue, setInputTagsValue] = useState("");
-
+  const [novelStatusArray, setNovelStatusArray] = useState([]);
   // Preview of uploaded image
   const [tempFileId, setTempFileId] = useState(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState("");
@@ -46,7 +45,8 @@ const NovelForm = () => {
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    if (novelId === null) return;
+    console.log(novelId);
+    if (!novelId) return;
     const novelData = async () => {
       try {
         const novel = await getNovel(novelId);
@@ -65,14 +65,19 @@ const NovelForm = () => {
     };
 
     novelData();
-  }, [novelId]);
+  }, [novelId, editor]);
 
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await getTags();
+        const [tags, novelStatusArrayData] = await Promise.all([
+          getTags(),
+          getNovelStatusValues(),
+        ]);
 
-        setTags(response);
+        setTags(tags);
+        setNovelStatusArray(novelStatusArrayData);
+        console.log(novelStatusArrayData);
       } catch (err) {
         console.error("Error while gettings tags: ", err);
       }
@@ -188,15 +193,18 @@ const NovelForm = () => {
             )}
           </div>
 
-          <div>
-            <label htmlFor="novelStatus">Novel Status</label>
-            <DropDown
-              items={novelStatusArray}
-              name="novelStatus"
-              id="novelStatus"
-              onChange={setNovelStatus}
-            />
-          </div>
+          {novelId && (
+            <div>
+              <label htmlFor="novelStatus">Novel Status</label>
+              <DropDown
+                items={novelStatusArray}
+                name="novelStatus"
+                id="novelStatus"
+                selectedValue={novelStatus}
+                onChange={setNovelStatus}
+              />
+            </div>
+          )}
 
           <div>
             <label htmlFor="">Novel tags</label>
