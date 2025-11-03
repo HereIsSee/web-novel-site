@@ -1,29 +1,43 @@
 import { useState, useEffect } from "react";
+import { FaRegClock, FaTrophy } from "react-icons/fa";
+import { AiFillPlaySquare } from "react-icons/ai";
+import { getTopNovels, getLatestNovels } from "../api/novel";
+import toSlug from "../helpers/toSlug";
 import App from "../App";
 import SectionWrapper from "../components/SectionWrapper";
 import NovelLatestUpdateMiniCard from "../components/NovelCards/NovelLatestUpdateMiniCard";
 import NovelMiniCard from "../components/NovelCards/NovelMiniCard";
-import { FaRegClock, FaTrophy } from "react-icons/fa";
-import { AiFillPlaySquare } from "react-icons/ai";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [novels, SetNovels] = useState([]);
+  const [topOngoingNovels, setTopOngoingNovels] = useState([]);
+  const [topCompletedNovels, setTopCompletedNovels] = useState([]);
+  const [latestNovels, setLatestNovels] = useState([]);
+
   const [error, SetError] = useState("");
 
   useEffect(() => {
-    const fetchNovels = () => {
-      fetch("/api/novels")
-        .then((response) => {
-          if (response.status >= 500) throw new Error("Server Error");
-          else if (response.status >= 400) {
-            throw new Error("Client side Error");
-          }
-          return response.json();
-        })
-        .then((response) => SetNovels(response))
-        .catch((error) => SetError(error))
-        .finally(() => setIsLoading(false));
+    const fetchNovels = async () => {
+      setIsLoading(true);
+      try {
+        const [topOngoing, topCompleted, latest] = await Promise.all([
+          getTopNovels(5, "ongoing"),
+          getTopNovels(5, "completed"),
+          getLatestNovels(5),
+        ]);
+
+        setTopOngoingNovels(topOngoing);
+        setTopCompletedNovels(topCompleted);
+        setLatestNovels(latest);
+        console.log("TOP ONGOING: ", topOngoing);
+        console.log("TOP COMPLETED: ", topCompleted);
+        console.log("LATEST: ", latest);
+      } catch (err) {
+        console.error(err);
+        SetError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchNovels();
@@ -39,7 +53,7 @@ const Home = () => {
   if (error) {
     return (
       <App>
-        <h1>Something went wrong</h1>
+        <h1>Something went wrong: {error}</h1>
       </App>
     );
   }
@@ -47,45 +61,54 @@ const Home = () => {
   return (
     <App>
       <SectionWrapper title="Latest Updates" Icon={FaRegClock}>
-        {novels.map((novel, index) => {
-          if (index > 4) return;
-          return (
-            <NovelLatestUpdateMiniCard
-              key={novel.id}
-              id={novel.id}
-              title={novel.title}
-            />
-          );
-        })}
+        {latestNovels &&
+          latestNovels.map((novel) => {
+            return (
+              <NovelLatestUpdateMiniCard
+                key={novel.id}
+                id={novel.id}
+                title={novel.title}
+                novelSlug={toSlug(novel.title)}
+                coverUrl={novel.coverImageUrl}
+                chapters={novel.chapters}
+              />
+            );
+          })}
       </SectionWrapper>
 
       <div className="novel-categories">
         <SectionWrapper title="Best Completed" Icon={FaTrophy}>
-          {novels.map((novel, index) => {
-            if (index > 4) return;
-            return (
-              <NovelMiniCard
-                key={novel.id}
-                id={novel.id}
-                title={novel.title}
-                tags={[]}
-              />
-            );
-          })}
+          {topCompletedNovels &&
+            topCompletedNovels.map((novel) => {
+              return (
+                <NovelMiniCard
+                  key={novel.id}
+                  id={novel.id}
+                  title={novel.title}
+                  novelSlug={toSlug(novel.title)}
+                  coverUrl={novel.coverImageUrl}
+                  tags={novel.tags}
+                  stats={novel.stats}
+                />
+              );
+            })}
         </SectionWrapper>
 
         <SectionWrapper title="Best Ongoing" Icon={AiFillPlaySquare}>
-          {novels.map((novel, index) => {
-            if (index > 4) return;
-            return (
-              <NovelMiniCard
-                key={novel.id}
-                id={novel.id}
-                title={novel.title}
-                tags={[]}
-              />
-            );
-          })}
+          {topOngoingNovels &&
+            topOngoingNovels.map((novel) => {
+              return (
+                <NovelMiniCard
+                  key={novel.id}
+                  id={novel.id}
+                  title={novel.title}
+                  novelSlug={toSlug(novel.title)}
+                  coverUrl={novel.coverImageUrl}
+                  tags={novel.tags}
+                  stats={novel.stats}
+                />
+              );
+            })}
         </SectionWrapper>
       </div>
     </App>

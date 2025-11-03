@@ -112,7 +112,7 @@ public class NovelStatsService : INovelStatsService
         var novels = await _db.Novels
             .Where(n => novelIds.Contains(n.Id))
             .ToDictionaryAsync(n => n.Id);
-        
+
         var result = new Dictionary<int, NovelStatsDto>();
 
         foreach (var id in novelIds)
@@ -143,4 +143,5 @@ public class NovelStatsService : INovelStatsService
 
         return result;
     }
+
 }

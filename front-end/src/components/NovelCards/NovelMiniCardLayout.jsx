@@ -1,22 +1,19 @@
 import { Link } from "react-router-dom";
 import styles from "./NovelCard.module.css";
-import NovelCover from "/the-legend-of-william-oh.png";
 import Button from "../FormFields/Button";
 
-const NovelMiniCardLayout = ({ id, title, coverUrl, children }) => {
-  const novelSlog = "the-legend-of-william-oh";
-
+const NovelMiniCardLayout = ({ id, title, novelSlug, coverUrl, children }) => {
   return (
     <div className={styles["mini-novel-card"]}>
-      <Link to={`/novels/${id}/${novelSlog}`} className="link-with-image">
-        <img src={NovelCover} alt="novel cover" />
+      <Link to={`/novels/${id}/${novelSlug}`} className="link-with-image">
+        <img src={coverUrl} alt="novel cover" />
       </Link>
       <div>
         <Link
           className={styles["mini-novel-card-title"]}
-          to={`/novels/${2}/${novelSlog}`}
+          to={`/novels/${id}/${novelSlug}`}
         >
-          The Legend Of William Oh
+          {title}
         </Link>
 
         <div className={styles["content"]}>{children}</div>

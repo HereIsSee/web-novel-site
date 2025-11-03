@@ -5,6 +5,16 @@ export const getPublicNovels = () => httpRequest("/api/public-novels");
 
 export const getPublicNovel = (id) => httpRequest(`/api/public-novels/${id}`);
 
+export const getTopNovels = (count = 5, status) => {
+  let url = `/api/public-novels/top?count=${count}`;
+  if (status) url += `&status=${status}`;
+  return httpRequest(url);
+};
+
+export const getLatestNovels = (count = 5) => {
+  return httpRequest(`/api/public-novels/latest?count=${count}`);
+};
+
 // Get novel status values
 export const getNovelStatusValues = () => httpRequest("/api/novels/statuses");
 

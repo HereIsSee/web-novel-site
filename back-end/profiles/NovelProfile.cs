@@ -34,6 +34,12 @@ namespace Api.Profiles
                 .ForMember(dest => dest.LatestChapter, opt => opt.Ignore())
                 .ForMember(dest => dest.LastReadChapter, opt => opt.Ignore())
                 .ForMember(dest => dest.NextChapter, opt => opt.Ignore());
+
+            CreateMap<Novel, NovelWithChaptersDto>()
+                .ForMember(dest => dest.Author,
+                    opt => opt.MapFrom(src => src.User))
+                 .ForMember(dest => dest.Chapters,
+                    opt => opt.MapFrom(src => src.Chapters ?? Enumerable.Empty<Chapter>()));
         }
     }
 }

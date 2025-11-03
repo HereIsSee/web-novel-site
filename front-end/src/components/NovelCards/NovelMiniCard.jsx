@@ -4,9 +4,14 @@ import NovelMiniCardLayout from "./NovelMiniCardLayout";
 import NovelTags from "../Novel/NovelTags";
 import { MdGroups } from "react-icons/md";
 
-const NovelMiniCard = ({ id, title, coverUrl, tags }) => {
+const NovelMiniCard = ({ id, title, novelSlug, coverUrl, tags, stats }) => {
   return (
-    <NovelMiniCardLayout id={id} title={title} coverUrl={coverUrl}>
+    <NovelMiniCardLayout
+      id={id}
+      title={title}
+      novelSlug={novelSlug}
+      coverUrl={coverUrl}
+    >
       <div className={styles["latest-update-chapters"]}>
         <NovelTags tags={tags} />
         <div className={styles["follows"]}>
@@ -19,7 +24,7 @@ const NovelMiniCard = ({ id, title, coverUrl, tags }) => {
             }}
             size="30px"
           />
-          19,740 FOLLOWERS
+          {stats.followsCount} FOLLOWERS
         </div>
       </div>
     </NovelMiniCardLayout>
