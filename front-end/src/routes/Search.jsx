@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getTags } from "../api/tags";
-import { novelStatusData } from "../helpers/novelStatusData";
-import { getPublicNovels } from "../api/novel";
+import { getPublicNovels, getNovelStatusValues } from "../api/novel";
+import { getOrderByOptions } from "../api/search";
 import toSlug from "../helpers/toSlug";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
@@ -11,22 +11,16 @@ import MultiRangeSlider from "../components/FormFields/MultiRangeSlider";
 import DropDown from "../components/FormFields/DropDown";
 import NovelCard from "../components/NovelCards/NovelCard";
 
-const orderBy = [
-  "Last Update",
-  "Release Date",
-  "Followers",
-  "Number of Pages",
-  "Views",
-  "Title",
-  "Author",
-];
-
 const Search = () => {
   // Form data
+  const [title, setTitle] = useState("");
+  const [authorUsername, setAuthorUsername] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [pages, setPages] = useState({ From: 0, To: 20000 });
+  const [rating, setRating] = useState({ From: 0, To: 5 });
   const [selectedStatuses, setSelectedStatuses] = useState([]);
-
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState([]);
+  const [selectedOrderBy, setSelectedOrderBy] = useState(0);
+  const [ascending, setAscending] = useState(false);
 
   // Search fields inputs
   const [inputTagsValue, setInputTagsValue] = useState("");
@@ -34,18 +28,27 @@ const Search = () => {
 
   // Data for selection like tags and novel status
   const [tags, setTags] = useState([]);
+  const [novelStatus, setNovelStatus] = useState([]);
+  const [orderByValues, setOrderByValues] = useState([]);
 
   // Fetched novels
   const [novels, setNovels] = useState([]);
 
+  // Show advanced search
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await getTags();
+        const [tagsData, novelStatusData, orderBy] = await Promise.all([
+          getTags(),
+          getNovelStatusValues(),
+          getOrderByOptions(),
+        ]);
 
-        console.log(response);
-
-        setTags(response);
+        setTags(tagsData);
+        setNovelStatus(novelStatusData);
+        setOrderByValues(orderBy);
       } catch (err) {
         console.error("Error while gettings tags: ", err);
       }
@@ -64,12 +67,43 @@ const Search = () => {
     fetchNovels();
   }, []);
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      Title: title,
+      ...(showAdvancedSearch && {
+        AuthorUsername: authorUsername,
+        TagsIds: selectedTags.map((t) => t.id),
+        Pages: pages,
+        Rating: rating,
+        StatusEnumValues: selectedStatuses.map((s) => s.value),
+        OrderBy: selectedOrderBy,
+        Ascending: ascending,
+      }),
+    };
+
+    console.log("PAYLOAD: ", payload);
+    // try{
+
+    // } catch(err){
+
+    // } finally{
+
+    // }
+  };
+
   return (
     <App>
-      <form className="search card">
+      <form className="search card" onSubmit={onSubmit}>
         <div className="basic-search">
-          <InputField styleType="search" placeholder="Search for title..." />
-          <Button>Search</Button>
+          <InputField
+            type="text"
+            styleType="search"
+            placeholder="Search for title..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Button type="submit">Search</Button>
         </div>
         <Button
           onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
@@ -83,6 +117,9 @@ const Search = () => {
             <div className="search-item">
               <label htmlFor="author-name">Author Name</label>
               <InputField
+                type="text"
+                value={authorUsername}
+                onChange={(e) => setAuthorUsername(e.target.value)}
                 styleType="search"
                 placeholder="Author..."
                 name="author-name"
@@ -110,7 +147,19 @@ const Search = () => {
 
             <div className="search-item">
               <label htmlFor="pages-interval">Number of Pages</label>
-              <MultiRangeSlider />
+              <MultiRangeSlider
+                minValue={0}
+                maxValue={20000}
+                step={0}
+                min={pages.From}
+                max={pages.To}
+                onMinChange={(value) =>
+                  setPages((prev) => ({ ...prev, From: Number(value) }))
+                }
+                onMaxChange={(value) =>
+                  setPages((prev) => ({ ...prev, To: Number(value) }))
+                }
+              />
             </div>
 
             <div className="search-item">
@@ -121,6 +170,14 @@ const Search = () => {
                 maxValue="5"
                 step="0.01"
                 wholeNumbers={false}
+                min={rating.From}
+                max={rating.To}
+                onMinChange={(value) =>
+                  setRating((prev) => ({ ...prev, From: Number(value) }))
+                }
+                onMaxChange={(value) =>
+                  setRating((prev) => ({ ...prev, To: Number(value) }))
+                }
               />
             </div>
 
@@ -128,10 +185,11 @@ const Search = () => {
               <label htmlFor="status">Status</label>
 
               <DropDownListSelection
-                items={novelStatusData}
+                items={novelStatus}
                 placeholder="Search status..."
                 selectedItems={selectedStatuses}
                 inputValue={inputStatusValue}
+                keyPair={true}
                 onInputChange={(value) => setInputStatusValue(value)}
                 onAddItem={(status) =>
                   setSelectedStatuses((prev) => [...prev, status])
@@ -147,17 +205,29 @@ const Search = () => {
             <div className="search-item">
               <label htmlFor="">Order by</label>
               <div className="order-by">
-                <DropDown items={orderBy} name="orderBy" id="orderBy" />
+                <DropDown
+                  items={orderByValues}
+                  name="orderBy"
+                  id="orderBy"
+                  onChange={(value) => setSelectedOrderBy(value)}
+                />
 
                 <DropDown
                   items={["Descending", "Ascending"]}
                   name="sortOrder"
                   id="sortOrder"
+                  onChange={(value) =>
+                    value === "Descending"
+                      ? setAscending(false)
+                      : setAscending(true)
+                  }
                 />
               </div>
             </div>
 
-            <Button align="stretch">Search</Button>
+            <Button type="submit" align="stretch">
+              Search
+            </Button>
           </div>
         )}
       </form>

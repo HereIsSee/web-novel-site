@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import styles from "./MultiRangeSlider.module.css";
 
 const MultiRangeSlider = ({
@@ -6,9 +6,13 @@ const MultiRangeSlider = ({
   maxValue = 100,
   step = 1,
   wholeNumbers = true,
+  min,
+  max,
+  onMinChange,
+  onMaxChange,
 }) => {
-  const [min, setMin] = useState(minValue);
-  const [max, setMax] = useState(maxValue);
+  // const [min, onMinChange] = useState(minValue);
+  // const [max, onMaxChange] = useState(maxValue);
   const minRangeRef = useRef(null);
   const maxRangeRef = useRef(null);
   const sliderProgress = useRef(null);
@@ -36,13 +40,15 @@ const MultiRangeSlider = ({
 
     if (maxVal - minVal < minGap) {
       if (e.target === minRangeRef.current) {
-        setMin(maxVal - minGap);
+        onMinChange(maxVal - minGap);
       } else {
-        setMax(wholeNumbers ? minVal + minGap : (minVal + minGap).toFixed(2));
+        onMaxChange(
+          wholeNumbers ? minVal + minGap : (minVal + minGap).toFixed(2),
+        );
       }
     } else {
-      setMin(minVal);
-      setMax(wholeNumbers ? maxVal : maxVal.toFixed(2));
+      onMinChange(minVal);
+      onMaxChange(wholeNumbers ? maxVal : maxVal.toFixed(2));
     }
   };
 
@@ -52,12 +58,12 @@ const MultiRangeSlider = ({
 
     if (type === "min") {
       if (max - value >= minGap && value >= minValue) {
-        setMin(value);
+        onMinChange(value);
         minRangeRef.current.value = value;
       }
     } else {
       if (value - min >= minGap && value <= maxValue) {
-        setMax(value);
+        onMaxChange(value);
         maxRangeRef.current.value = value;
       }
     }

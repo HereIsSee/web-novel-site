@@ -11,8 +11,6 @@ const DropDown = ({ items = [], name, id, selectedValue, onChange }) => {
     return items;
   }, [items]);
 
-  console.log(normalizedItems);
-
   return (
     <select
       className={styles.dropDown}

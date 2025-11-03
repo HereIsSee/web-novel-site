@@ -9,14 +9,17 @@ const DropDownListSelection = ({
   onInputChange,
   onAddItem,
   onRemoveItem,
+  keyPair = false, // if the items are a key pair and not an item with id, name, description.
 }) => {
   const searchField = useRef(null);
   const [showItemSelection, setShowItemSelection] = useState(false);
 
-  const filteredItems = items.filter(
-    (item) =>
-      item.name.toLowerCase().includes(inputValue.toLowerCase()) &&
-      !selectedItems.some((selected) => selected.id === item.id),
+  const filteredItems = items.filter((item) =>
+    keyPair
+      ? item.key.toLowerCase().includes(inputValue.toLowerCase()) &&
+        !selectedItems.some((selected) => selected.value === item.value)
+      : item.name.toLowerCase().includes(inputValue.toLowerCase()) &&
+        !selectedItems.some((selected) => selected.id === item.id),
   );
 
   const handleItemClick = (item) => {
@@ -33,8 +36,11 @@ const DropDownListSelection = ({
         onClick={() => searchField.current.focus()}
       >
         {selectedItems.map((item) => (
-          <div key={item.id} className={styles.selectedItem}>
-            <span>{item.name}</span>
+          <div
+            key={keyPair ? item.value : item.id}
+            className={styles.selectedItem}
+          >
+            <span>{keyPair ? item.key : item.name}</span>
             <button
               type="button"
               className={styles.removeButton}
@@ -59,16 +65,29 @@ const DropDownListSelection = ({
 
       {showItemSelection && filteredItems.length > 0 && (
         <div className={styles.itemSelection}>
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className={styles.item}
-              onMouseDown={() => handleItemClick(item)}
-            >
-              <div className={styles.itemName}>{item.name}</div>
-              <div className={styles.itemDescription}>{item.description}</div>
-            </div>
-          ))}
+          {filteredItems.map((item) => {
+            if (keyPair) {
+              return (
+                <div
+                  key={item.value}
+                  className={styles.item}
+                  onMouseDown={() => handleItemClick(item)}
+                >
+                  <div className={styles.itemName}>{item.key}</div>
+                </div>
+              );
+            }
+            return (
+              <div
+                key={item.id}
+                className={styles.item}
+                onMouseDown={() => handleItemClick(item)}
+              >
+                <div className={styles.itemName}>{item.name}</div>
+                <div className={styles.itemDescription}>{item.description}</div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
