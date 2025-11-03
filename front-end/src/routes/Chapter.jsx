@@ -84,9 +84,12 @@ const Chapter = () => {
     }
   };
 
-  const diff = currentChapter.chapterNumber - followInfo.lastReadChapterNumber;
-  const skipped = diff > 1;
-  const backtracked = diff < 0;
+  const diff =
+    followInfo.isFollowing && followInfo.lastReadChapterNumber != null
+      ? currentChapter.chapterNumber - followInfo.lastReadChapterNumber
+      : 0;
+  const skipped = diff > 1 && followInfo.isFollowing;
+  const backtracked = diff < 0 && followInfo.isFollowing;
 
   return (
     <>
