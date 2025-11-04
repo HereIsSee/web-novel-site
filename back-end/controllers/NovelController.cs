@@ -35,19 +35,13 @@ namespace Api.Controllers
         {
             var novels = await _db.Novels
                 .Include(n => n.User)
+                .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
 
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
-
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
-
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
@@ -57,6 +51,7 @@ namespace Api.Controllers
         {
             var novel = await _db.Novels
                 .Include(n => n.User)
+                .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
                 .FirstOrDefaultAsync(n => n.Id == id);
@@ -65,10 +60,6 @@ namespace Api.Controllers
                 return NotFound("Novel not found");
 
             var novelDto = _mapper.Map<NovelReadDto>(novel);
-
-            var stats = await _statsService.GetNovelStatsAsync(id);
-
-            novelDto.Stats = stats;
 
             return Ok(novelDto);
         }
@@ -111,6 +102,7 @@ namespace Api.Controllers
             
             _db.Novels.Add(novel);
             await _db.SaveChangesAsync();
+            await _statsService.RecalculateAllStatsAsync(novel.Id);
 
             if (novelDto.Tags != null && novelDto.Tags.Any())
             {
@@ -227,6 +219,8 @@ namespace Api.Controllers
                 await ReplaceNovelCoverAsync(novel, novelDto.CoverImageId.Value, userId.Value);
 
             await _db.SaveChangesAsync();
+            await _statsService.RecalculateAllStatsAsync(novel.Id);
+            
 
             var novelReadDto = _mapper.Map<NovelReadDto>(novel);
             return Ok(novelReadDto);
@@ -246,36 +240,20 @@ namespace Api.Controllers
 
             return NoContent();
         }
-
-        [HttpPost("{novelId}/tags/{tagId`}")]
-        public async Task<IActionResult> AddTagToNovel(int novelId, int tagId)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAllNovels()
         {
-            var novel = await _db.Novels.FindAsync(novelId);
-            if (novel == null) return NotFound();
+            var novels = await _db.Novels.ToListAsync();
 
-            var tag = await _db.Tags.FindAsync(tagId);
-            if (novel == null) return NotFound();
+            if (!novels.Any())
+                return NotFound(new { message = "No novels found to delete." });
 
-            if (!await _db.NovelTags.AnyAsync(nt => nt.NovelId == novelId && nt.TagId == tagId))
-            {
-                _db.NovelTags.Add(new NovelTag { NovelId = novelId, TagId = tagId });
-                await _db.SaveChangesAsync();
-            }
-
-            return NoContent();
-        }
-
-        [HttpDelete("{novelId}/tags/{tagId}")]
-        public async Task<IActionResult> RemoveTagFromNovel(int novelId, int tagId)
-        {
-            var novelTag = await _db.NovelTags.FirstOrDefaultAsync(nt => nt.NovelId == novelId && nt.TagId == tagId);
-            if (novelTag == null) return NotFound();
-
-            _db.NovelTags.Remove(novelTag);
+            _db.Novels.RemoveRange(novels);
             await _db.SaveChangesAsync();
 
             return NoContent();
         }
+
 
         [HttpGet("user/{id}")]
         public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserNovels(int id)
@@ -283,19 +261,13 @@ namespace Api.Controllers
             var novels = await _db.Novels
                 .Where(n => n.UserId == id)
                 .Include(n => n.User)
+                .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
 
 
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
-
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
-
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
@@ -395,7 +367,9 @@ namespace Api.Controllers
             var favorites = await _db.Favorites
                .Where(f => f.UserId == id)
                .Include(f => f.Novel)
-                   .ThenInclude(n => n.NovelTags)
+                    .ThenInclude(n => n.Stats)
+               .Include(f => f.Novel)
+                    .ThenInclude(n => n.NovelTags)
                        .ThenInclude(nt => nt.Tag)
                .ToListAsync();
 
@@ -403,13 +377,6 @@ namespace Api.Controllers
 
 
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
-
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
-
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
@@ -423,6 +390,8 @@ namespace Api.Controllers
             var readLaters = await _db.ReadLaters
                .Where(f => f.UserId == id)
                .Include(f => f.Novel)
+                   .ThenInclude(n => n.Stats)
+               .Include(f => f.Novel)
                    .ThenInclude(n => n.NovelTags)
                        .ThenInclude(nt => nt.Tag)
                .ToListAsync();
@@ -431,13 +400,6 @@ namespace Api.Controllers
 
 
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
-
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
-
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }

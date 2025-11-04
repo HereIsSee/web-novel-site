@@ -55,6 +55,7 @@ namespace Api.Controllers
 
             _db.Follows.Add(follow);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateFollowsAsync(novelId);
 
             return Ok(new { message = "Novel followed successfully." });
         }
@@ -76,6 +77,7 @@ namespace Api.Controllers
 
             _db.Follows.Remove(follow);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateFollowsAsync(novelId);
 
             return Ok(new { message = "Unfollowed the novel successfully." });
         }
@@ -109,7 +111,7 @@ namespace Api.Controllers
         
         [Authorize]
         [HttpPost("favorite/{novelId}")]
-        public async Task<IActionResult> UserFavoriteNovel(int novelId)
+        public async Task<IActionResult> FavoriteNovel(int novelId)
         {
             var userId = GetCurrentUserId();
 
@@ -137,6 +139,7 @@ namespace Api.Controllers
 
             _db.Favorites.Add(favorite);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateFavoritesAsync(novelId);
 
             return Ok(new { message = "Novel followed successfully." });
         }
@@ -158,28 +161,15 @@ namespace Api.Controllers
 
             _db.Favorites.Remove(favorite);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateFavoritesAsync(novelId);
 
             return Ok(new { message = "Unfavorited the novel successfully." });
-        }
-        
-        [Authorize]
-        [HttpGet("favorite/{novelId}")]
-        public async Task<ActionResult<bool>> IsFavoriteNovel(int novelId)
-        {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized(new { message = "Invalid or missing user Id." });
-
-            bool IsFavoriteNovel = await _db.Favorites
-                .AnyAsync(f => f.UserId == userId && f.NovelId == novelId);
-
-            return Ok(IsFavoriteNovel);
         }
 
 
         [Authorize]
         [HttpPost("readlater/{novelId}")]
-        public async Task<IActionResult> UserReadLatereNovel(int novelId)
+        public async Task<IActionResult> ReadLatereNovel(int novelId)
         {
             var userId = GetCurrentUserId();
 
@@ -207,6 +197,7 @@ namespace Api.Controllers
 
             _db.ReadLaters.Add(readLater);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateReadLatersAsync(novelId);
 
             return Ok(new { message = "Novel marked as read later successfully." });
         }
@@ -228,22 +219,9 @@ namespace Api.Controllers
 
             _db.ReadLaters.Remove(readLater);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateReadLatersAsync(novelId);
 
             return Ok(new { message = "Novel unmarked as read later successfully." });
-        }
-
-        [Authorize]
-        [HttpGet("readlater/{novelId}")]
-        public async Task<ActionResult<bool>> IsReadLaterNovel(int novelId)
-        {
-            var userId = GetCurrentUserId();
-            if (userId == null)
-                return Unauthorized(new { message = "Invalid or missing user Id." });
-
-            bool IsReadLaterNovel = await _db.ReadLaters
-                .AnyAsync(rd => rd.UserId == userId && rd.NovelId == novelId);
-
-            return Ok(IsReadLaterNovel);
         }
 
         [Authorize]
@@ -264,16 +242,6 @@ namespace Api.Controllers
                 isFavorited,
                 isReadLater
             });
-        }
-
-        [HttpGet("stats/novel/{novelId}")]
-        public async Task<ActionResult<NovelStatsDto>> GetNovelStats(int novelId)
-        {
-            var stats = await _statsService.GetNovelStatsAsync(novelId);
-            if (stats == null)
-                return NotFound(new { message = "Novel not found" });
-
-            return Ok(stats);
         }
 
 
@@ -305,10 +273,9 @@ namespace Api.Controllers
             var novel = await _db.Novels.FindAsync(novelId);
             if (novel == null) return NotFound();
 
-            novel.Views += 1;
-            await _db.SaveChangesAsync();
+            await _statsService.IncrementViewAsync(novelId);
 
-            return Ok(new { views = novel.Views });
+            return Ok(new { message="Views updated"});
         }
         [HttpPost("follow/{novelId}/last-read/{chapterId}")]
         public async Task<IActionResult> UpdateFollowLastReadChapter(int novelId, int chapterId)

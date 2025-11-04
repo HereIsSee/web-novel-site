@@ -16,6 +16,7 @@ namespace Api.DTOs
         public int Views { get; set; }
         public int Ratings { get; set; }
         public int WordCount { get; set; }
+        public double Popularity { get; set; }
     }
 
 }

@@ -1,11 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
 using Api.DTOs;
+using Api.Models;
 
 public interface INovelStatsService
 {
-    Task<NovelStatsDto?> GetNovelStatsAsync(int novelId);
-    Task<Dictionary<int, NovelStatsDto>> GetStatsForNovelsAsync(List<int> novelIds);
+    Task UpdateRatingsAsync(int novelId);
+    Task UpdateChaptersAsync(int novelId);
+    Task UpdateFollowsAsync(int novelId);
+    Task UpdateFavoritesAsync(int novelId);
+    Task UpdateReadLatersAsync(int novelId);
+    Task IncrementViewAsync(int novelId);
+    Task RecalculateAllStatsAsync(int novelId); 
 }
 
 public class NovelStatsService : INovelStatsService
@@ -17,131 +23,120 @@ public class NovelStatsService : INovelStatsService
         _db = db;
     }
 
-    public async Task<NovelStatsDto?> GetNovelStatsAsync(int novelId)
+    private async Task<NovelStats> GetOrCreateStats(int novelId)
     {
-        var novel = await _db.Novels.FindAsync(novelId);
-        if (novel == null)
-            return null;
-
-        var reviewStats = await _db.Reviews
-            .Where(r => r.NovelId == novelId)
-            .GroupBy(r => r.NovelId)
-            .Select(g => new
-            {
-                OverallScore = g.Average(r => r.OverallScore),
-                StyleScore = g.Average(r => r.StyleScore),
-                StoryScore = g.Average(r => r.StoryScore),
-                GrammarScore = g.Average(r => r.GrammarScore),
-                CharacterScore = g.Average(r => r.CharacterScore),
-                Ratings = g.Count()
-            })
-            .FirstOrDefaultAsync();
-
-        return new NovelStatsDto
+        var stats = await _db.NovelStats.FindAsync(novelId);
+        if (stats == null)
         {
-            OverallScore = reviewStats?.OverallScore ?? 0,
-            StyleScore = reviewStats?.StyleScore ?? 0,
-            StoryScore = reviewStats?.StoryScore ?? 0,
-            GrammarScore = reviewStats?.GrammarScore ?? 0,
-            CharacterScore = reviewStats?.CharacterScore ?? 0,
-            FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId),
-            FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId),
-            ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId),
-            ChaptersCount = await _db.Chapters.CountAsync(c => c.NovelId == novelId),
-            Views = novel.Views,
-            Ratings = reviewStats?.Ratings ?? 0,
-            WordCount = await _db.Chapters.Where(c => c.NovelId == novelId).SumAsync(c => c.WordCount),
-        };
+            stats = new NovelStats { Id = novelId };
+            _db.NovelStats.Add(stats);
+            await _db.SaveChangesAsync();
+        }
+        return stats;
+    }
+    
+    private void UpdatePopularity(NovelStats stats)
+    {
+        stats.Popularity =
+            (stats.FavoritesCount * 5) +
+            (stats.FollowsCount * 4) +
+            (stats.ReadLatersCount * 4) +
+            (stats.Ratings * 2) +
+            (stats.OverallScore * 20) +
+            (stats.Views * 0.05);
     }
 
-    public async Task<Dictionary<int, NovelStatsDto>> GetStatsForNovelsAsync(List<int> novelIds)
+    public async Task UpdateRatingsAsync(int novelId)
     {
-        if (novelIds == null || novelIds.Count == 0)
-            return new Dictionary<int, NovelStatsDto>();
+        var stats = await GetOrCreateStats(novelId);
 
-        // Bulk fetch reviews
-        var reviewStats = await _db.Reviews
-            .Where(r => novelIds.Contains(r.NovelId))
-            .GroupBy(r => r.NovelId)
-            .Select(g => new
-            {
-                NovelId = g.Key,
-                OverallScore = g.Average(r => r.OverallScore),
-                StyleScore = g.Average(r => r.StyleScore),
-                StoryScore = g.Average(r => r.StoryScore),
-                GrammarScore = g.Average(r => r.GrammarScore),
-                CharacterScore = g.Average(r => r.CharacterScore),
-                Ratings = g.Count()
-            })
-            .ToDictionaryAsync(x => x.NovelId);
+        var reviews = await _db.Reviews
+            .Where(r => r.NovelId == novelId)
+            .ToListAsync();
 
-        // Bulk fetch follows
-        var follows = await _db.Follows
-            .Where(f => novelIds.Contains(f.NovelId))
-            .GroupBy(f => f.NovelId)
-            .Select(g => new { NovelId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.NovelId);
+        stats.Ratings = reviews.Count;
 
-        // Bulk fetch favorites
-        var favorites = await _db.Favorites
-            .Where(f => novelIds.Contains(f.NovelId))
-            .GroupBy(f => f.NovelId)
-            .Select(g => new { NovelId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.NovelId);
+        stats.OverallScore = reviews.Count > 0 ? reviews.Average(r => r.OverallScore) : 0;
+        stats.StoryScore = reviews.Count > 0 ? reviews.Average(r => r.StoryScore) : 0;
+        stats.GrammarScore = reviews.Count > 0 ? reviews.Average(r => r.GrammarScore) : 0;
+        stats.CharacterScore = reviews.Count > 0 ? reviews.Average(r => r.CharacterScore) : 0;
+        stats.StyleScore = reviews.Count > 0 ? reviews.Average(r => r.StyleScore) : 0;
 
-        // Bulk fetch read-laters
-        var readLaters = await _db.ReadLaters
-            .Where(r => novelIds.Contains(r.NovelId))
-            .GroupBy(r => r.NovelId)
-            .Select(g => new { NovelId = g.Key, Count = g.Count() })
-            .ToDictionaryAsync(x => x.NovelId);
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
 
-        // Bulk fetch chapter stats per novel: count and total word count
-        var chaptersStats = await _db.Chapters
-            .Where(c => novelIds.Contains(c.NovelId))
-            .GroupBy(c => c.NovelId)
-            .Select(g => new
-            {
-                NovelId = g.Key,
-                ChaptersCount = g.Count(),
-                TotalWordCount = g.Sum(c => c.WordCount)
-            })
-            .ToDictionaryAsync(x => x.NovelId);
+    public async Task UpdateChaptersAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
 
-        // Load novels (for views)
-        var novels = await _db.Novels
-            .Where(n => novelIds.Contains(n.Id))
-            .ToDictionaryAsync(n => n.Id);
+        stats.ChaptersCount = await _db.Chapters.CountAsync(c => c.NovelId == novelId);
+        stats.WordCount = await _db.Chapters
+            .Where(c => c.NovelId == novelId)
+            .SumAsync(c => c.WordCount);
 
-        var result = new Dictionary<int, NovelStatsDto>();
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
 
-        foreach (var id in novelIds)
-        {
-            reviewStats.TryGetValue(id, out var rs);
-            follows.TryGetValue(id, out var f);
-            favorites.TryGetValue(id, out var fav);
-            readLaters.TryGetValue(id, out var rl);
-            novels.TryGetValue(id, out var novel);
-            chaptersStats.TryGetValue(id, out var ch);
+    public async Task UpdateFollowsAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
 
-            result[id] = new NovelStatsDto
-            {
-                OverallScore = rs?.OverallScore ?? 0,
-                StyleScore = rs?.StyleScore ?? 0,
-                StoryScore = rs?.StoryScore ?? 0,
-                GrammarScore = rs?.GrammarScore ?? 0,
-                CharacterScore = rs?.CharacterScore ?? 0,
-                Ratings = rs?.Ratings ?? 0,
-                FollowsCount = f?.Count ?? 0,
-                FavoritesCount = fav?.Count ?? 0,
-                ReadLatersCount = rl?.Count ?? 0,
-                ChaptersCount = ch?.ChaptersCount ?? 0,
-                WordCount = ch?.TotalWordCount ?? 0,
-                Views = novel?.Views ?? 0
-            };
-        }
+        stats.FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId);
+        
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
 
-        return result;
+    public async Task UpdateFavoritesAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
+
+        stats.FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId);
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdateReadLatersAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
+
+        stats.ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId);
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task IncrementViewAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
+
+        stats.Views += 1;
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task RecalculateAllStatsAsync(int novelId)
+    {
+        var stats = await GetOrCreateStats(novelId);
+
+        var reviews = await _db.Reviews.Where(r => r.NovelId == novelId).ToListAsync();
+        stats.Ratings = reviews.Count;
+        stats.OverallScore = reviews.Count > 0 ? reviews.Average(r => r.OverallScore) : 0;
+        stats.StoryScore = reviews.Count > 0 ? reviews.Average(r => r.StoryScore) : 0;
+        stats.GrammarScore = reviews.Count > 0 ? reviews.Average(r => r.GrammarScore) : 0;
+        stats.CharacterScore = reviews.Count > 0 ? reviews.Average(r => r.CharacterScore) : 0;
+        stats.StyleScore = reviews.Count > 0 ? reviews.Average(r => r.StyleScore) : 0;
+
+        stats.ChaptersCount = await _db.Chapters.CountAsync(c => c.NovelId == novelId);
+        stats.WordCount = await _db.Chapters.Where(c => c.NovelId == novelId).SumAsync(c => c.WordCount);
+
+        stats.FollowsCount = await _db.Follows.CountAsync(f => f.NovelId == novelId);
+        stats.FavoritesCount = await _db.Favorites.CountAsync(f => f.NovelId == novelId);
+        stats.ReadLatersCount = await _db.ReadLaters.CountAsync(r => r.NovelId == novelId);
+
+        UpdatePopularity(stats);
+        await _db.SaveChangesAsync();
     }
 
 }

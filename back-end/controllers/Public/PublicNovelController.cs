@@ -38,18 +38,12 @@ namespace Api.Controllers
             var novels = await _db.Novels
                 .Where(n => n.Status != NovelStatus.Draft && n.Status != NovelStatus.Hidden)
                 .Include(n => n.User)
+                .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
                 .ToListAsync();
             
             var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
-
-            var ids = novelDtos.Select(n => n.Id).ToList();
-            var statsDict = await _statsService.GetStatsForNovelsAsync(ids);
-
-            foreach (var dto in novelDtos)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(novelDtos);
         }
@@ -60,6 +54,7 @@ namespace Api.Controllers
             var novel = await _db.Novels
                 .Where(n => n.Status != NovelStatus.Draft && n.Status != NovelStatus.Hidden)
                 .Include(n => n.User)
+                .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
                 .FirstOrDefaultAsync(n => n.Id == id);
@@ -68,10 +63,6 @@ namespace Api.Controllers
                 return NotFound("Novel not found or hidden");
 
             var novelDto = _mapper.Map<NovelReadDto>(novel);
-
-            var stats = await _statsService.GetNovelStatsAsync(id);
-
-            novelDto.Stats = stats;
 
             return Ok(novelDto);
         }
@@ -87,30 +78,15 @@ namespace Api.Controllers
             if (status.HasValue)
                 query = query.Where(n => n.Status == status.Value);
 
-            var novelIds = await query
-                .Select(n => n.Id)
-                .ToListAsync();
-
-            var statsDict = await _statsService.GetStatsForNovelsAsync(novelIds);
-
-            var topIds = statsDict
-                .Select(x => new { Id = x.Key, Score = _rankingService.CalculatePopularity(x.Value) })
-                .OrderByDescending(x => x.Score)
-                .Take(count)
-                .Select(x => x.Id)
-                .ToList();
-
-            var novels = await _db.Novels
-                .Where(n => topIds.Contains(n.Id))
+            var novels = await query
+                .Include(n => n.Stats)
                 .Include(n => n.User)
                 .Include(n => n.NovelTags).ThenInclude(nt => nt.Tag)
+                .OrderByDescending(n => n.Stats!.Popularity)
+                .Take(count)
                 .ToListAsync();
 
             var result = _mapper.Map<List<NovelReadDto>>(novels);
-
-            foreach (var dto in result)
-                if (statsDict.TryGetValue(dto.Id, out var stats))
-                    dto.Stats = stats;
 
             return Ok(result);
         }
@@ -129,7 +105,6 @@ namespace Api.Controllers
 
             var novelDtos = _mapper.Map<List<NovelWithChaptersDto>>(novels);
 
-            // Step 3: Filter chapters to those uploaded within 1 hour of latest chapter
             foreach (var dto in novelDtos)
             {
                 if (dto.Chapters.Count == 0) continue;

@@ -17,11 +17,13 @@ namespace Api.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly INovelStatsService _statsService;
 
-        public ReviewsController(AppDbContext db, IMapper mapper)
+        public ReviewsController(AppDbContext db, IMapper mapper, INovelStatsService statsService)
         {
             _db = db;
             _mapper = mapper;
+            _statsService = statsService;
         }
 
         [HttpGet]
@@ -62,20 +64,6 @@ namespace Api.Controllers
             return Ok(reviewsDto);
         }
 
-        // [HttpGet("{reviewId}")]
-        // public async Task<ActionResult<ReadReviewDto>> GetReview(int reviewId)
-        // {
-        //     var review = await _db.Reviews
-        //         .Include(r => r.User)
-        //         .FirstOrDefaultAsync(r => r)
-
-        //     if (review == null)
-        //         return NotFound(new { message = "Review not found." });
-
-        //     var reviewDto = _mapper.Map<ReadReviewDto>(review);
-
-        //     return Ok(reviewDto);
-        // }
         [HttpGet("novel/{novelId}/user/{userId}")]
         public async Task<ActionResult<ReadReviewDto>> GetUserReviewOnNovel(int novelId, int userId)
         {
@@ -121,6 +109,7 @@ namespace Api.Controllers
 
             _db.Reviews.Add(review);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateRatingsAsync(novelId);
 
             var savedReview = await _db.Reviews
                 .Include(r => r.User)
@@ -162,6 +151,7 @@ namespace Api.Controllers
             review.UpdatedAt = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
+            await _statsService.UpdateRatingsAsync(novelId);
 
             var updatedReviewDto = await _db.Reviews
                 .Include(r => r.User)
@@ -191,6 +181,7 @@ namespace Api.Controllers
 
             _db.Reviews.Remove(review);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateRatingsAsync(novelId);
 
             return Ok(new { message = "Review deleted." });
         }

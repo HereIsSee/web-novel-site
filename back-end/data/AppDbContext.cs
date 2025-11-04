@@ -20,6 +20,7 @@ namespace Api.Data
         public DbSet<Favorite> Favorites { get; set; } = null!;
         public DbSet<ReadLater> ReadLaters { get; set; } = null!;
         public DbSet<Review> Reviews { get; set; } = null!;
+        public DbSet<NovelStats> NovelStats { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -58,6 +59,11 @@ namespace Api.Data
                 .WithMany(n => n.Chapters)
                 .HasForeignKey(c => c.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<Novel>()
+                .HasOne(n => n.Stats)
+                .WithOne(s => s.Novel)
+                .HasForeignKey<NovelStats>(s => s.Id);
 
             // Novel -> Comments 1-to-many
             modelBuilder.Entity<Comment>()
@@ -97,7 +103,7 @@ namespace Api.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Follow>()
                 .HasOne(f => f.Novel)
-                .WithMany()
+                .WithMany(n => n.Follows)
                 .HasForeignKey(f => f.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Follow>()
@@ -115,7 +121,7 @@ namespace Api.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.Novel)
-                .WithMany()
+                .WithMany(n => n.Favorites)
                 .HasForeignKey(f => f.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -128,7 +134,7 @@ namespace Api.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<ReadLater>()
                 .HasOne(r => r.Novel)
-                .WithMany()
+                .WithMany(n => n.ReadLaters)
                 .HasForeignKey(r => r.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -141,7 +147,7 @@ namespace Api.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.Novel)
-                .WithMany()
+                .WithMany(n => n.Reviews)
                 .HasForeignKey(r => r.NovelId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
