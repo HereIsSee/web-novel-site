@@ -34,7 +34,7 @@ namespace Api.DTOs
         public string? AuthorUsername { get; set; }
         public IEnumerable<int>? TagsIds { get; set; }
         public RangeIntDto? Pages { get; set; }
-        public RangeDoubleDto? Raring { get; set; }
+        public RangeDoubleDto? Rating { get; set; }
         public IEnumerable<NovelStatus>? StatusEnumValues { get; set; }
         public OrderBy OrderBy { get; set; }
         public bool Ascending { get; set; }

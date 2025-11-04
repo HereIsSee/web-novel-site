@@ -15,11 +15,13 @@ namespace Api.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly INovelStatsService _statsService;
 
-        public ChapterController(AppDbContext db, IMapper mapper)
+        public ChapterController(AppDbContext db, IMapper mapper, INovelStatsService statsService)
         {
             _db = db;
             _mapper = mapper;
+            _statsService = statsService;
         }
 
         [HttpGet]
@@ -82,6 +84,7 @@ namespace Api.Controllers
 
             _db.Chapters.Add(chapter);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateChaptersAsync(novelId);
 
             var chapterDto = _mapper.Map<ChapterReadDto>(chapter);
 
@@ -116,6 +119,7 @@ namespace Api.Controllers
             chapter.WordCount = CountWordsFromHtml(chapter.Content);
 
             await _db.SaveChangesAsync();
+            await _statsService.UpdateChaptersAsync(novelId);
             return NoContent();
         }
 
@@ -128,6 +132,7 @@ namespace Api.Controllers
 
             _db.Chapters.Remove(chapter);
             await _db.SaveChangesAsync();
+            await _statsService.UpdateChaptersAsync(novelId);
             return NoContent();
         }
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { getTags } from "../api/tags";
 import { getPublicNovels, getNovelStatusValues } from "../api/novel";
-import { getOrderByOptions } from "../api/search";
+import { getOrderByOptions, basicSearch, advancedSearch } from "../api/search";
+import { IoIosClose } from "react-icons/io";
 import toSlug from "../helpers/toSlug";
 import App from "../App";
 import InputField from "../components/FormFields/InputField";
@@ -11,10 +12,19 @@ import MultiRangeSlider from "../components/FormFields/MultiRangeSlider";
 import DropDown from "../components/FormFields/DropDown";
 import NovelCard from "../components/NovelCards/NovelCard";
 
+const iconStyles = {
+  display: "inline",
+  verticalAlign: "middle",
+  marginRight: "4px",
+  marginTop: "-3px",
+  color: "#ffffffff",
+};
+const iconSize = "30px";
+
 const Search = () => {
   // Form data
   const [title, setTitle] = useState("");
-  const [authorUsername, setAuthorUsername] = useState(null);
+  const [authorUsername, setAuthorUsername] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [pages, setPages] = useState({ From: 0, To: 20000 });
   const [rating, setRating] = useState({ From: 0, To: 5 });
@@ -36,6 +46,9 @@ const Search = () => {
 
   // Show advanced search
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -60,6 +73,9 @@ const Search = () => {
         setNovels(response);
       } catch (err) {
         console.error("Error while fetching novels: ", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -83,13 +99,21 @@ const Search = () => {
     };
 
     console.log("PAYLOAD: ", payload);
-    // try{
-
-    // } catch(err){
-
-    // } finally{
-
-    // }
+    try {
+      let searchResults;
+      if (showAdvancedSearch) {
+        searchResults = await advancedSearch(payload);
+      } else {
+        searchResults = await basicSearch(payload);
+      }
+      setNovels(searchResults);
+      console.log(searchResults);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -233,21 +257,32 @@ const Search = () => {
       </form>
 
       <div className="search-results card">
-        {novels.map((novel) => {
-          return (
-            <NovelCard
-              key={novel.id}
-              id={novel.id}
-              title={novel.title}
-              novelSlug={toSlug(novel.title)}
-              synopsis={novel.synopsis}
-              coverImageUrl={novel.coverImageUrl}
-              createdAt={novel.createdAt}
-              tags={novel.tags}
-              stats={novel.stats}
-            />
-          );
-        })}
+        {isLoading ? (
+          <h1>Loading...</h1>
+        ) : error ? (
+          <h1>{error}</h1>
+        ) : novels && novels.length > 0 ? (
+          novels.map((novel) => {
+            return (
+              <NovelCard
+                key={novel.id}
+                id={novel.id}
+                title={novel.title}
+                novelSlug={toSlug(novel.title)}
+                synopsis={novel.synopsis}
+                coverImageUrl={novel.coverImageUrl}
+                createdAt={novel.createdAt}
+                tags={novel.tags}
+                stats={novel.stats}
+              />
+            );
+          })
+        ) : (
+          <div className="not-found">
+            <IoIosClose style={iconStyles} size={iconSize} />
+            No novels found matching the criteria
+          </div>
+        )}
       </div>
     </App>
   );
