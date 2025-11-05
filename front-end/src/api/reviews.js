@@ -18,3 +18,7 @@ export const updateReview = (novelId, data) =>
     method: "PUT",
     body: JSON.stringify(data),
   });
+export const deleteReview = (novelId) =>
+  httpRequest(`/api/reviews/novel/${novelId}`, {
+    method: "DELETE",
+  });

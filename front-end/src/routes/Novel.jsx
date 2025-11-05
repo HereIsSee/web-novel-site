@@ -63,6 +63,10 @@ const Novel = () => {
     fetchData();
   }, [novelId, authIsLoading, isLoggedIn]);
 
+  const onReviewDelete = (userId) => {
+    setReviews((prev) => prev.filter((review) => review.author.id != userId));
+  };
+
   return (
     <App>
       {isLoading ? (
@@ -101,7 +105,12 @@ const Novel = () => {
             chapters={chapters}
           />
 
-          <Reviews reviews={reviews} />
+          <Reviews
+            novelId={novelId}
+            currentUserId={user.id}
+            reviews={reviews}
+            onReviewDelete={onReviewDelete}
+          />
         </div>
       )}
     </App>

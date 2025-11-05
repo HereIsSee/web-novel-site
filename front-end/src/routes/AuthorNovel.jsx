@@ -74,7 +74,6 @@ const AuthorNovel = () => {
 
   const handleConfirmDelete = async () => {
     if (deleteTarget.type === "novel") {
-      // TODO: add your delete novel API call
       try {
         await deleteNovel(novelId);
         showToast("Novel deleted successfully", "success");
