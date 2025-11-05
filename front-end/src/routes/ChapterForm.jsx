@@ -59,18 +59,14 @@ const ChapterForm = () => {
     };
 
     try {
-      let response;
       if (novelId && chapterId) {
-        response = await updateChapter(novelId, chapterId, formData);
+        await updateChapter(novelId, chapterId, formData);
         showToast("Chapter updated successfully", "success");
-        navigate(
-          `/author-dashboard/${userId}/novel/${novelId}/chapters/${chapterId}`,
-        );
       } else {
-        response = await createChapter(novelId, formData);
+        await createChapter(novelId, formData);
         showToast("Chapter created successfully", "success");
-        // navigate(`/novels/${response.id}/:novelSlug`);
       }
+      navigate(`/author-dashboard/${userId}/novel/${novelId}`);
     } catch (err) {
       console.log(err);
       showToast(err.message, "error");

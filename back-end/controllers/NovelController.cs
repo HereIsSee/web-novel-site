@@ -230,11 +230,15 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNovel(int id)
         {
+            var userId = GetCurrentUserId();
+
             var novel = await _db.Novels.FindAsync(id);
 
             if (novel == null)
                 return NotFound();
-
+            if (novel.UserId != userId)
+                return Forbid("Only the author can delete the novel");
+            
             _db.Novels.Remove(novel);
             await _db.SaveChangesAsync();
 

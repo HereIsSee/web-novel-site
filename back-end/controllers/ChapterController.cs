@@ -126,9 +126,22 @@ namespace Api.Controllers
         [HttpDelete("{chapterId}")]
         public async Task<IActionResult> DeleteChapter(int novelId, int chapterId)
         {
-            var chapter = await _db.Chapters.FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
+            var user = await _db.Users.FindAsync(userId);
+            if (user == null)
+                return BadRequest(new { message = $"User with id {userId} does not exist." });
+            
+
+            var chapter = await _db.Chapters
+                .Include(c => c.Novel)
+                .FirstOrDefaultAsync(c => c.Id == chapterId && c.NovelId == novelId);
             if (chapter == null)
                 return NotFound();
+            if(userId != chapter.Novel.UserId)
+                return Forbid("Only the author can delete chapters.");
 
             _db.Chapters.Remove(chapter);
             await _db.SaveChangesAsync();

@@ -19,6 +19,7 @@ import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
 import DropDown from "../components/FormFields/DropDown";
 import DropDownListSelection from "../components/FormFields/DropDownListSelection";
+import toSlug from "../helpers/toSlug";
 
 const NovelForm = () => {
   const { userId, novelId } = useParams();
@@ -147,7 +148,7 @@ const NovelForm = () => {
       } else {
         response = await createNovel(formData);
         showToast("Novel created successfully", "success");
-        navigate(`/novels/${response.id}/:novelSlug`);
+        navigate(`/novels/${response.id}/${toSlug(title)}`);
       }
     } catch (err) {
       console.log(err);

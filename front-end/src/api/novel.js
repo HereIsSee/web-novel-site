@@ -53,3 +53,7 @@ export const updateNovel = (id, data) =>
     method: "PUT",
     body: JSON.stringify(data),
   });
+export const deleteNovel = (id) =>
+  httpRequest(`/api/novels/${id}`, {
+    method: "DELETE",
+  });

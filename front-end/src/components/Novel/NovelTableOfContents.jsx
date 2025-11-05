@@ -1,15 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { timeAgo } from "../../helpers/timeFormating";
 import toSlug from "../../helpers/toSlug";
-import Button from "../FormFields/Button";
 
-const NovelTableOfContents = ({
-  novelId,
-  novelTitle,
-  chapters = [],
-  isAuthor = false,
-  onClick,
-}) => {
+const NovelTableOfContents = ({ novelId, novelTitle, chapters = [] }) => {
   const navigate = useNavigate();
 
   console.log(chapters);
@@ -50,8 +43,6 @@ const NovelTableOfContents = ({
           <div> No posted chapters</div>
         )}
       </div>
-
-      {isAuthor && <Button onClick={onClick}>Create Chapter</Button>}
     </div>
   );
 };

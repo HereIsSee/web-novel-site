@@ -17,3 +17,8 @@ export const updateChapter = (novelId, chapterId, data) =>
     method: "PUT",
     body: JSON.stringify(data),
   });
+
+export const deleteChapter = (novelId, chapterId) =>
+  httpRequest(`/api/novels/${novelId}/chapters/${chapterId}`, {
+    method: "DELETE",
+  });
