@@ -1,0 +1,71 @@
+.review {
+  display: flex;
+  flex-direction: row;
+  padding: 10px 0;
+  gap: 20px;
+  font-size: 20px;
+  border-bottom: 1px solid var(--light-white-border-color);
+}
+.columnOne,
+.columnTwo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.columnOne {
+  justify-content: center;
+  align-items: center;
+}
+.columnOne img {
+  border-radius: 50%;
+  width: 80px;
+  justify-self: center;
+  align-self: center;
+}
+.columnTwo {
+  flex: 1;
+}
+.scoreItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+}
+.title {
+  font-size: 32px;
+}
+.scoreItem div:nth-child(2) {
+  color: var(--golden-color);
+}
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.reviewAuthor {
+  color: var(--light-blue-color);
+}
+.reviewAuthor span {
+  color: var(--golden-color);
+  font-size: 24px;
+}
+.reviewDate {
+  color: var(--light-blue-color);
+}
+.reviewContent > p {
+  padding: 5px 0px;
+}
+.noReviewsMessage {
+  font-size: 20px;
+}
+@media (max-width: 600px) {
+  .review {
+    flex-direction: column;
+  }
+  .scoreRow {
+    align-self: center;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+  }
+}

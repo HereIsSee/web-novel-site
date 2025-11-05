@@ -40,7 +40,7 @@ const NovelTableOfContents = ({ novelId, novelTitle, chapters = [] }) => {
             );
           })
         ) : (
-          <div> No posted chapters</div>
+          <div className="no-chapters-message"> No posted chapters</div>
         )}
       </div>
     </div>

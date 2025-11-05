@@ -4,6 +4,7 @@ import { getNovel } from "../api/novel";
 import { getNovelChapters } from "../api/chapter";
 import { useAuth } from "../context/useAuth";
 import { getUserNovelStatus, incrementView } from "../api/novelInteractions";
+import { getNovelReviews } from "../api/reviews";
 import App from "../App";
 
 import NovelHeader from "../components/Novel/NovelHeader";
@@ -11,6 +12,7 @@ import NovelInfo from "../components/Novel/NovelInfo";
 import NovelStatistics from "../components/Novel/NovelStatistics";
 import NovelActionButtons from "../components/Novel/NovelActionButtons";
 import NovelTableOfContents from "../components/Novel/NovelTableOfContents";
+import Reviews from "../components/Reviews/Reviews";
 
 const Novel = () => {
   const { id: novelId } = useParams();
@@ -21,6 +23,7 @@ const Novel = () => {
   const [chapters, setChapters] = useState([]);
   const [userNovelStatus, setUserNovelStatus] = useState({});
   const [novelStats, setNovelStats] = useState({});
+  const [reviews, setReviews] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -31,20 +34,24 @@ const Novel = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [novelData, chaptersData, userStatusData] = await Promise.all([
-          getNovel(novelId),
-          getNovelChapters(novelId),
-          isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
-          incrementView(novelId),
-        ]);
+        const [novelData, chaptersData, reviewsData, userStatusData] =
+          await Promise.all([
+            getNovel(novelId),
+            getNovelChapters(novelId),
+            getNovelReviews(novelId),
+            isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
+            incrementView(novelId),
+          ]);
 
         setNovel(novelData);
         setChapters(chaptersData);
+        setReviews(reviewsData);
         setNovelStats(novelData.stats);
         if (userStatusData) setUserNovelStatus(userStatusData);
 
         console.log(novelData);
         console.log(chaptersData);
+        console.log(reviewsData);
         console.log(userStatusData);
       } catch (err) {
         setError(err.message);
@@ -94,7 +101,7 @@ const Novel = () => {
             chapters={chapters}
           />
 
-          <div>Comments</div>
+          <Reviews reviews={reviews} />
         </div>
       )}
     </App>

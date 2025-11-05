@@ -490,6 +490,9 @@ button.release-date-sort:hover {
   text-align: end;
   background-color: var(--dark-light-color);
 }
+.no-chapters-message {
+  font-size: 20px;
+}
 /* Novel css DONE */
 
 /* Create Novel START */
@@ -830,12 +833,3 @@ button.edit:hover {
 /* Search DONE */
 
 /* CSS DONE */
-
-/* Author Novel START */
-
-.author-novel-header {
-  position: relative;
-  margin-top: -20px;
-}
-
-/* Author Novel DONE */
