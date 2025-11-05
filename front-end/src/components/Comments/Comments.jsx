@@ -11,7 +11,6 @@ import TextEditor from "../FormFields/TextEditor/TextEditor";
 import Button from "../FormFields/Button";
 
 const Comments = ({ userId, chapterId, comments, onChange }) => {
-  console.log("GOTTEN COMMENTS: ", comments);
   const editor = useEditor({
     extensions: [StarterKit],
     content: "",
@@ -37,7 +36,6 @@ const Comments = ({ userId, chapterId, comments, onChange }) => {
     }
   };
   const onCommentDelete = async (commentId) => {
-    console.log("GOT HERE");
     try {
       await deleteComment(commentId);
       showToast("Comment deleted successfully", "success");

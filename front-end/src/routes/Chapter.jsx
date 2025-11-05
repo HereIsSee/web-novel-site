@@ -41,20 +41,14 @@ const Chapter = () => {
     if (isLoading || !isLoggedIn) return;
     const fetchData = async () => {
       try {
-        const [followData, comments] = await Promise.all([
-          getFollow(user.id, novelId),
-          getChapterComments(currentChapter.id),
-        ]);
+        const followData = await getFollow(user.id, novelId);
         setFollowInfo(followData);
-        setComments(comments);
-        console.log(comments);
-        console.log(followData);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
-  }, [isLoading, isLoggedIn, user, novelId, currentChapter]);
+  }, [isLoading, isLoggedIn, user, novelId]);
 
   useEffect(() => {
     if (!isLoggedIn || !followInfo?.isFollowing || !currentChapter) return;
