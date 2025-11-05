@@ -5,9 +5,7 @@ namespace Api.DTOs
     public class CreateCommentDto
     {
         public string Content { get; set; } = null!;
-        public int UserId { get; set; }
-        public int? NovelId { get; set; }
-        public int? ChapterId { get; set; }
+        public int ChapterId { get; set; }
         public int? ParentCommentId { get; set; }
     }
 

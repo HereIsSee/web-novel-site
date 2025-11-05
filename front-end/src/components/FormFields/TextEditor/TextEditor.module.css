@@ -36,6 +36,9 @@
   min-height: 200px;
   padding: 10px 10px;
 }
+.text-area.small {
+  min-height: 100px;
+}
 .text-area > div:focus {
   outline: none;
 }

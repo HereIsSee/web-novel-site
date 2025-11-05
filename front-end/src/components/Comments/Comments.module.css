@@ -1,0 +1,62 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 20px;
+}
+.header {
+  font-size: 28px;
+  border-bottom: 1px solid var(--light-white-border-color);
+}
+.commentEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.post {
+  background-color: var(--light-blue-color);
+  border: none;
+  color: white;
+  padding: 5px 12px;
+  font-size: 18px;
+  align-self: flex-end;
+}
+.post:hover,
+.post:focus {
+  background-color: var(--dark-blue-color);
+}
+.comment {
+  display: flex;
+  gap: 10px;
+}
+.commentAvatar img {
+  border-radius: 50%;
+  width: 50px;
+}
+.commentBody {
+  display: flex;
+  flex-direction: column;
+}
+.commentAuthor {
+  color: var(--light-blue-color);
+  font-size: 22px;
+}
+.commentTimestamp {
+  font-size: 18px;
+  color: rgb(134, 134, 134);
+}
+.commentContent > p {
+  padding: 5px 0px;
+}
+.commentDeleteButton {
+  background-color: rgb(148, 42, 42);
+  border: none;
+  color: white;
+  padding: 5px 12px;
+  font-size: 18px;
+  align-self: flex-start;
+}
+.commentDeleteButton:hover,
+.commentDeleteButton:focus {
+  background-color: rgb(110, 31, 31);
+}

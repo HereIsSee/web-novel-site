@@ -5,11 +5,13 @@ import {
   getFollow,
   updateFollowLastReadChapter,
 } from "../api/novelInteractions";
+import { getChapterComments } from "../api/comment";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
 } from "react-icons/md";
+import Comments from "../components/Comments/Comments";
 import Button from "../components/FormFields/Button";
 
 const iconStyles = {
@@ -32,20 +34,28 @@ const Chapter = () => {
   } = useOutletContext();
   const { user, isLoggedIn, isLoading } = useAuth();
   const [followInfo, setFollowInfo] = useState({ isFollowing: false });
+  const [comments, setComments] = useState([]);
+  const [refetchComments, setRefetchComments] = useState(false);
 
   useEffect(() => {
     if (isLoading || !isLoggedIn) return;
     const fetchData = async () => {
       try {
-        const followData = await getFollow(user.id, novelId);
+        const [followData, comments] = await Promise.all([
+          getFollow(user.id, novelId),
+          getChapterComments(currentChapter.id),
+        ]);
         setFollowInfo(followData);
+        setComments(comments);
+        console.log(comments);
         console.log(followData);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
-  }, [isLoading, isLoggedIn, user, novelId]);
+  }, [isLoading, isLoggedIn, user, novelId, currentChapter]);
+
   useEffect(() => {
     if (!isLoggedIn || !followInfo?.isFollowing || !currentChapter) return;
 
@@ -70,6 +80,18 @@ const Chapter = () => {
       updateProgress();
     }
   }, [isLoggedIn, followInfo, novelId, currentChapter]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const commentsData = await getChapterComments(currentChapter.id);
+        setComments(commentsData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchComments();
+  }, [currentChapter, refetchComments]);
 
   const updateLastRead = async () => {
     try {
@@ -165,6 +187,12 @@ const Chapter = () => {
               </Button>
             </div>
           </div>
+          <Comments
+            userId={user?.id}
+            chapterId={currentChapter.id}
+            comments={comments}
+            onChange={() => setRefetchComments(!refetchComments)}
+          />
         </>
       )}
     </>

@@ -4,6 +4,7 @@ using Api.Data;
 using Api.Models;
 using Api.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -33,6 +34,20 @@ namespace Api.Controllers
             return Ok(commentsDtos);
         }
 
+        [HttpGet("chapter/{chapterId}")]
+        public async Task<ActionResult<IEnumerable<CommentReadDto>>> GetChapterComments(int chapterId)
+        {
+            var comments = await _db.Comments
+                .Include(c => c.User)
+                .Include(c => c.Replies)
+                .Where(c => c.ChapterId == chapterId)
+                .ToListAsync();
+
+            var commentsDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+
+            return Ok(commentsDtos);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CommentReadDto>> GetComment(int id)
         {
@@ -49,24 +64,19 @@ namespace Api.Controllers
             return Ok(commentDto);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<CommentReadDto>> CreateComment([FromBody] CreateCommentDto createdComment)
         {
-            if (createdComment.NovelId == null && createdComment.ChapterId == null)
-                return BadRequest("Comment must be associated with either a Novel or a Chapter.");
-            else if (createdComment.NovelId != null)
-            {
-                var novel = await _db.Novels.FindAsync(createdComment.NovelId);
-                if (novel == null) return BadRequest("Invalid NovelId: novel does not exist.");
-            }
-            else
-            {
-                var chapter = await _db.Chapters.FindAsync(createdComment.ChapterId);
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+            
+            var chapter = await _db.Chapters.FindAsync(createdComment.ChapterId);
                 if (chapter == null)
                     return BadRequest("Invalid ChapterId: chapter does not exist");
-            }
 
-            var user = await _db.Users.FindAsync(createdComment.UserId);
+            var user = await _db.Users.FindAsync(userId);
             if (user == null)
                 return BadRequest("Invalid UserId: user does not exist.");
             
@@ -76,8 +86,9 @@ namespace Api.Controllers
                 if (parentComment == null)
                     return BadRequest("Invalid ParentCommentId: comment does not exist");
             }
-            
+
             var comment = _mapper.Map<Comment>(createdComment);
+            comment.UserId = (int)userId;
 
             comment.CreatedAt = DateTime.UtcNow;
 
@@ -92,13 +103,19 @@ namespace Api.Controllers
                 commentDto
             );
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateComment(int id, [FromBody] UpdateCommentDto updatedCommentDto)
         {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
                 return NotFound("Comment not found");
+            if (comment.UserId != userId)
+                return Forbid("Only the user who created the comment can delete it");
 
             _mapper.Map(updatedCommentDto, comment);
 
@@ -109,13 +126,20 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
+            var userId = GetCurrentUserId();
+            if (userId == null)
+                return Unauthorized(new { message = "Invalid or missing user Id." });
+
             var comment = await _db.Comments.FindAsync(id);
             if (comment == null)
                 return NotFound("Comment not found");
 
+            if (comment.UserId != userId)
+                return Forbid("Only the user who created the comment can delete it");
             _db.Comments.Remove(comment);
             await _db.SaveChangesAsync();
             return NoContent();
