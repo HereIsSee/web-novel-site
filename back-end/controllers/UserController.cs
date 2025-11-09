@@ -16,13 +16,16 @@ namespace Api.Controllers
     {
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UserController(AppDbContext db, IMapper mapper)
+        public UserController(AppDbContext db, IMapper mapper, IUserService userService)
         {
             _db = db;
             _mapper = mapper;
+            _userService = userService;
         }
 
+        // For testing, will be delted later
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
         {
@@ -34,13 +37,11 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDto>> GetUser(int id)
         {
-            var user = await _db.Users.FindAsync(id);
-            if (user == null)
+            var userdto = await _userService.GetUserByIdAsync(id);
+            if (userdto == null)
                 return NotFound();
 
-            var dto = _mapper.Map<UserReadDto>(user);
-
-            return Ok(dto);
+            return Ok(userdto);
         }
 
         [HttpPost]
@@ -51,19 +52,9 @@ namespace Api.Controllers
             if (used != "")
                 return Conflict(new { message = used });
 
-            var user = _mapper.Map<User>(dto);
+            var createdUser = await _userService.CreateUserAsync(dto);
 
-            var hasher = new PasswordHasher<User>();
-            user.PasswordHash = hasher.HashPassword(user, dto.Password);
-
-            user.JoinedAt = DateTime.UtcNow;
-
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
-            var readDto = _mapper.Map<UserReadDto>(user);
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, readDto);
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
         
         [Authorize]
@@ -139,6 +130,15 @@ namespace Api.Controllers
                 return "";
 
             return "UserName already used";
+        }
+
+               [HttpPatch("{userId:int}/role")]
+        public async Task<IActionResult> ChangeUserRole(int userId, UserRole role)
+        {
+            var success = await _userService.ChangeUserRoleAsync(userId, role);
+
+            if (!success) return NotFound("User not found");
+            return NoContent();
         }
     }
 

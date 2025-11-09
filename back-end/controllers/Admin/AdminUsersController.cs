@@ -18,122 +18,75 @@ namespace Api.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminUsersController : BaseController
     {
-        private readonly AppDbContext _db;
-        private readonly IMapper _mapper;
-        private readonly IWebHostEnvironment _env;
-        private readonly INovelStatsService _statsService;
-        private readonly INovelRankingService _rankingService;
+        private readonly IUserService _userService;
 
-        public AdminUsersController(IWebHostEnvironment env, AppDbContext db, IMapper mapper, INovelStatsService statsService, INovelRankingService rankingService)
+        public AdminUsersController(IUserService userService)
         {
-            _db = db;
-            _mapper = mapper;
-            _env = env;
-            _statsService = statsService;
-            _rankingService = rankingService;
+            _userService = userService;
         }
 
-        // GET	/api/admin/users?search=john&page=1&pageSize=20&includeDeleted=false
+        // GET /api/admin/users?search=john&page=1&pageSize=20&includeDeleted=false
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers(
+        public async Task<IActionResult> GetUsers(
             string? search = null,
             int page = 1,
             int pageSize = 20,
             bool includeDeleted = false)
         {
-            var query = _db.Users.AsQueryable();
-
-            if (!includeDeleted)
-                query = query.Where(u => !u.IsDeleted);
-
-            if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
-
-            var users = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var userDtos = _mapper.Map<IEnumerable<UserReadDto>>(users);
-            return Ok(userDtos);
+            var (users, totalCount) = await _userService.GetUsersAsync(search, page, pageSize, includeDeleted);
+            return Ok(new { totalCount, users });
         }
 
-        // GET	/api/admin/users/{userId}
+        // GET /api/admin/users/5
         [HttpGet("{userId:int}")]
-        public async Task<ActionResult<UserReadDto>> GetUserById(int userId)
+        public async Task<IActionResult> GetUserById(int userId)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null) return NotFound("User not found");
 
-            if (user == null)
-                return NotFound("User not found");
-
-            return Ok(_mapper.Map<UserReadDto>(user));
+            return Ok(user);
         }
 
-        // PUT	/api/admin/users/{userId}
+        // PUT /api/admin/users/5
         [HttpPut("{userId:int}")]
-        public async Task<ActionResult> UpdateUser(int userId, UserUpdateDto dto)
+        public async Task<IActionResult> UpdateUser(int userId, UserUpdateDto dto)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var updated = await _userService.UpdateUserAsync(userId, dto, isAdmin: true);
 
-            if (user == null)
-                return NotFound("User not found");
-
-            user.UserName = dto.UserName;
-            user.Bio = dto.Bio;
-            user.Email = dto.Email;
-
-            await _db.SaveChangesAsync();
+            if (!updated) return NotFound("User not found");
             return NoContent();
         }
 
-        // DELETE	/api/admin/users/{userId} (Soft Delete)
+        // DELETE /api/admin/users/5
         [HttpDelete("{userId:int}")]
-        public async Task<ActionResult> SoftDeleteUser(int userId)
+        public async Task<IActionResult> SoftDeleteUser(int userId)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var success = await _userService.SoftDeleteUserAsync(userId);
 
-            if (user == null)
-                return NotFound("User not found");
-
-            if (user.IsDeleted)
-                return BadRequest("User is already deleted");
-
-            user.IsDeleted = true;
-            await _db.SaveChangesAsync();
+            if (!success) return BadRequest("User already deleted or not found");
             return NoContent();
         }
 
-        // PATCH	/api/admin/users/{userId}/restore
+        // PATCH /api/admin/users/5/restore
         [HttpPatch("{userId:int}/restore")]
-        public async Task<ActionResult> RestoreUser(int userId)
+        public async Task<IActionResult> RestoreUser(int userId)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var success = await _userService.RestoreUserAsync(userId);
 
-            if (user == null)
-                return NotFound("User not found");
-
-            if (!user.IsDeleted)
-                return BadRequest("User is not deleted");
-
-            user.IsDeleted = false;
-            await _db.SaveChangesAsync();
+            if (!success) return BadRequest("User not deleted or not found");
             return NoContent();
         }
 
-        // PATCH	/api/admin/users/{userId}/role?role=Admin
+        // PATCH /api/admin/users/5/role?role=Admin
         [HttpPatch("{userId:int}/role")]
-        public async Task<ActionResult> ChangeUserRole(int userId, UserRole role)
+        public async Task<IActionResult> ChangeUserRole(int userId, UserRole role)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var success = await _userService.ChangeUserRoleAsync(userId, role);
 
-            if (user == null)
-                return NotFound("User not found");
-
-            user.Role = role;
-            await _db.SaveChangesAsync();
+            if (!success) return NotFound("User not found");
             return NoContent();
         }
+
         
     }
 
