@@ -4,12 +4,7 @@ using Api.Data;
 using Api.Models;
 using Api.DTOs;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using AutoMapper.QueryableExtensions;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-
+using System.Text.RegularExpressions;
 
 namespace Api.Controllers
 {
@@ -32,13 +27,53 @@ namespace Api.Controllers
             _rankingService = rankingService;
         }
 
+        [HttpPut("{chapterId}")]
+        public async Task<IActionResult> UpdateChapter(int chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
+        {
 
-        // GET	    /api/admin/novels/{novelId}/chapters	List chapters for a novel
-        // GET  	/api/admin/chapters/{chapterId}	        Get chapter details
-        // PUT	    /api/admin/chapters/{chapterId}	        Edit chapter title or content
-        // DELETE	/api/admin/chapters/{chapterId}	        Hard delete a chapter
+            var chapter = await _db.Chapters.FindAsync(chapterId);
+            if (chapter == null)
+                return NotFound(new { message = "Chapter not found" });
 
-        
+            var novelId = chapter.NovelId;
+            
+            _mapper.Map(updatedChapterDto, chapter);
+
+            chapter.UpdatedAt = DateTime.UtcNow;
+            chapter.WordCount = CountWordsFromHtml(chapter.Content);
+
+            await _db.SaveChangesAsync();
+            await _statsService.UpdateChaptersAsync(novelId);
+            return NoContent();
+        }
+
+        [HttpDelete("{chapterId}")]
+        public async Task<IActionResult> DeleteChapter(int chapterId)
+        {
+            var chapter = await _db.Chapters.FindAsync(chapterId);
+
+            if (chapter == null)
+                return NotFound(new { message = "Chapter not found" });
+
+            var novelId = chapter.NovelId;
+
+            _db.Chapters.Remove(chapter);
+            await _db.SaveChangesAsync();
+            await _statsService.UpdateChaptersAsync(novelId);
+            return NoContent();
+        }
+
+        private int CountWordsFromHtml(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html))
+                return 0;
+
+            var text = Regex.Replace(html, "<.*?>", " ");
+
+            text = System.Net.WebUtility.HtmlDecode(text);
+
+            return text.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
+        }
     }
 
 }

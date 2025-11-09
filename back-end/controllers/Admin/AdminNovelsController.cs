@@ -33,14 +33,168 @@ namespace Api.Controllers
         }
 
 
-        // GET	    /api/admin/novels	                Paginated list of novels (with filters)
-        // GET  	/api/admin/novels/{novelId} 	    Get full novel details
-        // PUT	    /api/admin/novels/{novelId}	        Edit novel metadata (title, synopsis, tags, genre, cover, status)
-        // PATCH	/api/admin/novels/{novelId}/hide	Soft-hide the novel (IsDeleted = true)
-        // PATCH	/api/admin/novels/{novelId}/restore	Restore a hidden/deleted novel
-        // DELETE	/api/admin/novels/{novelId}	        Hard delete novel (rare, irreversible)
+        // GET  /api/admin/novels	Paginated list of novels (with filters)
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>>  GetNovelsAsync(
+            int page, int pageSize)
+        {
+            var query = _db.Novels.AsQueryable();
 
+            var novels = await query
+                .Include(n => n.User)
+                .Include(n => n.Stats)
+                .Include(n => n.NovelTags)
+                    .ThenInclude(nt => nt.Tag)
+                .OrderBy(u => u.Title)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+
+            return Ok(novelDtos);
+        }
+
+        // GET  	/api/admin/novels/{novelId} 	    Get full novel details
+        public async Task<ActionResult<NovelReadDto>> GetNovelByIdAsync(int novelId)
+        {
+            var novel = await _db.Novels
+                .Include(n => n.User)
+                .Include(n => n.Stats)
+                .Include(n => n.NovelTags)
+                    .ThenInclude(nt => nt.Tag)
+                .FirstOrDefaultAsync(n => n.Id == novelId);
+
+            if (novel == null)
+                return NotFound("Novel not found");
+
+            var novelDto = _mapper.Map<NovelReadDto>(novel);
+
+            return Ok(novelDto);
+        }
+        // PUT	    /api/admin/novels/{novelId}	        Edit novel metadata (title, synopsis, tags, genre, cover, status)
+        public async Task<ActionResult<NovelReadDto>> UpdateNovel(int id, [FromBody] UpdateNovelDto novelDto)
+        {
+            var currentUserId = GetCurrentUserId();
+            
+            var novel = await _db.Novels
+                .Include(n => n.NovelTags)
+                .Include(n => n.Chapters)
+                .FirstOrDefaultAsync(n => n.Id == id);
+
+            if (novel == null)
+                return NotFound(new { message = "Novel not found." });
+
+            if (novelDto.Status != null)
+            {
+                if (!Enum.IsDefined(typeof(NovelStatus), novelDto.Status))
+                    return BadRequest(new { message = $"Invalid novel status: {novelDto.Status}" });
+
+                if (novelDto.Status != NovelStatus.Draft && (novel.Chapters?.Count ?? 0) == 0)
+                {
+                    return BadRequest(new
+                    {
+                        message = "You must add at least 1 chapter before changing the novel's status."
+                    });
+                }
+
+            }
+            if (novelDto.Tags != null && !novelDto.Tags.Any())
+                return BadRequest(new { message = "A novel must have at least one tag." });
+
+            _mapper.Map(novelDto, novel);
+            novel.UpdatedAt = DateTime.UtcNow;
+
+            if (novelDto.Tags != null)
+            {
+                var existingTags = _db.NovelTags.Where(nt => nt.NovelId == novel.Id);
+                _db.NovelTags.RemoveRange(existingTags);
+
+                if (novelDto.Tags.Any())
+                {
+                    var tagIds = novelDto.Tags.Select(t => t.Id).ToList();
+                    var validTags = await _db.Tags.Where(t => tagIds.Contains(t.Id)).ToListAsync();
+
+                    foreach (var tag in validTags)
+                    {
+                        _db.NovelTags.Add(new NovelTag
+                        {
+                            NovelId = novel.Id,
+                            TagId = tag.Id
+                        });
+                    }
+                }
+            }
+
+            if (novelDto.CoverImageId.HasValue)
+                await ReplaceNovelCoverAsync(novel, novelDto.CoverImageId.Value, currentUserId.Value);
+
+            await _db.SaveChangesAsync();
+            await _statsService.RecalculateAllStatsAsync(novel.Id);
+
+
+            var novelReadDto = _mapper.Map<NovelReadDto>(novel);
+            return Ok(novelReadDto);
+        }
+
+        // DELETE	/api/admin/novels/{novelId}	Hard delete novel (rare, irreversible)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNovel(int id)
+        {
+            var novel = await _db.Novels.FindAsync(id);
+
+            if (novel == null)
+                return NotFound();
+
+            _db.Novels.Remove(novel);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
         
+        private async Task ReplaceNovelCoverAsync(Novel novel, int newCoverId, int userId)
+        {
+            var newCoverTemp = await _db.UploadedFiles.FindAsync(newCoverId);
+            if (newCoverTemp == null || newCoverTemp.UserId != userId || !newCoverTemp.IsTemporary)
+                return;
+
+            // Remove existing cover if any
+            var oldCover = await _db.UploadedFiles
+                .FirstOrDefaultAsync(f => f.NovelId == novel.Id && !f.IsTemporary);
+
+            if (oldCover != null)
+            {
+                try
+                {
+                    if (System.IO.File.Exists(oldCover.FilePath))
+                        System.IO.File.Delete(oldCover.FilePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to delete old cover file: {ex.Message}");
+                }
+
+                _db.UploadedFiles.Remove(oldCover);
+            }
+
+            // Move new temp file to permanent location
+            var permDir = Path.Combine(_env.WebRootPath, "uploads", "covers", novel.UserId.ToString());
+            if (!Directory.Exists(permDir))
+                Directory.CreateDirectory(permDir);
+
+            var newPath = Path.Combine(permDir, newCoverTemp.FileName);
+            if (System.IO.File.Exists(newCoverTemp.FilePath))
+                System.IO.File.Move(newCoverTemp.FilePath, newPath, true);
+
+            var newUrl = $"{Request.Scheme}://{Request.Host}/uploads/covers/{novel.UserId}/{newCoverTemp.FileName}";
+
+            newCoverTemp.FilePath = newPath;
+            newCoverTemp.FileUrl = newUrl;
+            newCoverTemp.IsTemporary = false;
+            newCoverTemp.NovelId = novel.Id;
+            newCoverTemp.ExpiresAt = null;
+
+            novel.CoverImageUrl = newUrl;
+        }
     }
 
 }
