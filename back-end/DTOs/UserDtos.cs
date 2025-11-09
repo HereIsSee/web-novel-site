@@ -15,7 +15,7 @@ namespace Api.DTOs
         public string? AvatarUrl { get; set; }
     }
 
-    public class UpdateUserDto
+    public class UserUpdateDto
     {
         public string? UserName { get; set; }
         public string? Email { get; set; }

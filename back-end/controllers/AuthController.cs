@@ -42,7 +42,7 @@ namespace Api.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized(new { message = "Wrong password" });
 
-            var token = GenerateJwtToken(user.Id, user.UserName);
+            var token = GenerateJwtToken(user.Id, user.UserName, user.Role);
 
             return Ok(new { token });
         }
@@ -64,7 +64,7 @@ namespace Api.Controllers
             return Ok(dto);
         }
 
-        private string GenerateJwtToken(int userId, string username)
+        private string GenerateJwtToken(int userId, string username, UserRole role)
         {
             var jwtKey = _config["Jwt:Key"];
             var jwtIssuer = _config["Jwt:Issuer"];
@@ -76,6 +76,7 @@ namespace Api.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, username),
+                new Claim(ClaimTypes.Role, role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

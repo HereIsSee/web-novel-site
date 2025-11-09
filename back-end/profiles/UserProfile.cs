@@ -15,7 +15,7 @@ namespace Api.Profiles
 
             CreateMap<User, UserSummaryDto>();
 
-            CreateMap<UpdateUserDto, User>()
+            CreateMap<UserUpdateDto, User>()
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, srcMember) => srcMember != null));
         }

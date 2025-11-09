@@ -68,7 +68,7 @@ namespace Api.Controllers
         
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto updatedUser)
         {
             var userId = GetCurrentUserId();
 
