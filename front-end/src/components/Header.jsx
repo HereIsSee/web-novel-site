@@ -9,6 +9,7 @@ import {
   IoIosBookmark,
   IoIosStar,
 } from "react-icons/io";
+import { MdAdminPanelSettings } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { HiOutlinePencil } from "react-icons/hi";
 import { MdPerson } from "react-icons/md";
@@ -28,6 +29,8 @@ const Header = function () {
   const { user, isLoggedIn, logout } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const { showToast } = useToast();
+
+  console.log(user);
 
   const handleClick = () => {
     setShowMenu(!showMenu);
@@ -60,13 +63,26 @@ const Header = function () {
                       <MdPerson style={iconStyles} size={iconSize} />
                       My Profile
                     </Link>
-                    <Link
-                      className="menu-option"
-                      to={`/author-dashboard/${user.id}`}
-                    >
-                      <HiOutlinePencil style={iconStyles} size={iconSize} />
-                      Author Dashboard
-                    </Link>
+                    {user?.role && user.role.toLowerCase() === "admin" ? (
+                      <Link
+                        className="menu-option"
+                        to={`/admin-dashboard/users`}
+                      >
+                        <MdAdminPanelSettings
+                          style={iconStyles}
+                          size={iconSize}
+                        />
+                        Admin Dashboard
+                      </Link>
+                    ) : (
+                      <Link
+                        className="menu-option"
+                        to={`/author-dashboard/${user.id}`}
+                      >
+                        <HiOutlinePencil style={iconStyles} size={iconSize} />
+                        Author Dashboard
+                      </Link>
+                    )}
                     <hr />
                     <Link className="menu-option" to="/search">
                       <IoMdSearch style={iconStyles} size={iconSize} />

@@ -12,7 +12,7 @@ import {
 import { getTags } from "../api/tags";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
-import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
+import DashboardLayout from "../components/DashboardLayout";
 import TextEditor from "../components/FormFields/TextEditor/TextEditor";
 import checkImageRatio from "../helpers/checkImageRatio";
 import InputField from "../components/FormFields/InputField";
@@ -157,7 +157,7 @@ const NovelForm = () => {
   };
 
   return (
-    <AuthorDashboardLayout subTitle="Create Novel">
+    <DashboardLayout title="Author Dashboard" subTitle="Create Novel">
       {isLoading && novelId !== null ? (
         <>
           <h1>Loading...</h1>
@@ -232,7 +232,7 @@ const NovelForm = () => {
           <Button type="submit">Submit</Button>
         </form>
       )}
-    </AuthorDashboardLayout>
+    </DashboardLayout>
   );
 };
 

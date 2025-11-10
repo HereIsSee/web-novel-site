@@ -13,10 +13,15 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       try {
-        const { sub: id, unique_name: username, exp } = jwtDecode(storedToken);
+        const {
+          sub: id,
+          unique_name: username,
+          role: role,
+          exp,
+        } = jwtDecode(storedToken);
         if (exp > Date.now() / 1000) {
           setToken(storedToken);
-          setUser({ id, username });
+          setUser({ id, username, role });
           setIsLoggedIn(true);
         } else {
           localStorage.removeItem("token");
@@ -36,8 +41,9 @@ export const AuthProvider = ({ children }) => {
   const login = (token) => {
     localStorage.setItem("token", token);
     setToken(token);
-    const { sub: id, unique_name: username } = jwtDecode(token);
-    setUser({ id, username });
+    const { sub: id, unique_name: username, role: role } = jwtDecode(token);
+    console.log(jwtDecode(token));
+    setUser({ id, username, role });
     setIsLoggedIn(true);
   };
 

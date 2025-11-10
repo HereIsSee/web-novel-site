@@ -23,7 +23,7 @@ namespace Api.Controllers
         private readonly INovelStatsService _statsService;
         private readonly INovelRankingService _rankingService;
 
-        public AdminNovelsController(IWebHostEnvironment env, AppDbContext db, IMapper mapper,INovelStatsService statsService, INovelRankingService rankingService)
+        public AdminNovelsController(IWebHostEnvironment env, AppDbContext db, IMapper mapper, INovelStatsService statsService, INovelRankingService rankingService)
         {
             _db = db;
             _mapper = mapper;
@@ -34,7 +34,8 @@ namespace Api.Controllers
 
 
         // GET  /api/admin/novels	Paginated list of novels (with filters)
-        public async Task<ActionResult<IEnumerable<NovelReadDto>>>  GetNovelsAsync(
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetNovelsAsync(
             int page, int pageSize)
         {
             var query = _db.Novels.AsQueryable();
@@ -55,6 +56,7 @@ namespace Api.Controllers
         }
 
         // GET  	/api/admin/novels/{novelId} 	    Get full novel details
+        [HttpGet("{novelId}")]
         public async Task<ActionResult<NovelReadDto>> GetNovelByIdAsync(int novelId)
         {
             var novel = await _db.Novels
@@ -72,6 +74,7 @@ namespace Api.Controllers
             return Ok(novelDto);
         }
         // PUT	    /api/admin/novels/{novelId}	        Edit novel metadata (title, synopsis, tags, genre, cover, status)
+        [HttpPut("{id}")]
         public async Task<ActionResult<NovelReadDto>> UpdateNovel(int id, [FromBody] UpdateNovelDto novelDto)
         {
             var currentUserId = GetCurrentUserId();

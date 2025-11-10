@@ -1,0 +1,15 @@
+.navigation {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.navigationButton {
+  color: white;
+  border: solid 2px var(--light-white-border-color);
+  font-size: 22px;
+  padding: 5px 10px;
+  background-color: inherit;
+}
+.selectedButton {
+  background-color: var(--dark-blue-color);
+}

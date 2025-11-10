@@ -98,7 +98,6 @@ const Search = () => {
       }),
     };
 
-    console.log("PAYLOAD: ", payload);
     try {
       let searchResults;
       if (showAdvancedSearch) {

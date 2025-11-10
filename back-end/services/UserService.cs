@@ -45,7 +45,13 @@ public class UserService : IUserService
             query = query.Where(u => !u.IsDeleted);
 
         if (!string.IsNullOrWhiteSpace(search))
-            query = query.Where(u => u.UserName.Contains(search) || u.Email.Contains(search));
+        {
+            var lowerSearch = search.ToLower();
+            query = query.Where(u =>
+                u.UserName.ToLower().Contains(lowerSearch) ||
+                u.Email.ToLower().Contains(lowerSearch)
+            );
+        }
 
         var totalCount = await query.CountAsync();
 

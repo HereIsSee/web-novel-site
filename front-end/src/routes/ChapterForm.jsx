@@ -5,7 +5,7 @@ import { useToast } from "../context/useToast";
 import { getChapter, createChapter, updateChapter } from "../api/chapter";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
-import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
+import DashboardLayout from "../components/DashboardLayout";
 import TextEditor from "../components/FormFields/TextEditor/TextEditor";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
@@ -74,7 +74,7 @@ const ChapterForm = () => {
   };
 
   return (
-    <AuthorDashboardLayout subTitle="Create Chapter">
+    <DashboardLayout title="Author Dashboard" subTitle="Create Chapter">
       {isLoading && novelId !== null ? (
         <>
           <h1>Loading...</h1>
@@ -106,7 +106,7 @@ const ChapterForm = () => {
           <Button type="submit">Submit</Button>
         </form>
       )}
-    </AuthorDashboardLayout>
+    </DashboardLayout>
   );
 };
 

@@ -30,7 +30,7 @@ namespace Api.Controllers
         public async Task<IActionResult> GetUsers(
             string? search = null,
             int page = 1,
-            int pageSize = 20,
+            int pageSize = 10,
             bool includeDeleted = false)
         {
             var (users, totalCount) = await _userService.GetUsersAsync(search, page, pageSize, includeDeleted);

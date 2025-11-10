@@ -20,10 +20,42 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import NovelReaderLayout from "./routes/NovelReaderLayout";
 import Chapter from "./routes/Chapter";
+import AdminDashboard from "./routes/Admin/AdminDashboard";
+import AdminUsers from "./routes/Admin/AdminUsers";
+import AdminComments from "./routes/Admin/AdminComments";
+import AdminReviews from "./routes/Admin/AdminReviews";
+import AdminNovels from "./routes/Admin/AdminNovels";
+import AdminChapters from "./routes/Admin/AdminChapters";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
   { path: "/author-dashboard/:id", element: <AuthorDashboard /> },
+  {
+    path: "/admin-dashboard/",
+    element: <AdminDashboard />,
+    children: [
+      {
+        path: "users",
+        element: <AdminUsers />,
+      },
+      {
+        path: "comments",
+        element: <AdminComments />,
+      },
+      {
+        path: "reviews",
+        element: <AdminReviews />,
+      },
+      {
+        path: "novels",
+        element: <AdminNovels />,
+      },
+      {
+        path: "chapters",
+        element: <AdminChapters />,
+      },
+    ],
+  },
   { path: "/author-dashboard/:id/create-novel", element: <NovelForm /> },
   {
     path: "/author-dashboard/:userId/novel/:novelId",

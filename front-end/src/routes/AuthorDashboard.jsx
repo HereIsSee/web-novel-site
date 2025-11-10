@@ -8,7 +8,7 @@ import { TbStarFilled } from "react-icons/tb";
 import App from "../App";
 import Button from "../components/FormFields/Button";
 import DefaultCover from "/default-image.png";
-import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
+import DashboardLayout from "../components/DashboardLayout";
 
 const AuthorDashboard = () => {
   const { user } = useAuth();
@@ -66,7 +66,7 @@ const AuthorDashboard = () => {
   const onClick = () => navigate(`/author-dashboard/${user.id}/create-novel`);
 
   return (
-    <AuthorDashboardLayout>
+    <DashboardLayout title="Author Dashboard">
       {isLoading ? (
         <div>Loading...</div>
       ) : error ? (
@@ -156,7 +156,7 @@ const AuthorDashboard = () => {
           </div>
         </>
       )}
-    </AuthorDashboardLayout>
+    </DashboardLayout>
   );
 };
 

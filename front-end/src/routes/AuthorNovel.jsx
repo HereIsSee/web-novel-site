@@ -4,7 +4,7 @@ import { getNovel, deleteNovel } from "../api/novel";
 import { getNovelChapters, deleteChapter } from "../api/chapter";
 import { formatDateTime, timeAgo } from "../helpers/timeFormating";
 import styles from "./AuthorNovel.module.css";
-import AuthorDashboardLayout from "../components/AuthorDashboardLayout";
+import DashboardLayout from "../components/DashboardLayout";
 import { useToast } from "../context/useToast";
 import {
   IoDocumentText,
@@ -103,7 +103,7 @@ const AuthorNovel = () => {
   };
 
   return (
-    <AuthorDashboardLayout subTitle="Novel">
+    <DashboardLayout title="Author Dashboard" subTitle="Novel">
       {isLoading ? (
         <>
           <h1>Loading...</h1>
@@ -342,7 +342,7 @@ const AuthorNovel = () => {
         onConfirm={handleConfirmDelete}
         onClose={() => setShowConfirm(false)}
       />
-    </AuthorDashboardLayout>
+    </DashboardLayout>
   );
 };
 

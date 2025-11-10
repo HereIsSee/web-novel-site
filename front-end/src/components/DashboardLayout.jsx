@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import App from "../App";
 
-const AuthorDashboardLayout = ({ subTitle, children }) => {
+const DashboardLayout = ({ title, subTitle, children }) => {
   const { user, isLoggedIn, isLoading } = useAuth();
 
   if (isLoading) {
@@ -20,7 +20,7 @@ const AuthorDashboardLayout = ({ subTitle, children }) => {
     <App>
       <div className="author-dashboard-container">
         <div className="author-dashboard-header">
-          <h3>Author Dashboard</h3>
+          <h3>{title}</h3>
           {subTitle && <div className="sub-title">{subTitle}</div>}
         </div>
 
@@ -30,4 +30,4 @@ const AuthorDashboardLayout = ({ subTitle, children }) => {
   );
 };
 
-export default AuthorDashboardLayout;
+export default DashboardLayout;
