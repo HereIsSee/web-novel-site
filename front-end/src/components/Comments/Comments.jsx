@@ -1,14 +1,11 @@
 import { EditorContent, EditorProvider, useEditor } from "@tiptap/react";
 import { postComment, deleteComment } from "../../api/comment";
 import { useToast } from "../../context/useToast";
-import { timeAgo } from "../../helpers/timeFormating";
-import SectionWrapper from "../SectionWrapper";
 import styles from "./Comments.module.css";
-import DefaultImage from "/avatar_default.webp";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
 import TextEditor from "../FormFields/TextEditor/TextEditor";
-import Button from "../FormFields/Button";
+import Comment from "./Comment";
 
 const Comments = ({ userId, chapterId, comments, onChange }) => {
   const editor = useEditor({
@@ -61,35 +58,12 @@ const Comments = ({ userId, chapterId, comments, onChange }) => {
         {comments && comments.length > 0 ? (
           comments.map((comment) => {
             return (
-              <div key={comment.id} className={styles.comment}>
-                <div className={styles.commentAvatar}>
-                  <img
-                    src={comment.author.avatarUrl ?? DefaultImage}
-                    alt="Profile image"
-                  />
-                </div>
-
-                <div className={styles.commentBody}>
-                  <div className={styles.commentAuthor}>
-                    {comment.author.userName}
-                  </div>
-                  <div className={styles.commentTimestamp}>
-                    {timeAgo(comment.createdAt)}
-                  </div>
-                  <div
-                    className={styles.commentContent}
-                    dangerouslySetInnerHTML={{ __html: comment.content }}
-                  ></div>
-                  {comment.author.id == userId && (
-                    <button
-                      onClick={() => onCommentDelete(comment.id)}
-                      className={styles.commentDeleteButton}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
+              <Comment
+                key={comment.id}
+                comment={comment}
+                userId={userId}
+                onDelete={onCommentDelete}
+              />
             );
           })
         ) : (

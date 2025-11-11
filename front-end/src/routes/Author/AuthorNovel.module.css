@@ -42,7 +42,8 @@ img.cover {
   padding: 10px;
 }
 .selection:hover,
-.selection:focus {
+.selection:focus,
+.selected {
   background-color: var(--dark-very-light-color);
   color: white;
 }

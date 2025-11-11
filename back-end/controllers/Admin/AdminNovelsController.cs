@@ -15,6 +15,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/admin/novels")]
+    [Authorize(Roles = "Admin")]
     public class AdminNovelsController : BaseController
     {
         private readonly AppDbContext _db;
@@ -35,24 +36,38 @@ namespace Api.Controllers
 
         // GET  /api/admin/novels	Paginated list of novels (with filters)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetNovelsAsync(
-            int page, int pageSize)
+        public async Task<IActionResult> GetNovelsAsync(
+            string? search = null,
+            int page = 1,
+            int pageSize = 20)
         {
-            var query = _db.Novels.AsQueryable();
-
-            var novels = await query
+            var query = _db.Novels
                 .Include(n => n.User)
                 .Include(n => n.Stats)
                 .Include(n => n.NovelTags)
                     .ThenInclude(nt => nt.Tag)
+                .AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var normalizedSearch = search.Trim().ToLower();
+                query = query.Where(r =>
+                    r.Title.ToLower().Contains(normalizedSearch) ||
+                    (r.Synopsis != null && r.Synopsis.ToLower().Contains(normalizedSearch))
+                );
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var novelList = await query
                 .OrderBy(u => u.Title)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            var novelDtos = _mapper.Map<List<NovelReadDto>>(novels);
+            var novelDtos = _mapper.Map<List<NovelReadDto>>(novelList);
 
-            return Ok(novelDtos);
+            return Ok(new { totalCount, novels = novelDtos });
         }
 
         // GET  	/api/admin/novels/{novelId} 	    Get full novel details

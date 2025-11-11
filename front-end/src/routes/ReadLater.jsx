@@ -49,6 +49,7 @@ const ReadLater = () => {
               author={novel.author}
               synopsis={novel.synopsis}
               stats={novel.stats}
+              link={`/novels/${novel.id}/${toSlug(novel.title)}`}
               onRemove={handleRemove}
             />
           );

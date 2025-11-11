@@ -1,20 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
-using Api.Models;
 using Api.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper.QueryableExtensions;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/admin/reviews")]
+    [Authorize(Roles = "Admin")]
     public class AdminReviewsController : BaseController
     {
         private readonly AppDbContext _db;
@@ -34,7 +29,7 @@ namespace Api.Controllers
 
         // GET /api/admin/reviews Paginated list of reviews (filterable by user, novel, etc.)
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReadReviewDto>>> GetReviews(
+        public async Task<IActionResult> GetReviews(
             int? userId = null,
             int? novelId = null,
             string? search = null,
@@ -43,6 +38,7 @@ namespace Api.Controllers
         {
             var query = _db.Reviews
                 .Include(r => r.User)
+                .Include(r => r.Novel)
                 .AsQueryable();
 
             if (userId.HasValue)
@@ -51,22 +47,26 @@ namespace Api.Controllers
             if (novelId.HasValue)
                 query = query.Where(r => r.NovelId == novelId.Value);
 
-            if (!string.IsNullOrWhiteSpace(search)){
+            if (!string.IsNullOrWhiteSpace(search))
+            {
                 var normalizedSearch = search.Trim().ToLower();
-                query = query.Where(r => 
+                query = query.Where(r =>
                     r.ReviewContent.ToLower().Contains(normalizedSearch) ||
-                    r.Title.ToLower().Contains(normalizedSearch)
+                    r.Title.ToLower().Contains(normalizedSearch) ||
+                    r.User.UserName.ToLower().Contains(normalizedSearch)
                 );
             }
+            
+            var totalCount = await query.CountAsync();
 
-            var reviews = await query
+            var reviewsList = await query
                 .OrderByDescending(r => r.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            var dto = _mapper.Map<IEnumerable<ReadReviewDto>>(reviews);
-            return Ok(dto);
+            var dto = _mapper.Map<IEnumerable<ReadReviewDto>>(reviewsList);
+            return Ok(new { totalCount, reviews = dto });
         }
 
         // DELETE /api/admin/reviews/{userId}/{novelId}

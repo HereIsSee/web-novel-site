@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Api.Data;
-using Api.Models;
 using Api.DTOs;
 using AutoMapper;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/admin/chapters")]
+    [Authorize(Roles = "Admin")]
     public class AdminChaptersController : BaseController
     {
         private readonly AppDbContext _db;
@@ -18,7 +18,7 @@ namespace Api.Controllers
         private readonly INovelStatsService _statsService;
         private readonly INovelRankingService _rankingService;
 
-        public AdminChaptersController(IWebHostEnvironment env, AppDbContext db, IMapper mapper,INovelStatsService statsService, INovelRankingService rankingService)
+        public AdminChaptersController(IWebHostEnvironment env, AppDbContext db, IMapper mapper, INovelStatsService statsService, INovelRankingService rankingService)
         {
             _db = db;
             _mapper = mapper;
@@ -36,7 +36,7 @@ namespace Api.Controllers
                 return NotFound(new { message = "Chapter not found" });
 
             var novelId = chapter.NovelId;
-            
+
             _mapper.Map(updatedChapterDto, chapter);
 
             chapter.UpdatedAt = DateTime.UtcNow;

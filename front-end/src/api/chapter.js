@@ -12,13 +12,13 @@ export const createChapter = (novelId, data) =>
     body: JSON.stringify(data),
   });
 
-export const updateChapter = (novelId, chapterId, data) =>
-  httpRequest(`/api/novels/${novelId}/chapters/${chapterId}`, {
+export const updateChapter = (chapterId, data) =>
+  httpRequest(`/api/chapters/${chapterId}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
 
-export const deleteChapter = (novelId, chapterId) =>
-  httpRequest(`/api/novels/${novelId}/chapters/${chapterId}`, {
+export const deleteChapter = (chapterId) =>
+  httpRequest(`/api/chapters/${chapterId}`, {
     method: "DELETE",
   });

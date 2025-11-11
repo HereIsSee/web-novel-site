@@ -67,6 +67,14 @@ namespace Api.DTOs
         public NovelStatus Status { get; set; }
         public UserSummaryDto Author { get; set; } = null!;
         public List<ChapterListItemDto> Chapters { get; set; } = [];
+    }
 
+    public class NovelSummaryDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public string? CoverImageUrl { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public NovelStatus Status { get; set; }
     }
 }

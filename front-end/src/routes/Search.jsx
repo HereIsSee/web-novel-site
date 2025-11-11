@@ -267,12 +267,12 @@ const Search = () => {
                 key={novel.id}
                 id={novel.id}
                 title={novel.title}
-                novelSlug={toSlug(novel.title)}
                 synopsis={novel.synopsis}
                 coverImageUrl={novel.coverImageUrl}
                 createdAt={novel.createdAt}
                 tags={novel.tags}
                 stats={novel.stats}
+                link={`/novels/${novel.id}/${toSlug(novel.title)}`}
               />
             );
           })

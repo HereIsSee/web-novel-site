@@ -44,11 +44,11 @@ const Favorites = () => {
               key={novel.id}
               id={novel.id}
               title={novel.title}
-              novelSlug={toSlug(novel.title)}
               coverUrl={novel.coverImageUrl}
               author={novel.author}
               synopsis={novel.synopsis}
               stats={novel.stats}
+              link={`/novels/${novel.id}/${toSlug(novel.title)}`}
               onRemove={handleRemove}
             />
           );

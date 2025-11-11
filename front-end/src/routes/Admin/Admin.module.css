@@ -35,7 +35,12 @@
   padding: 10px;
   gap: 10px;
 }
-
+.comment {
+  border: 1px solid var(--light-white-border-color);
+  border-radius: 20px;
+  padding: 10px;
+  background-color: rgb(34, 34, 34);
+}
 @media (max-width: 740px) {
   .container {
     flex-direction: column;

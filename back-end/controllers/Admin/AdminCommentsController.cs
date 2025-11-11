@@ -1,20 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Data;
-using Api.Models;
 using Api.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using AutoMapper.QueryableExtensions;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("api/admin/comments")]
+    [Authorize(Roles = "Admin")]
     public class AdminCommentsController : BaseController
     {
         private readonly AppDbContext _db;
@@ -47,19 +42,22 @@ namespace Api.Controllers
             {
                 var normalizedSearch = search.Trim().ToLower();
                 query = query.Where(c =>
-                    c.Content.ToLower().Contains(normalizedSearch)
+                    c.Content.ToLower().Contains(normalizedSearch) ||
+                    c.User.UserName.ToLower().Contains(normalizedSearch)
                 );
             }
             
-            var comments = await _db.Comments
+            var totalCount = await query.CountAsync();
+
+            var commentList = await query
                 .OrderBy(c => c.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            var commentsDtos = _mapper.Map<IEnumerable<CommentReadDto>>(comments);
+            var commentsDtos = _mapper.Map<IEnumerable<CommentReadDto>>(commentList);
 
-            return Ok(commentsDtos);
+            return Ok(new { totalCount, comments = commentsDtos });;
         }
 
         // DELETE	/api/admin/comments/{commentId}	Hard delete a comment

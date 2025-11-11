@@ -60,14 +60,14 @@ const AuthorNovel = () => {
             <FaBook style={iconStyles} size={iconSize} />
             Novels
           </Link>
-          <Link
+          {/* <Link
             className={selected === "chapters" ? styles.selected : ""}
             onClick={() => setSelected("chapters")}
             to="/admin-dashboard/chapters"
           >
             <FaBookOpen style={iconStyles} size={iconSize} />
             Chapers
-          </Link>
+          </Link> */}
         </div>
         <div className={styles.searchContainer}>
           <Outlet />

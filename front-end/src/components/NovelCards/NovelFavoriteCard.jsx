@@ -9,11 +9,11 @@ import NovelCardLayout from "./NovelCardLayout";
 const NovelFavoriteCard = ({
   id,
   title,
-  novelSlug,
   coverUrl,
   author,
   synopsis,
   stats,
+  link,
   onRemove,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -42,11 +42,8 @@ const NovelFavoriteCard = ({
   };
 
   return (
-    <NovelCardLayout id={id} novelSlug={novelSlug} coverUrl={coverUrl}>
-      <Link
-        className={styles["novel-card-title"]}
-        to={`/novels/${id}/${novelSlug}`}
-      >
+    <NovelCardLayout id={id} link={link} coverUrl={coverUrl}>
+      <Link className={styles["novel-card-title"]} to={link}>
         {title}
       </Link>
 

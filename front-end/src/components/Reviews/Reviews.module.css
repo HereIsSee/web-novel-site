@@ -6,6 +6,9 @@
   font-size: 20px;
   border-bottom: 1px solid var(--light-white-border-color);
 }
+.review.admin {
+  border-bottom: none;
+}
 .columnOne,
 .columnTwo {
   display: flex;
@@ -45,7 +48,8 @@
 .reviewAuthor {
   color: var(--light-blue-color);
 }
-.reviewAuthor span {
+.reviewAuthor span,
+.title span {
   color: var(--golden-color);
   font-size: 24px;
 }

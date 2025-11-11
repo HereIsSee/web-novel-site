@@ -10,6 +10,7 @@ const NovelFollowCard = ({
   title,
   coverUrl,
   author,
+  link,
   latestChapter,
   lastReadChapter,
   nextChapter,
@@ -19,19 +20,10 @@ const NovelFollowCard = ({
   const allRead =
     lastReadChapter !== null && latestChapter.id === lastReadChapter.id;
   const hasReadNovel = lastReadChapter !== null;
-  const novelSlug = toSlug(title);
 
   return (
-    <NovelCardLayout
-      id={id}
-      coverUrl={coverUrl}
-      novelSlug={novelSlug}
-      fitMode="hide"
-    >
-      <Link
-        className={styles["novel-card-title"]}
-        to={`/novels/${id}/${novelSlug}`}
-      >
+    <NovelCardLayout id={id} coverUrl={coverUrl} link={link} fitMode="hide">
+      <Link className={styles["novel-card-title"]} to={link}>
         {title}
       </Link>
 
@@ -45,7 +37,10 @@ const NovelFollowCard = ({
       </div>
       <Link
         className={styles["last-update"]}
-        to={`/novels/${id}/${novelSlug}/read/chapters/${latestChapter.id}/${toSlug(latestChapter.title)}`}
+        to={
+          link +
+          `/read/chapters/${latestChapter.id}/${toSlug(latestChapter.title)}`
+        }
       >
         <div>{latestChapter.title}</div>
         <div>{timeAgo(latestChapter.createdAt)}</div>
@@ -56,7 +51,10 @@ const NovelFollowCard = ({
           <div className={styles["novel-status"]}>Last Read Chapter</div>
           <Link
             className={styles["last-read"]}
-            to={`/novels/${id}/${novelSlug}/read/chapters/${lastReadChapter.id}/${toSlug(lastReadChapter.title)}`}
+            to={
+              link +
+              `/read/chapters/${lastReadChapter.id}/${toSlug(lastReadChapter.title)}`
+            }
           >
             <div>{lastReadChapter.title}</div>
             <div>{timeAgo(lastReadChapter.createdAt)}</div>
@@ -70,7 +68,8 @@ const NovelFollowCard = ({
             styleType="blue-white"
             onClick={() =>
               navigate(
-                `/novels/${id}/${novelSlug}/read/chapters/${nextChapter.id}/${toSlug(nextChapter.title)}`,
+                link +
+                  `/read/chapters/${nextChapter.id}/${toSlug(nextChapter.title)}`,
               )
             }
           >
@@ -82,10 +81,3 @@ const NovelFollowCard = ({
   );
 };
 export default NovelFollowCard;
-
-<div className={styles["novel-meta"]}>
-  <div className={styles["pages-number"]}>1851 PAGES</div>
-  <div className={styles["novel-author"]}>
-    by <span>Macronomicon</span>
-  </div>
-</div>;

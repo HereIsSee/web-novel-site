@@ -172,7 +172,7 @@ namespace Api.Controllers
                 return NotFound(new { message = "Novel not found." });
 
             if (novel.UserId != userId)
-                return Forbid("Only the author can update this novel.");
+                return Forbid();
 
             if (novelDto.Status != null)
             {

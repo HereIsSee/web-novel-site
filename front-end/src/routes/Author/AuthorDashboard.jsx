@@ -1,14 +1,13 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../context/useAuth";
-import { getUserNovels } from "../api/novel";
+import { useAuth } from "../../context/useAuth";
+import { getUserNovels } from "../../api/novel";
 import { IoBookSharp, IoDocumentTextSharp } from "react-icons/io5";
 import { FaPuzzlePiece, FaBookmark } from "react-icons/fa";
 import { TbStarFilled } from "react-icons/tb";
-import App from "../App";
-import Button from "../components/FormFields/Button";
+import Button from "../../components/FormFields/Button";
 import DefaultCover from "/default-image.png";
-import DashboardLayout from "../components/DashboardLayout";
+import DashboardLayout from "../../components/DashboardLayout";
 
 const AuthorDashboard = () => {
   const { user } = useAuth();
@@ -124,7 +123,7 @@ const AuthorDashboard = () => {
                 return (
                   <div className="novel" key={novel.id}>
                     <Link
-                      to={`/author-dashboard/${novel.author.id}/novel/${novel.id}`}
+                      to={`/author-dashboard/${novel.author.id}/novel/${novel.id}/novel-info`}
                       className="link-with-image"
                     >
                       <img
@@ -135,7 +134,7 @@ const AuthorDashboard = () => {
                     <div>
                       <Link
                         className="title"
-                        to={`/author-dashboard/${novel.author.id}/novel/${novel.id}`}
+                        to={`/author-dashboard/${novel.author.id}/novel/${novel.id}/novel-info`}
                       >
                         {novel.title}
                       </Link>

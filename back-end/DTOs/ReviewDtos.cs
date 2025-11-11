@@ -35,6 +35,7 @@ namespace Api.DTOs
         public double CharacterScore { get; set; }
         public string ReviewContent { get; set; } = null!;
         public UserSummaryDto Author { get; set; } = null!;
+        public NovelSummaryDto? Novel { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

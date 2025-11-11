@@ -41,6 +41,8 @@ namespace Api.Profiles
                     opt => opt.MapFrom(src => src.User))
                  .ForMember(dest => dest.Chapters,
                     opt => opt.MapFrom(src => src.Chapters ?? Enumerable.Empty<Chapter>()));
+
+            CreateMap<Novel, NovelSummaryDto>();
         }
     }
 }

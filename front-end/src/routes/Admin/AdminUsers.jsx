@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getUsers, deleteUser } from "../../api/admin";
 import { useToast } from "../../context/useToast";
 import styles from "./Admin.module.css";
@@ -17,19 +17,19 @@ const AdminUsers = () => {
 
   const { showToast } = useToast();
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async (pageNumber = 1) => {
-    const response = await getUsers(search, pageNumber, PAGE_SIZE, false);
+  const fetchUsers = useCallback(async (pageNumber = 1, searchTerm = "") => {
+    const response = await getUsers(searchTerm, pageNumber, PAGE_SIZE, false);
     setUsers(response.users);
     setTotalCount(response.totalCount);
     setPage(pageNumber);
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleSearch = () => {
-    fetchUsers(1);
+    fetchUsers(1, search);
   };
 
   const onDelete = async (userId) => {
@@ -43,7 +43,7 @@ const AdminUsers = () => {
       const pageToFetch =
         page > totalPagesAfterDelete ? totalPagesAfterDelete : page;
 
-      fetchUsers(pageToFetch);
+      fetchUsers(pageToFetch, search);
       setTotalCount(updatedTotal);
     } catch (err) {
       console.error(err);
@@ -83,7 +83,7 @@ const AdminUsers = () => {
       <Pagination
         totalPages={totalPages}
         currentPage={page}
-        onPageChange={(newPage) => fetchUsers(newPage)}
+        onPageChange={(newPage) => fetchUsers(newPage, search)}
       />
     </>
   );

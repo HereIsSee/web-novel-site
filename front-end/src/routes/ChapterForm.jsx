@@ -1,6 +1,7 @@
 import { Link, useNavigate, Navigate, useParams } from "react-router-dom";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { useEffect, useState } from "react";
+import { updateChapterAdmin } from "../api/admin";
 import { useToast } from "../context/useToast";
 import { getChapter, createChapter, updateChapter } from "../api/chapter";
 import StarterKit from "@tiptap/starter-kit";
@@ -10,7 +11,8 @@ import TextEditor from "../components/FormFields/TextEditor/TextEditor";
 import InputField from "../components/FormFields/InputField";
 import Button from "../components/FormFields/Button";
 
-const ChapterForm = () => {
+// role: admin or author
+const ChapterForm = ({ role }) => {
   const { userId, novelId, chapterId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -60,13 +62,20 @@ const ChapterForm = () => {
 
     try {
       if (novelId && chapterId) {
-        await updateChapter(novelId, chapterId, formData);
-        showToast("Chapter updated successfully", "success");
+        if (role === "admin") {
+          await updateChapterAdmin(chapterId, formData);
+          showToast("Chapter updated successfully", "success");
+          navigate(`/admin-dashboard/novels/${novelId}/chapters`);
+        } else {
+          await updateChapter(novelId, chapterId, formData);
+          showToast("Chapter updated successfully", "success");
+          navigate(`/author-dashboard/${userId}/novel/${novelId}/chapters`);
+        }
       } else {
         await createChapter(novelId, formData);
         showToast("Chapter created successfully", "success");
+        navigate(`/author-dashboard/${userId}/novel/${novelId}/chapters`);
       }
-      navigate(`/author-dashboard/${userId}/novel/${novelId}`);
     } catch (err) {
       console.log(err);
       showToast(err.message, "error");

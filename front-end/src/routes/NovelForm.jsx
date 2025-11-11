@@ -9,6 +9,7 @@ import {
   updateNovel,
   getNovelStatusValues,
 } from "../api/novel";
+import { updateNovelAdmin } from "../api/admin";
 import { getTags } from "../api/tags";
 import StarterKit from "@tiptap/starter-kit";
 import DOMPurify from "dompurify";
@@ -21,7 +22,8 @@ import DropDown from "../components/FormFields/DropDown";
 import DropDownListSelection from "../components/FormFields/DropDownListSelection";
 import toSlug from "../helpers/toSlug";
 
-const NovelForm = () => {
+// role: admin or author
+const NovelForm = ({ role }) => {
   const { userId, novelId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -142,9 +144,15 @@ const NovelForm = () => {
     try {
       let response;
       if (novelId != null) {
-        response = await updateNovel(novelId, formData);
-        showToast("Novel updated successfully", "success");
-        navigate(`/author-dashboard/${userId}/novel/${novelId}`);
+        if (role === "admin") {
+          response = await updateNovelAdmin(novelId, formData);
+          showToast("Novel updated successfully", "success");
+          navigate(`/admin-dashboard/novels`);
+        } else {
+          response = await updateNovel(novelId, formData);
+          showToast("Novel updated successfully", "success");
+          navigate(`/author-dashboard/${userId}/novel/${novelId}`);
+        }
       } else {
         response = await createNovel(formData);
         showToast("Novel created successfully", "success");

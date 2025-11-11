@@ -6,6 +6,7 @@ import { getUserFollowedNovels } from "../api/novel";
 import App from "../App";
 import NovelFollowCard from "../components/NovelCards/NovelFollowCard";
 import SectionWrapper from "../components/SectionWrapper";
+import toSlug from "../helpers/toSlug";
 
 const Follows = () => {
   const { user, isLoggedIn, isLoading } = useAuth();
@@ -41,15 +42,13 @@ const Follows = () => {
               title={novel.title}
               coverUrl={novel.coverImageUrl}
               author={novel.author}
+              link={`/novels/${novel.id}/${toSlug(novel.title)}`}
               latestChapter={novel.latestChapter}
               lastReadChapter={novel.lastReadChapter}
               nextChapter={novel.nextChapter}
             />
           );
         })}
-        {/* <NovelFollowCard />
-        <NovelFollowCard />
-        <NovelFollowCard /> */}
       </SectionWrapper>
     </App>
   );
