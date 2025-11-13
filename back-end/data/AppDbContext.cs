@@ -25,6 +25,8 @@ namespace Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasDefaultSchema("webnovelsite");
+
             // Novel <-> Tag Many-to-Many
             modelBuilder.Entity<NovelTag>()
                 .HasKey(nt => new { nt.NovelId, nt.TagId });
