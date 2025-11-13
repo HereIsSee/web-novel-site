@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5107",
+        target: "https://web-novel-site-1.onrender.com",
         changeOrigin: true,
         secure: false,
       },
