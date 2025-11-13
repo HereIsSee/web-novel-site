@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function httpRequest(url, options = {}) {
   const token = localStorage.getItem("token");
 
@@ -19,7 +21,9 @@ export async function httpRequest(url, options = {}) {
     },
   };
 
-  let response = await fetch(url, config);
+  const fullUrl = `${API_URL}${url}`;
+
+  let response = await fetch(fullUrl, config);
 
   if (response.status === 401) {
     // Token expired or invalid
