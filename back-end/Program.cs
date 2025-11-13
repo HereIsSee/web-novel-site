@@ -54,20 +54,19 @@ builder.Services.AddControllers()
     });
 
 // CORS configuration
+var allowedOriginsEnv = builder.Configuration["CORS_ALLOWED_ORIGINS"] ?? "";
+var allowedOrigins = allowedOriginsEnv.Split(",", StringSplitOptions.RemoveEmptyEntries);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173", // for local dev (Vite)
-                "https://front-end.onrender.com" // your deployed front-end URL on Render
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
-
 
 // Swagger with JWT Support
 builder.Services.AddEndpointsApiExplorer();
