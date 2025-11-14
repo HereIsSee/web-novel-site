@@ -226,7 +226,7 @@ namespace Api.Controllers
             return Ok(novelReadDto);
         }
 
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNovel(int id)
         {
@@ -238,25 +238,26 @@ namespace Api.Controllers
                 return NotFound();
             if (novel.UserId != userId)
                 return Forbid("Only the author can delete the novel");
-            
+
             _db.Novels.Remove(novel);
             await _db.SaveChangesAsync();
 
             return NoContent();
         }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllNovels()
-        {
-            var novels = await _db.Novels.ToListAsync();
+        // [Authorize]
+        // [HttpDelete]
+        // public async Task<IActionResult> DeleteAllNovels()
+        // {
+        //     var novels = await _db.Novels.ToListAsync();
 
-            if (!novels.Any())
-                return NotFound(new { message = "No novels found to delete." });
+        //     if (!novels.Any())
+        //         return NotFound(new { message = "No novels found to delete." });
 
-            _db.Novels.RemoveRange(novels);
-            await _db.SaveChangesAsync();
+        //     _db.Novels.RemoveRange(novels);
+        //     await _db.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
 
         [HttpGet("user/{id}")]
