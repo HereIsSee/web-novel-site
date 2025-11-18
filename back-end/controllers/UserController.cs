@@ -88,14 +88,17 @@ namespace Api.Controllers
             await _db.SaveChangesAsync();
             return NoContent();
         }
-
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            var userId = GetCurrentUserId();
+
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
-
+            if (userId != user.Id)
+                return Forbid();
             _db.Users.Remove(user);
             await _db.SaveChangesAsync();
 

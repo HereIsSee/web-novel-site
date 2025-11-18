@@ -141,6 +141,8 @@ const NovelForm = ({ role }) => {
       Tags: selectedTags,
     };
 
+    console.log(formData);
+
     try {
       let response;
       if (novelId != null) {
