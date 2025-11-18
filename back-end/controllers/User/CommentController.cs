@@ -115,7 +115,7 @@ namespace Api.Controllers
             if (comment == null)
                 return NotFound("Comment not found");
             if (comment.UserId != userId)
-                return Forbid("Only the user who created the comment can delete it");
+                return Forbid();
 
             _mapper.Map(updatedCommentDto, comment);
 
@@ -139,7 +139,7 @@ namespace Api.Controllers
                 return NotFound("Comment not found");
 
             if (comment.UserId != userId)
-                return Forbid("Only the user who created the comment can delete it");
+                return Forbid();
             _db.Comments.Remove(comment);
             await _db.SaveChangesAsync();
             return NoContent();

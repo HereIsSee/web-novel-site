@@ -267,6 +267,7 @@ namespace Api.Controllers
             return Ok(stats);
         }
 
+        [Authorize]
         [HttpPost("view/{novelId}")]
         public async Task<IActionResult> IncrementView(int novelId)
         {
@@ -277,6 +278,8 @@ namespace Api.Controllers
 
             return Ok(new { message="Views updated"});
         }
+        
+        [Authorize]
         [HttpPost("follow/{novelId}/last-read/{chapterId}")]
         public async Task<IActionResult> UpdateFollowLastReadChapter(int novelId, int chapterId)
         {

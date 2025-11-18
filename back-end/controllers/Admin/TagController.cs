@@ -41,6 +41,7 @@ namespace Api.Controllers
             return Ok(tag);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<TagDto>> CreateTag([FromBody] TagDto tagDto)
         {
@@ -58,6 +59,7 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetTag), new { id = tag.Id }, tagReadDto);
         }
         
+        [Authorize(Roles = "Admin")]
         [HttpPost("bulk")]
         public async Task<ActionResult<IEnumerable<TagDto>>> CreateTags([FromBody] IEnumerable<TagDto> tagDtos)
         {
@@ -85,7 +87,7 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetTags), createdDtos);
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("id")]
         public async Task<IActionResult> UpdateTag(int id, [FromBody] TagDto updatedTagDto)
         {
@@ -99,6 +101,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteTag(int id)
         {

@@ -66,7 +66,7 @@ namespace Api.Controllers
                 return NotFound("Novel not found!");
             
             if (novel.UserId != userId)
-                return Forbid("Only the author can create chapters.");
+                return Forbid();
 
             var chapter = _mapper.Map<Chapter>(createChapterDto);
 
@@ -94,7 +94,7 @@ namespace Api.Controllers
                 chapterDto
             );
         }
-
+        [Authorize]
         [HttpPut("{chapterId}")]
         public async Task<IActionResult> UpdateChapter(int novelId, int chapterId, [FromBody] UpdateChapterDto updatedChapterDto)
         {
@@ -111,7 +111,7 @@ namespace Api.Controllers
                 return NotFound("Novel not found!");
             
             if (novel.UserId != userId)
-                return Forbid("Only the author can update chapters.");
+                return Forbid();
 
             _mapper.Map(updatedChapterDto, chapter);
 
@@ -122,7 +122,7 @@ namespace Api.Controllers
             await _statsService.UpdateChaptersAsync(novelId);
             return NoContent();
         }
-
+        [Authorize]
         [HttpDelete("{chapterId}")]
         public async Task<IActionResult> DeleteChapter(int novelId, int chapterId)
         {
@@ -141,7 +141,7 @@ namespace Api.Controllers
             if (chapter == null)
                 return NotFound();
             if(userId != chapter.Novel.UserId)
-                return Forbid("Only the author can delete chapters.");
+                return Forbid();
 
             _db.Chapters.Remove(chapter);
             await _db.SaveChangesAsync();

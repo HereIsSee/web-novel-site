@@ -166,7 +166,6 @@ namespace Api.Controllers
         [HttpDelete("novel/{novelId}")]
         public async Task<IActionResult> DeleteReview(int novelId)
         {
-            // Will have to update so that the admin can also delete reviews
             var userId = GetCurrentUserId();
             if (userId == null)
                 return Unauthorized(new { message = "Invalid or missing user Id." });

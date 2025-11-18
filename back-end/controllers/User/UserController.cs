@@ -25,14 +25,14 @@ namespace Api.Controllers
             _userService = userService;
         }
 
-        // For testing, will be delted later
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
-        {
-            var users = await _db.Users.ToListAsync();
-            var userDtos = _mapper.Map<IEnumerable<UserReadDto>>(users);
-            return Ok(userDtos);
-        }
+        // [Authorize(Roles = "Admin")]
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<UserReadDto>>> GetUsers()
+        // {
+        //     var users = await _db.Users.ToListAsync();
+        //     var userDtos = _mapper.Map<IEnumerable<UserReadDto>>(users);
+        //     return Ok(userDtos);
+        // }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDto>> GetUser(int id)
@@ -89,12 +89,16 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
+            var userId = GetCurrentUserId();
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
+            if (user.Id != userId)
+                return Forbid();
 
             _db.Users.Remove(user);
             await _db.SaveChangesAsync();

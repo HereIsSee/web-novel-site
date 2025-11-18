@@ -237,28 +237,13 @@ namespace Api.Controllers
             if (novel == null)
                 return NotFound();
             if (novel.UserId != userId)
-                return Forbid("Only the author can delete the novel");
+                return Forbid();
 
             _db.Novels.Remove(novel);
             await _db.SaveChangesAsync();
 
             return NoContent();
         }
-        // [Authorize]
-        // [HttpDelete]
-        // public async Task<IActionResult> DeleteAllNovels()
-        // {
-        //     var novels = await _db.Novels.ToListAsync();
-
-        //     if (!novels.Any())
-        //         return NotFound(new { message = "No novels found to delete." });
-
-        //     _db.Novels.RemoveRange(novels);
-        //     await _db.SaveChangesAsync();
-
-        //     return NoContent();
-        // }
-
 
         [HttpGet("user/{id}")]
         public async Task<ActionResult<IEnumerable<NovelReadDto>>> GetUserNovels(int id)
