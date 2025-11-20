@@ -40,7 +40,7 @@ const Novel = () => {
             getNovelChapters(novelId),
             getNovelReviews(novelId),
             isLoggedIn ? getUserNovelStatus(novelId) : Promise.resolve(null),
-            incrementView(novelId),
+            isLoggedIn ? incrementView(novelId) : Promise.resolve(null),
           ]);
 
         setNovel(novelData);
@@ -107,7 +107,7 @@ const Novel = () => {
 
           <Reviews
             novelId={novelId}
-            currentUserId={user.id}
+            currentUserId={user?.id}
             reviews={reviews}
             onReviewDelete={onReviewDelete}
           />

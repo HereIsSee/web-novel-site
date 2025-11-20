@@ -62,7 +62,7 @@ const ReviewCard = ({ review, currentUserId, onDeleteClick }) => {
           dangerouslySetInnerHTML={{ __html: review.reviewContent }}
         />
 
-        {Number(currentUserId) === review.author.id && (
+        {currentUserId && Number(currentUserId) === review.author.id && (
           <Button align="right" styleType="red-white" onClick={onDeleteClick}>
             <FaTrash
               size="22px"

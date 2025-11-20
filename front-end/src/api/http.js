@@ -1,16 +1,43 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export async function httpRequest(url, options = {}) {
-  const token = localStorage.getItem("token");
+let accessToken = localStorage.getItem("token");
 
+const setAccessToken = (token) => {
+  accessToken = token;
+  localStorage.setItem("token", token);
+};
+
+async function refreshAccessToken() {
+  try {
+    const res = await fetch(`${API_URL}/api/auth/refresh`, {
+      //On this request it return 401 without a message
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    if (data.accessToken) {
+      setAccessToken(data.accessToken);
+      return data.accessToken;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export async function httpRequest(url, options = {}) {
   const defaultHeaders = {};
 
   if (!options.isFormData) {
     defaultHeaders["Content-Type"] = "application/json";
   }
 
-  if (token) {
-    defaultHeaders["Authorization"] = `Bearer ${token}`;
+  if (accessToken) {
+    defaultHeaders["Authorization"] = `Bearer ${accessToken}`;
   }
 
   const config = {
@@ -19,6 +46,7 @@ export async function httpRequest(url, options = {}) {
       ...defaultHeaders,
       ...(options.headers || {}),
     },
+    credentials: "include",
   };
 
   const fullUrl = `${API_URL}${url}`;
@@ -26,10 +54,19 @@ export async function httpRequest(url, options = {}) {
   let response = await fetch(fullUrl, config);
 
   if (response.status === 401) {
-    // Token expired or invalid
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-    throw new Error("Unauthorized, please log in again.");
+    const newToken = await refreshAccessToken();
+
+    if (newToken) {
+      // Retry original request with new access token
+      config.headers["Authorization"] = `Bearer ${newToken}`;
+      response = await fetch(fullUrl, config);
+    } else {
+      // Refresh failed -> logout
+      accessToken = null;
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      throw new Error("Unauthorized, please log in again.");
+    }
   }
 
   if (!response.ok) {

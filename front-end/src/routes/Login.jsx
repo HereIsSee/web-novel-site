@@ -24,7 +24,7 @@ const Login = () => {
         Password: password,
       });
 
-      login(response.token);
+      login(response.accessToken);
 
       setEmail("");
       setPassword("");

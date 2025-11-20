@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { logoutUser } from "../api/users";
 
 const AuthContext = createContext();
 
@@ -47,7 +48,12 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(true);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.error(err);
+    }
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setToken(null);

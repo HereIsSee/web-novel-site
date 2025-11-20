@@ -22,6 +22,8 @@ namespace Api.Models
         
         // Soft-delete for when admin deletes a user
         public bool IsDeleted { get; set; } = false;
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpires { get; set; }
 
         //Navigation properties
         public ICollection<Novel>? Novels { get; set; }

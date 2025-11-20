@@ -8,6 +8,11 @@ export const loginUser = (credentials) =>
     body: JSON.stringify(credentials),
   });
 
+export const logoutUser = () =>
+  httpRequest("/api/auth/logout", {
+    method: "POST",
+  });
+
 export const registerUser = (data) =>
   httpRequest("/api/users", {
     method: "POST",
