@@ -1,0 +1,4856 @@
+openapi: 3.0.3
+info:
+  title: Web Novel Site API (minimal)
+  version: 1.0.0
+  description:
+    Minimal API specifikacija (be Admin endpointų). Sugeneruota iš kontrolerių
+    struktūros.
+servers:
+  - url: https://web-novel-site-z0u9.onrender.com
+    description: Local
+tags:
+  - name: Auth
+  - name: Users
+  - name: Novels
+  - name: Chapters
+  - name: Comments
+  - name: Reviews
+  - name: Tags
+  - name: Uploads
+  - name: Interactions
+  - name: Public
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      operationId: Auth_Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id087
+                  _note: UserLogin schema
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id001
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id001
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id001
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/auth/me:
+    get:
+      tags:
+        - Auth
+      summary: GetCurrentUser
+      operationId: Auth_GetCurrentUser
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: &id064
+                    _note: UserReadDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id002
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id002
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id002
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id002
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id002
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/{novelid}/chapters:
+    get:
+      tags:
+        - Chapters
+      summary: GetChapters
+      operationId: Chapter_GetChapters
+      parameters:
+        - name: novelid
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: novelId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChapterReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id004
+                      _note: ChapterReadDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id003
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id003
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id003
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id003
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id003
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Chapters
+      summary: CreateChapter
+      operationId: Chapter_CreateChapter
+      parameters:
+        - name: novelid
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: novelId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChapterDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id074
+                  _note: CreateChapterDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChapterReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id004
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id005
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id005
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id005
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id005
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id005
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/{novelid}/chapters/{chapterId}:
+    get:
+      tags:
+        - Chapters
+      summary: GetChapter
+      operationId: Chapter_GetChapter
+      parameters:
+        - name: novelid
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: novelId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChapterReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id004
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id006
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id006
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id006
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id006
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id006
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    put:
+      tags:
+        - Chapters
+      summary: UpdateChapter
+      operationId: Chapter_UpdateChapter
+      parameters:
+        - name: novelid
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: novelId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateChapterDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id083
+                  _note: UpdateChapterDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id007
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id007
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id007
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id007
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id007
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Chapters
+      summary: DeleteChapter
+      operationId: Chapter_DeleteChapter
+      parameters:
+        - name: novelid
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: novelId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id008
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id008
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id008
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id008
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id008
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/comments:
+    get:
+      tags:
+        - Comments
+      summary: GetAllComments
+      operationId: Comment_GetAllComments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommentReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id010
+                      _note: CommentReadDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id009
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id009
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id009
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id009
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id009
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Comments
+      summary: CreateComment
+      operationId: Comment_CreateComment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommentDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id075
+                  _note: CreateCommentDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id010
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id011
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id011
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id011
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id011
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id011
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/comments/chapter/{chapterId}:
+    get:
+      tags:
+        - Comments
+      summary: GetChapterComments
+      operationId: Comment_GetChapterComments
+      parameters:
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommentReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id010
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id012
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id012
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id012
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id012
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id012
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/comments/{id}:
+    get:
+      tags:
+        - Comments
+      summary: GetComment
+      operationId: Comment_GetComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id010
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id013
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id013
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id013
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id013
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id013
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    put:
+      tags:
+        - Comments
+      summary: UpdateComment
+      operationId: Comment_UpdateComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCommentDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id084
+                  _note: UpdateCommentDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id014
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id014
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id014
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id014
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id014
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Comments
+      summary: DeleteComment
+      operationId: Comment_DeleteComment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id015
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id015
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id015
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id015
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id015
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels:
+    get:
+      tags:
+        - Novels
+      summary: GetNovels
+      operationId: Novel_GetNovels
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id017
+                      _note: NovelReadDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id016
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id016
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id016
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id016
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id016
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Novels
+      summary: CreateNovel
+      operationId: Novel_CreateNovel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNovelDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id076
+                  _note: CreateNovelDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id018
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id018
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id018
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id018
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id018
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Novels
+      summary: DeleteAllNovels
+      operationId: Novel_DeleteAllNovels
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id019
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id019
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id019
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id019
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id019
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/{id}:
+    get:
+      tags:
+        - Novels
+      summary: GetNovel
+      operationId: Novel_GetNovel
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id020
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id020
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id020
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id020
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id020
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    put:
+      tags:
+        - Novels
+      summary: UpdateNovel
+      operationId: Novel_UpdateNovel
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateNovelDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id085
+                  _note: UpdateNovelDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id021
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id021
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id021
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id021
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id021
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Novels
+      summary: DeleteNovel
+      operationId: Novel_DeleteNovel
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id022
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id022
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id022
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id022
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id022
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/statuses:
+    get:
+      tags:
+        - Novels
+      summary: GetNovelStatuses
+      operationId: Novel_GetNovelStatuses
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/object"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id043
+                      _note: object schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id023
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id023
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id023
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id023
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id023
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/user/{id}:
+    get:
+      tags:
+        - Novels
+      summary: GetUserNovels
+      operationId: Novel_GetUserNovels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id024
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id024
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id024
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id024
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id024
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/user/{id}/follows:
+    get:
+      tags:
+        - Novels
+      summary: GetUserFollowedNovels
+      operationId: Novel_GetUserFollowedNovels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelFollowDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id080
+                      _note: NovelFollowDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id025
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id025
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id025
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id025
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id025
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/user/{id}/favorites:
+    get:
+      tags:
+        - Novels
+      summary: GetUserFavoriteNovels
+      operationId: Novel_GetUserFavoriteNovels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id026
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id026
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id026
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id026
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id026
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novels/user/{id}/readlater:
+    get:
+      tags:
+        - Novels
+      summary: GetUserReadLaterNovels
+      operationId: Novel_GetUserReadLaterNovels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id017
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id027
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id027
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id027
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id027
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id027
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/follow/{novelId}:
+    post:
+      tags:
+        - Interactions
+      summary: FollowNovel
+      operationId: NovelInteractions_FollowNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id028
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id028
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id028
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id028
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id028
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Interactions
+      summary: UnfollowNovel
+      operationId: NovelInteractions_UnfollowNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id029
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id029
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id029
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id029
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id029
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/follow/{novelId}/user/{userId}:
+    get:
+      tags:
+        - Interactions
+      summary: GetFollow
+      operationId: NovelInteractions_GetFollow
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadFollowDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: &id082
+                    _note: ReadFollowDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id030
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id030
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id030
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id030
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id030
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/favorite/{novelId}:
+    post:
+      tags:
+        - Interactions
+      summary: FavoriteNovel
+      operationId: NovelInteractions_FavoriteNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id031
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id031
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id031
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id031
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id031
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Interactions
+      summary: UnfavoriteNovel
+      operationId: NovelInteractions_UnfavoriteNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id032
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id032
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id032
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id032
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id032
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/readlater/{novelId}:
+    post:
+      tags:
+        - Interactions
+      summary: ReadLatereNovel
+      operationId: NovelInteractions_ReadLatereNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id033
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id033
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id033
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id033
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id033
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Interactions
+      summary: UnReadLaterNovel
+      operationId: NovelInteractions_UnReadLaterNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id034
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id034
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id034
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id034
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id034
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/status/{novelId}:
+    get:
+      tags:
+        - Interactions
+      summary: GetUserNovelStatus
+      operationId: NovelInteractions_GetUserNovelStatus
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id035
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id035
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id035
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id035
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id035
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/stats/author/{authorId}:
+    get:
+      tags:
+        - Interactions
+      summary: GetAuthorNovelStats
+      operationId: NovelInteractions_GetAuthorNovelStats
+      parameters:
+        - name: authorId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorInteractionStatsDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: &id072
+                    _note: AuthorInteractionStatsDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id036
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id036
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id036
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id036
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id036
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/view/{novelId}:
+    post:
+      tags:
+        - Interactions
+      summary: IncrementView
+      operationId: NovelInteractions_IncrementView
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id037
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id037
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id037
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id037
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id037
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/novelinteractions/follow/{novelId}/last-read/{chapterId}:
+    post:
+      tags:
+        - Interactions
+      summary: UpdateFollowLastReadChapter
+      operationId: NovelInteractions_UpdateFollowLastReadChapter
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id038
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id038
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id038
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id038
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id038
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/public-novels:
+    get:
+      tags:
+        - Public
+      summary: GetNovels
+      operationId: PublicNovel_GetNovels
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id017
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id039
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id039
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id039
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/public-novels/{id}:
+    get:
+      tags:
+        - Public
+      summary: GetNovel
+      operationId: PublicNovel_GetNovel
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id017
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id040
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id040
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id040
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/public-novels/top:
+    get:
+      tags:
+        - Public
+      summary: GetTopNovels
+      operationId: PublicNovel_GetTopNovels
+      parameters:
+        - name: "5"
+          in: query
+          required: false
+          schema:
+            type: string
+          example: value
+        - name: "null"
+          in: query
+          required: false
+          schema:
+            type: string
+          example: value
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id017
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id041
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id041
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id041
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/public-novels/latest:
+    get:
+      tags:
+        - Public
+      summary: GetLatestNovels
+      operationId: PublicNovel_GetLatestNovels
+      parameters:
+        - name: "5"
+          in: query
+          required: false
+          schema:
+            type: string
+          example: value
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NovelWithChaptersDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id081
+                      _note: NovelWithChaptersDto schema
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id042
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id042
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id042
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/search/order-by:
+    get:
+      tags:
+        - Public
+      summary: GetNovelStatuses
+      operationId: Search_GetNovelStatuses
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/object"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id043
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id044
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id044
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id044
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/search/basic:
+    post:
+      tags:
+        - Public
+      summary: BasicSearch
+      operationId: Search_BasicSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BasicSearchDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id073
+                  _note: BasicSearchDto schema
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Novel"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id046
+                      _note: Novel schema
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id045
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id045
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id045
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/search/advanced:
+    post:
+      tags:
+        - Public
+      summary: AdvancedSearch
+      operationId: Search_AdvancedSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvancedSearchDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id071
+                  _note: AdvancedSearchDto schema
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Novel"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id046
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: &id047
+                $ref: "#/components/schemas/Error"
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id047
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id047
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: GetReviews
+      operationId: Reviews_GetReviews
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id049
+                      _note: ReadReviewDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id048
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id048
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id048
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id048
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id048
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/reviews/novel/{novelId}:
+    get:
+      tags:
+        - Reviews
+      summary: GetNovelReviews
+      operationId: Reviews_GetNovelReviews
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id049
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id050
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id050
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id050
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id050
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id050
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Reviews
+      summary: CreateReview
+      operationId: Reviews_CreateReview
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateReviewDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id077
+                  _note: CreateReviewDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id049
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id051
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id051
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id051
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id051
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id051
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    put:
+      tags:
+        - Reviews
+      summary: UpdateReview
+      operationId: Reviews_UpdateReview
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateReviewDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id086
+                  _note: UpdateReviewDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id049
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id052
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id052
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id052
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id052
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id052
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Reviews
+      summary: DeleteReview
+      operationId: Reviews_DeleteReview
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id053
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id053
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id053
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id053
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id053
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/reviews/user/{userId}:
+    get:
+      tags:
+        - Reviews
+      summary: GetUserReviews
+      operationId: Reviews_GetUserReviews
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id049
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id054
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id054
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id054
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id054
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id054
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/reviews/novel/{novelId}/user/{userId}:
+    get:
+      tags:
+        - Reviews
+      summary: GetUserReviewOnNovel
+      operationId: Reviews_GetUserReviewOnNovel
+      parameters:
+        - name: novelId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadReviewDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id049
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id055
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id055
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id055
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id055
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id055
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/tags:
+    get:
+      tags:
+        - Tags
+      summary: GetTags
+      operationId: Tag_GetTags
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TagDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - &id057
+                      _note: TagDto schema
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id056
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id056
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id056
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id056
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id056
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Tags
+      summary: CreateTag
+      operationId: Tag_CreateTag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: *id057
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id057
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id058
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id058
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id058
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id058
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id058
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/tags/{id}:
+    get:
+      tags:
+        - Tags
+      summary: GetTag
+      operationId: Tag_GetTag
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id057
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id059
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id059
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id059
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id059
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id059
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/tags/bulk:
+    post:
+      tags:
+        - Tags
+      summary: CreateTags
+      operationId: Tag_CreateTags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IEnumerable<TagDto>"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id079
+                  _note: IEnumerable<TagDto> schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TagDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id057
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id060
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id060
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id060
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id060
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id060
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/tags/id:
+    put:
+      tags:
+        - Tags
+      summary: UpdateTag
+      operationId: Tag_UpdateTag
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: *id057
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id061
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id061
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id061
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id061
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id061
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Tags
+      summary: DeleteTag
+      operationId: Tag_DeleteTag
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id062
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id062
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id062
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id062
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id062
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/upload/cover-temp:
+    post:
+      tags:
+        - Uploads
+      summary: UploadTempCover
+      operationId: Upload_UploadTempCover
+      parameters:
+        - name: file
+          in: query
+          required: false
+          schema:
+            type: string
+          example: value
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id063
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id063
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id063
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id063
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id063
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: GetUsers
+      operationId: User_GetUsers
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    - *id064
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id065
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id065
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id065
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id065
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id065
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    post:
+      tags:
+        - Users
+      summary: CreateUser
+      operationId: User_CreateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id078
+                  _note: CreateUserDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id064
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id066
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id066
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id066
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id066
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id066
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: GetUser
+      operationId: User_GetUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserReadDto"
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value: *id064
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id067
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id067
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id067
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id067
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id067
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    put:
+      tags:
+        - Users
+      summary: UpdateUser
+      operationId: User_UpdateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateDto"
+            examples:
+              sample:
+                summary: Pavyzdinė užklausa
+                value: &id088
+                  _note: UserUpdateDto schema
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id068
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id068
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id068
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id068
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id068
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+    delete:
+      tags:
+        - Users
+      summary: DeleteUser
+      operationId: User_DeleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Sėkminga operacija (be turinio)
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id069
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id069
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id069
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id069
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id069
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+  /api/users/{userId:int}/role:
+    patch:
+      tags:
+        - Users
+      summary: ChangeUserRole
+      operationId: User_ChangeUserRole
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: role
+          in: query
+          required: false
+          schema:
+            type: string
+          example: value
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Sėkmingas atsakymas
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                ok:
+                  summary: Sėkmingas atsakymas
+                  value:
+                    status: ok
+        "401":
+          description: Neautorizuota (nėra / neteisingas JWT)
+          content:
+            application/json:
+              schema: &id070
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  value:
+                    code: UNAUTHORIZED
+                    message: Missing or invalid token
+        "403":
+          description: Uždrausta (trūksta teisių)
+          content:
+            application/json:
+              schema: *id070
+              examples:
+                forbidden:
+                  value:
+                    code: FORBIDDEN
+                    message: Access denied
+        "400":
+          description: Netinkama užklausa / validacijos klaida
+          content:
+            application/json:
+              schema: *id070
+              examples:
+                badRequest:
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        "404":
+          description: Nerasta
+          content:
+            application/json:
+              schema: *id070
+              examples:
+                notFound:
+                  value:
+                    code: NOT_FOUND
+                    message: Resource not found
+        "500":
+          description: Serverio klaida
+          content:
+            application/json:
+              schema: *id070
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: Unexpected error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          example: title is required
+    AdvancedSearchDto:
+      type: object
+      additionalProperties: true
+      example: *id071
+    AuthorInteractionStatsDto:
+      type: object
+      additionalProperties: true
+      example: *id072
+    BasicSearchDto:
+      type: object
+      additionalProperties: true
+      example: *id073
+    ChapterReadDto:
+      type: object
+      additionalProperties: true
+      example: *id004
+    CommentReadDto:
+      type: object
+      additionalProperties: true
+      example: *id010
+    CreateChapterDto:
+      type: object
+      additionalProperties: true
+      example: *id074
+    CreateCommentDto:
+      type: object
+      additionalProperties: true
+      example: *id075
+    CreateNovelDto:
+      type: object
+      additionalProperties: true
+      example: *id076
+    CreateReviewDto:
+      type: object
+      additionalProperties: true
+      example: *id077
+    CreateUserDto:
+      type: object
+      additionalProperties: true
+      example: *id078
+    IEnumerable<TagDto>:
+      type: object
+      additionalProperties: true
+      example: *id079
+    Novel:
+      type: object
+      additionalProperties: true
+      example: *id046
+    NovelFollowDto:
+      type: object
+      additionalProperties: true
+      example: *id080
+    NovelReadDto:
+      type: object
+      additionalProperties: true
+      example: *id017
+    NovelWithChaptersDto:
+      type: object
+      additionalProperties: true
+      example: *id081
+    ReadFollowDto:
+      type: object
+      additionalProperties: true
+      example: *id082
+    ReadReviewDto:
+      type: object
+      additionalProperties: true
+      example: *id049
+    TagDto:
+      type: object
+      additionalProperties: true
+      example: *id057
+    UpdateChapterDto:
+      type: object
+      additionalProperties: true
+      example: *id083
+    UpdateCommentDto:
+      type: object
+      additionalProperties: true
+      example: *id084
+    UpdateNovelDto:
+      type: object
+      additionalProperties: true
+      example: *id085
+    UpdateReviewDto:
+      type: object
+      additionalProperties: true
+      example: *id086
+    UserLogin:
+      type: object
+      additionalProperties: true
+      example: *id087
+    UserReadDto:
+      type: object
+      additionalProperties: true
+      example: *id064
+    UserUpdateDto:
+      type: object
+      additionalProperties: true
+      example: *id088
+    object:
+      type: object
+      additionalProperties: true
+      example: *id043
